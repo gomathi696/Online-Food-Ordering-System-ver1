@@ -7,216 +7,1583 @@
 <title>Food Sprint</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{--black:#0a0a0a;--yellow:#ffcc00;--yellow-dim:#e6b800;--white:#fff;--gray:#f4f4f4;--border:#e8e8e8;--shadow:0 4px 24px rgba(0,0,0,0.08);--veg:#22c55e;--nonveg:#ef4444;--best:#f97316;}
-body{background:#f6f6f4;font-family:'DM Sans',sans-serif;color:var(--black);}
-h1,h2,h3,h4,.brand-name{font-family:'Syne',sans-serif;}
-nav{background:var(--black);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:18px 56px;position:sticky;top:0;z-index:500;box-shadow:0 2px 20px rgba(0,0,0,0.4);}
-.logo{display:flex;align-items:center;gap:10px;}
-.logo img{height:44px;object-fit:contain;}
-.brand-name{color:var(--yellow);font-size:22px;font-weight:800;letter-spacing:-0.5px;}
-.nav-right{display:flex;align-items:center;gap:10px;}
-.login-btn{background:transparent;color:var(--yellow);border:1.5px solid var(--yellow);padding:9px 20px;border-radius:8px;font-weight:600;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;}
-.login-btn:hover{background:var(--yellow);color:var(--black);}
-.signup-btn{background:var(--yellow);color:var(--black);border:none;padding:9px 20px;border-radius:8px;font-weight:600;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;}
-.signup-btn:hover{background:var(--yellow-dim);}
-.user-info{color:var(--yellow);font-weight:600;font-size:14px;}
-.logout-btn{background:#222;color:#fff;border:none;padding:9px 18px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;transition:0.2s;}
-.logout-btn:hover{background:#333;}
-.role-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700;margin-left:4px;}
-.role-badge.user{background:rgba(255,204,0,0.15);color:var(--yellow);}
-.role-badge.admin{background:rgba(239,68,68,0.15);color:#ef4444;}
-.role-badge.restaurant{background:rgba(59,130,246,0.15);color:#3b82f6;}
-.hero{background:var(--black);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:80px 56px;overflow:hidden;min-height:460px;}
-.hero-text{max-width:50%;}
-.hero-text h1{font-size:46px;margin-bottom:16px;min-height:108px;transition:opacity 0.4s;line-height:1.1;font-weight:800;}
-.hero-text p{color:#aaa;margin-bottom:18px;min-height:48px;transition:opacity 0.4s;font-size:16px;line-height:1.6;}
-.hero img{width:460px;height:300px;object-fit:cover;border-radius:16px;transition:opacity 0.4s;margin-right:20px;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
-.hero-dots{margin:18px 0;}
-.hero-dots span{display:inline-block;width:8px;height:8px;margin:0 4px;border-radius:50%;background:#444;cursor:pointer;transition:0.3s;}
-.hero-dots span.active{background:var(--yellow);transform:scale(1.4);}
-.search-wrap{position:relative;max-width:460px;}
-.search-box{display:flex;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(255,204,0,0.2);transition:box-shadow 0.3s,transform 0.3s;}
-.search-box.focused{box-shadow:0 0 0 3px var(--yellow),0 8px 32px rgba(255,204,0,0.35);transform:scale(1.02);}
-.search-box input{flex:1;padding:14px 16px;border:none;outline:none;font-size:14px;font-family:'DM Sans',sans-serif;}
-.search-box button{background:var(--yellow);border:none;padding:0 22px;cursor:pointer;font-weight:700;font-family:'Syne',sans-serif;font-size:14px;transition:0.2s;}
-.search-box button:hover{background:var(--yellow-dim);}
-.search-suggestions{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.12);z-index:300;display:none;max-height:260px;overflow-y:auto;}
-.search-suggestions.show{display:block;}
-.suggestion-item{padding:11px 16px;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0f0;transition:0.15s;}
-.suggestion-item:last-child{border-bottom:none;}
-.suggestion-item:hover{background:#fffbea;}
-.suggestion-item .sug-icon{font-size:16px;}
-.suggestion-item .sug-name{font-weight:600;}
-.suggestion-item .sug-sub{font-size:12px;color:#888;margin-left:auto;}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:2000;backdrop-filter:blur(6px);}
-.modal.show{display:flex;}
-.modal-content{background:#fff;padding:0;width:440px;border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,0.3);animation:popIn 0.25s ease;overflow:hidden;}
-@keyframes popIn{from{transform:scale(0.9);opacity:0;}to{transform:scale(1);opacity:1;}}
-.modal-header{background:var(--black);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;}
-.modal-header h3{color:var(--yellow);font-size:20px;font-weight:800;}
-.modal-header-close{background:none;border:none;color:#aaa;font-size:22px;cursor:pointer;font-weight:700;line-height:1;}
-.modal-header-close:hover{color:#fff;}
-.modal-body{padding:28px;}
-.role-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
-.role-btn{padding:14px 8px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:0.2s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;}
-.role-btn .role-icon{font-size:24px;}
-.role-btn .role-label{font-size:12px;font-weight:700;letter-spacing:0.3px;}
-.role-btn .role-sub{font-size:10px;color:#999;font-weight:400;}
-.role-btn:hover{border-color:var(--yellow);}
-.role-btn.active{border-color:var(--yellow);background:#fffbea;}
-.role-btn.active .role-label{color:var(--black);}
-.form-tabs{display:flex;gap:0;margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
-.form-tab{flex:1;padding:9px;background:transparent;border:none;color:#888;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:0.2s;}
-.form-tab.active{background:var(--yellow);color:var(--black);}
-.modal-field{margin-bottom:14px;}
-.modal-field label{display:block;font-size:11px;font-weight:700;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
-.modal-field input,.modal-field select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s;background:#fff;color:var(--black);}
-.modal-field input:focus,.modal-field select:focus{border-color:var(--yellow);}
-.modal-field select option{background:#fff;}
-.modal-submit{width:100%;padding:13px;background:var(--yellow);border:none;cursor:pointer;border-radius:10px;font-weight:800;font-size:15px;font-family:'Syne',sans-serif;transition:0.2s;margin-top:4px;color:var(--black);}
-.modal-submit:hover{background:var(--yellow-dim);}
-.modal-msg{font-size:13px;margin-top:10px;text-align:center;}
-.modal-msg.err{color:#ef4444;}
-.modal-msg.ok{color:#22c55e;}
-.redirect-panel{display:none;text-align:center;padding:20px 0;}
-.redirect-panel .rp-icon{font-size:52px;margin-bottom:14px;}
-.redirect-panel h4{font-size:18px;font-weight:800;margin-bottom:8px;}
-.redirect-panel p{font-size:13px;color:#666;margin-bottom:20px;line-height:1.6;}
-.redirect-btn{display:inline-block;padding:12px 28px;background:var(--yellow);color:var(--black);border:none;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Syne',sans-serif;text-decoration:none;transition:0.2s;}
-.redirect-btn:hover{background:var(--yellow-dim);}
-/* NEW RESTAURANT CTA BANNER */
-.res-register-cta{background:linear-gradient(135deg,#1a1a1a,#111);border-radius:12px;padding:14px 16px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
-.res-register-cta span{font-size:12px;color:#aaa;line-height:1.4;}
-.res-register-cta strong{color:#fff;display:block;font-size:13px;margin-bottom:2px;}
-.res-register-link{padding:8px 16px;background:var(--yellow);color:var(--black);border-radius:8px;font-weight:800;font-size:12px;font-family:'Syne',sans-serif;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:0.2s;}
-.res-register-link:hover{background:var(--yellow-dim);}
-.categories{background:#fff;padding:72px 56px;text-align:center;}
-.categories h2{font-size:34px;margin-bottom:48px;font-weight:800;}
-.category-container{display:flex;justify-content:center;flex-wrap:wrap;gap:32px;}
-.category-card{width:130px;cursor:pointer;transition:0.25s ease;}
-.category-card img{width:130px;height:130px;object-fit:cover;border-radius:50%;border:5px solid var(--yellow);transition:0.25s ease;display:block;}
-.category-card p{margin-top:10px;font-weight:600;font-size:15px;}
-.category-card:hover{transform:translateY(-8px);}
-.category-card:hover img{box-shadow:0 8px 32px rgba(255,204,0,0.4);}
-.section-wrap{padding:48px 56px;background:#f6f6f4;}
-.section-wrap h2{font-size:28px;font-weight:800;margin-bottom:8px;}
-.section-subtitle{font-size:14px;color:#888;margin-bottom:24px;}
-.res-grid{display:flex;gap:16px;flex-wrap:wrap;}
-.res-card{padding:16px 20px;background:#fff;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);transition:0.2s;border:2px solid transparent;min-width:180px;}
-.res-card:hover{border-color:var(--yellow);transform:translateY(-2px);}
-.res-card img{width:44px;height:44px;object-fit:contain;border-radius:8px;}
-.res-card-info{display:flex;flex-direction:column;gap:2px;}
-.res-card-info span{font-weight:600;font-size:15px;}
-.res-card-info small{font-size:11px;color:#888;}
-.filters-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:28px;padding:16px 20px;background:#fff;border-radius:12px;box-shadow:var(--shadow);}
-.filter-label{font-weight:700;font-size:13px;color:#555;margin-right:4px;}
-.filter-btn{padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:0.2s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px;}
-.filter-btn:hover{border-color:var(--yellow);}
-.filter-btn.active{background:var(--yellow);border-color:var(--yellow);color:var(--black);}
-.filter-divider{width:1px;height:24px;background:var(--border);margin:0 4px;}
-.price-range-wrap{display:flex;align-items:center;gap:8px;font-size:13px;}
-.price-range-wrap input[type=range]{accent-color:var(--yellow);width:100px;}
-.price-val{font-weight:700;font-size:13px;}
-.menu-layout{display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:start;}
-.menu-sidebar{background:#fff;border-radius:14px;padding:20px;box-shadow:var(--shadow);position:sticky;top:80px;}
-.menu-sidebar h3{font-size:15px;font-weight:800;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--yellow);}
-.sidebar-item{padding:9px 12px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;transition:0.15s;display:flex;align-items:center;gap:8px;}
-.sidebar-item:hover{background:#fffbea;}
-.sidebar-item.active{background:var(--yellow);font-weight:700;}
-.sidebar-item .si-count{margin-left:auto;font-size:11px;background:#f0f0f0;padding:2px 7px;border-radius:10px;font-weight:600;}
-.sidebar-item.active .si-count{background:rgba(0,0,0,0.1);}
-.menu-section{margin-bottom:40px;}
-.menu-section-title{font-size:20px;font-weight:800;margin-bottom:4px;padding-bottom:10px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px;}
-.menu-section-desc{font-size:13px;color:#888;margin-bottom:16px;}
-.menu-items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;}
-.menu-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:0.2s;position:relative;}
-.menu-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.12);}
-.menu-card.hidden{display:none;}
-.menu-card img{width:100%;height:130px;object-fit:cover;display:block;}
-.menu-card-body{padding:12px;}
-.menu-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:4px;}
-.menu-card-top h4{font-size:14px;font-weight:700;line-height:1.3;}
-.veg-dot{width:14px;height:14px;border-radius:3px;border:1.5px solid;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;}
-.veg-dot.veg{border-color:var(--veg);}
-.veg-dot.veg::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--veg);}
-.veg-dot.nonveg{border-color:var(--nonveg);}
-.veg-dot.nonveg::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--nonveg);}
-.menu-price{font-size:15px;font-weight:700;margin-bottom:8px;}
-.menu-desc{font-size:12px;color:#888;margin-bottom:10px;line-height:1.5;}
-.best-badge{position:absolute;top:10px;left:10px;background:var(--best);color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:4px;font-family:'Syne',sans-serif;letter-spacing:0.5px;}
-.spicy-badge{position:absolute;top:10px;right:10px;font-size:12px;}
-.qty-control{display:flex;align-items:center;justify-content:center;gap:0;border:2px solid var(--yellow);border-radius:8px;overflow:hidden;}
-.qty-btn{background:var(--yellow);border:none;width:32px;height:32px;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.15s;flex-shrink:0;}
-.qty-btn:hover{background:var(--yellow-dim);}
-.qty-num{flex:1;text-align:center;font-weight:700;font-size:15px;min-width:32px;background:#fff;}
-.add-btn{width:100%;background:var(--yellow);border:none;padding:8px 0;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;transition:0.2s;font-family:'DM Sans',sans-serif;}
-.add-btn:hover{background:var(--yellow-dim);}
-.cart-icon{position:fixed;bottom:28px;right:28px;background:var(--black);color:var(--yellow);padding:14px 20px;border-radius:40px;font-weight:700;cursor:pointer;z-index:600;box-shadow:0 4px 24px rgba(0,0,0,0.35);display:flex;align-items:center;gap:8px;font-size:15px;transition:0.2s;font-family:'Syne',sans-serif;}
-.cart-icon:hover{background:#222;transform:scale(1.05);}
-.cart-badge{background:var(--yellow);color:var(--black);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
-.cart-panel{position:fixed;top:0;right:-420px;width:380px;height:100%;background:#fff;box-shadow:-4px 0 32px rgba(0,0,0,0.15);padding:0;transition:right 0.3s ease;z-index:700;display:flex;flex-direction:column;}
-.cart-panel.active{right:0;}
-.cart-header{background:var(--black);color:#fff;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;}
-.cart-header h3{font-size:18px;font-weight:800;color:var(--yellow);}
-.cart-close{cursor:pointer;font-size:22px;color:#fff;background:none;border:none;font-weight:700;}
-.cart-body{flex:1;overflow-y:auto;padding:20px 24px;}
-.cart-item{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
-.cart-item-name{font-weight:600;font-size:14px;}
-.cart-item-price{font-weight:700;font-size:14px;text-align:right;}
-.cart-qty-control{display:flex;align-items:center;border:1.5px solid var(--yellow);border-radius:6px;overflow:hidden;}
-.cart-qty-btn{background:var(--yellow);border:none;width:26px;height:26px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.cart-qty-num{width:28px;text-align:center;font-weight:700;font-size:13px;}
-.cart-footer{padding:20px 24px;border-top:2px solid var(--border);background:#fafafa;}
-.cart-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;color:#555;}
-.cart-total-row{display:flex;justify-content:space-between;font-size:17px;font-weight:800;margin-top:10px;padding-top:10px;border-top:2px solid var(--border);}
-.pay-btn{width:100%;margin-top:16px;padding:14px;background:var(--yellow);border:none;border-radius:10px;font-weight:800;font-size:16px;cursor:pointer;font-family:'Syne',sans-serif;transition:0.2s;}
-.pay-btn:hover{background:var(--yellow-dim);}
-.empty-cart{text-align:center;color:#aaa;padding:40px 0;font-size:15px;}
-.pay-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);justify-content:center;align-items:center;z-index:3000;backdrop-filter:blur(4px);overflow-y:auto;}
-.pay-content{background:#fff;width:480px;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:popIn 0.25s ease;margin:20px;}
-.pay-header{background:var(--black);padding:20px 28px;display:flex;justify-content:space-between;align-items:center;}
-.pay-header h3{color:var(--yellow);font-size:20px;font-weight:800;}
-.pay-header .hclose{color:#fff;font-size:22px;cursor:pointer;background:none;border:none;font-weight:700;}
-.pay-body{padding:28px;}
-.pay-step{display:none;}
-.pay-step.active{display:block;}
-.pay-step h4{font-size:16px;font-weight:800;margin-bottom:16px;color:var(--black);}
-.form-group{margin-bottom:14px;}
-.form-group label{display:block;font-size:12px;font-weight:600;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s;background:#fff;}
-.form-group input:focus,.form-group textarea:focus{border-color:var(--yellow);}
-.form-group textarea{height:80px;resize:vertical;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.input-error{border-color:#e53e3e!important;}
-.field-error{color:#e53e3e;font-size:12px;margin-top:4px;}
-.step-btn{width:100%;padding:13px;background:var(--yellow);border:none;border-radius:10px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Syne',sans-serif;transition:0.2s;margin-top:6px;}
-.step-btn:hover{background:var(--yellow-dim);}
-.back-link{display:inline-block;margin-top:10px;font-size:13px;color:#666;cursor:pointer;text-decoration:underline;}
-.card-icons{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
-.card-icon-b{padding:5px 10px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;font-weight:700;letter-spacing:0.5px;color:#555;}
-.pay-type-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
-.pay-type-btn{padding:14px;border:2px solid var(--border);border-radius:10px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;transition:0.2s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;}
-.pay-type-btn .pt-icon{font-size:22px;}
-.pay-type-btn:hover{border-color:var(--yellow);}
-.pay-type-btn.selected{border-color:var(--yellow);background:#fffbea;}
-.order-summary{background:#f9f9f7;border-radius:10px;padding:16px;margin-bottom:18px;}
-.order-summary-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;}
-.success-screen{text-align:center;padding:20px 0;}
-.success-icon{font-size:64px;margin-bottom:16px;}
-.success-screen h3{font-size:24px;font-weight:800;margin-bottom:8px;}
-.success-screen p{color:#666;font-size:15px;margin-bottom:6px;}
-.order-id{font-size:13px;color:#aaa;margin-top:4px;}
-.progress-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;position:relative;}
-.progress-bar::before{content:'';position:absolute;top:14px;left:0;right:0;height:2px;background:var(--border);z-index:0;}
-.progress-fill{position:absolute;top:14px;left:0;height:2px;background:var(--yellow);z-index:1;transition:width 0.4s;}
-.step-dot{width:28px;height:28px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;z-index:2;transition:0.3s;}
-.step-dot.done{background:var(--yellow);color:var(--black);}
-.step-dot.active{background:var(--black);color:var(--yellow);box-shadow:0 0 0 3px rgba(255,204,0,0.3);}
-.step-label{font-size:10px;text-align:center;color:#999;position:absolute;top:34px;white-space:nowrap;}
-.step-dot-wrap{display:flex;flex-direction:column;align-items:center;position:relative;}
-.no-results{text-align:center;padding:48px 20px;color:#aaa;}
-@media(max-width:900px){.menu-layout{grid-template-columns:1fr;}.menu-sidebar{position:static;}nav{padding:14px 20px;}.hero{padding:48px 20px;flex-direction:column;gap:24px;}.hero img{width:100%;height:200px;margin-right:0;}.hero-text{max-width:100%;}.section-wrap{padding:32px 20px;}.categories{padding:48px 20px;}.role-selector{grid-template-columns:1fr;}}
+
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root {
+    --black:#0a0a0a;
+    --yellow:#ffcc00;
+    --yellow-dim:#e6b800;
+    --white:#fff;
+    --gray:#f4f4f4;
+    --border:#e8e8e8;
+    --shadow:0 4px 24px rgba(0,0,0,0.08);
+    --veg:#22c55e;
+    --nonveg:#ef4444;
+    --best:#f97316;
+}
+
+body {
+    background:#f6f6f4;
+    font-family:'DM Sans',sans-serif;
+    color:var(--black);
+}
+
+h1,h2,h3,h4,.brand-name {
+    font-family:'Syne',sans-serif;
+}
+
+nav {
+    background:var(--black);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 56px;
+    position:sticky;
+    top:0;
+    z-index:500;
+    box-shadow:0 2px 20px rgba(0,0,0,0.4);
+}
+
+.logo {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo img {
+    height:44px;
+    object-fit:contain;
+}
+
+.brand-name {
+    color:var(--yellow);
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-0.5px;
+}
+
+.nav-right {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.login-btn {
+    background:transparent;
+    color:var(--yellow);
+    border:1.5px solid var(--yellow);
+    padding:9px 20px;
+    border-radius:8px;
+    font-weight:600;
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    cursor:pointer;
+    transition:all 0.2s;
+}
+
+.login-btn:hover {
+    background:var(--yellow);
+    color:var(--black);
+}
+
+.signup-btn {
+    background:var(--yellow);
+    color:var(--black);
+    border:none;
+    padding:9px 20px;
+    border-radius:8px;
+    font-weight:600;
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    cursor:pointer;
+    transition:all 0.2s;
+}
+
+.signup-btn:hover {
+    background:var(--yellow-dim);
+}
+
+.user-info {
+    color:var(--yellow);
+    font-weight:600;
+    font-size:14px;
+}
+
+.logout-btn {
+    background:#222;
+    color:#fff;
+    border:none;
+    padding:9px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:14px;
+    transition:0.2s;
+}
+
+.logout-btn:hover {
+    background:#333;
+}
+
+.role-badge {
+    font-size:11px;
+    padding:3px 10px;
+    border-radius:12px;
+    font-weight:700;
+    margin-left:4px;
+}
+
+.role-badge.user {
+    background:rgba(255,204,0,0.15);
+    color:var(--yellow);
+}
+
+.role-badge.admin {
+    background:rgba(239,68,68,0.15);
+    color:#ef4444;
+}
+
+.role-badge.restaurant {
+    background:rgba(59,130,246,0.15);
+    color:#3b82f6;
+}
+
+.hero {
+    background:var(--black);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:80px 56px;
+    overflow:hidden;
+    min-height:460px;
+}
+
+.hero-text {
+    max-width:50%;
+}
+
+.hero-text h1 {
+    font-size:46px;
+    margin-bottom:16px;
+    min-height:108px;
+    transition:opacity 0.4s;
+    line-height:1.1;
+    font-weight:800;
+}
+
+.hero-text p {
+    color:#aaa;
+    margin-bottom:18px;
+    min-height:48px;
+    transition:opacity 0.4s;
+    font-size:16px;
+    line-height:1.6;
+}
+
+.hero img {
+    width:460px;
+    height:300px;
+    object-fit:cover;
+    border-radius:16px;
+    transition:opacity 0.4s;
+    margin-right:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+
+.hero-dots {
+    margin:18px 0;
+}
+
+.hero-dots span {
+    display:inline-block;
+    width:8px;
+    height:8px;
+    margin:0 4px;
+    border-radius:50%;
+    background:#444;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.hero-dots span.active {
+    background:var(--yellow);
+    transform:scale(1.4);
+}
+
+.search-wrap {
+    position:relative;
+    max-width:460px;
+}
+
+.search-box {
+    display:flex;
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 4px 20px rgba(255,204,0,0.2);
+    transition:box-shadow 0.3s,transform 0.3s;
+}
+
+.search-box.focused {
+    box-shadow:0 0 0 3px var(--yellow),0 8px 32px rgba(255,204,0,0.35);
+    transform:scale(1.02);
+}
+
+.search-box input {
+    flex:1;
+    padding:14px 16px;
+    border:none;
+    outline:none;
+    font-size:14px;
+    font-family:'DM Sans',sans-serif;
+}
+
+.search-box button {
+    background:var(--yellow);
+    border:none;
+    padding:0 22px;
+    cursor:pointer;
+    font-weight:700;
+    font-family:'Syne',sans-serif;
+    font-size:14px;
+    transition:0.2s;
+}
+
+.search-box button:hover {
+    background:var(--yellow-dim);
+}
+
+.search-suggestions {
+    position:absolute;
+    top:calc(100% + 6px);
+    left:0;
+    right:0;
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.12);
+    z-index:300;
+    display:none;
+    max-height:260px;
+    overflow-y:auto;
+}
+
+.search-suggestions.show {
+    display:block;
+}
+
+.suggestion-item {
+    padding:11px 16px;
+    cursor:pointer;
+    font-size:14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border-bottom:1px solid #f0f0f0;
+    transition:0.15s;
+}
+
+.suggestion-item:last-child {
+    border-bottom:none;
+}
+
+.suggestion-item:hover {
+    background:#fffbea;
+}
+
+.suggestion-item .sug-icon {
+    font-size:16px;
+}
+
+.suggestion-item .sug-name {
+    font-weight:600;
+}
+
+.suggestion-item .sug-sub {
+    font-size:12px;
+    color:#888;
+    margin-left:auto;
+}
+
+.modal {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+    justify-content:center;
+    align-items:center;
+    z-index:2000;
+    backdrop-filter:blur(6px);
+}
+
+.modal.show {
+    display:flex;
+}
+
+.modal-content {
+    background:#fff;
+    padding:0;
+    width:440px;
+    border-radius:20px;
+    box-shadow:0 24px 80px rgba(0,0,0,0.3);
+    animation:popIn 0.25s ease;
+    overflow:hidden;
+}
+
+@keyframes popIn {
+    from {
+        transform:scale(0.9);
+        opacity:0;
+    }
+    to {
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+.modal-header {
+    background:var(--black);
+    padding:24px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.modal-header h3 {
+    color:var(--yellow);
+    font-size:20px;
+    font-weight:800;
+}
+
+.modal-header-close {
+    background:none;
+    border:none;
+    color:#aaa;
+    font-size:22px;
+    cursor:pointer;
+    font-weight:700;
+    line-height:1;
+}
+
+.modal-header-close:hover {
+    color:#fff;
+}
+
+.modal-body {
+    padding:28px;
+}
+
+.role-selector {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-bottom:24px;
+}
+
+.role-btn {
+    padding:14px 8px;
+    border:2px solid var(--border);
+    border-radius:12px;
+    background:#fff;
+    cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    transition:0.2s;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+}
+
+.role-btn .role-icon {
+    font-size:24px;
+}
+
+.role-btn .role-label {
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.3px;
+}
+
+.role-btn .role-sub {
+    font-size:10px;
+    color:#999;
+    font-weight:400;
+}
+
+.role-btn:hover {
+    border-color:var(--yellow);
+}
+
+.role-btn.active {
+    border-color:var(--yellow);
+    background:#fffbea;
+}
+
+.role-btn.active .role-label {
+    color:var(--black);
+}
+
+.form-tabs {
+    display:flex;
+    gap:0;
+    margin-bottom:20px;
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid var(--border);
+}
+
+.form-tab {
+    flex:1;
+    padding:9px;
+    background:transparent;
+    border:none;
+    color:#888;
+    font-family:'DM Sans',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.form-tab.active {
+    background:var(--yellow);
+    color:var(--black);
+}
+
+.modal-field {
+    margin-bottom:14px;
+}
+
+.modal-field label {
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    color:#666;
+    margin-bottom:5px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+}
+
+.modal-field input,.modal-field select {
+    width:100%;
+    padding:11px 14px;
+    border:1.5px solid var(--border);
+    border-radius:8px;
+    font-size:14px;
+    font-family:'DM Sans',sans-serif;
+    outline:none;
+    transition:border 0.2s;
+    background:#fff;
+    color:var(--black);
+}
+
+.modal-field input:focus,.modal-field select:focus {
+    border-color:var(--yellow);
+}
+
+.modal-field select option {
+    background:#fff;
+}
+
+.modal-submit {
+    width:100%;
+    padding:13px;
+    background:var(--yellow);
+    border:none;
+    cursor:pointer;
+    border-radius:10px;
+    font-weight:800;
+    font-size:15px;
+    font-family:'Syne',sans-serif;
+    transition:0.2s;
+    margin-top:4px;
+    color:var(--black);
+}
+
+.modal-submit:hover {
+    background:var(--yellow-dim);
+}
+
+.modal-msg {
+    font-size:13px;
+    margin-top:10px;
+    text-align:center;
+}
+
+.modal-msg.err {
+    color:#ef4444;
+}
+
+.modal-msg.ok {
+    color:#22c55e;
+}
+
+.redirect-panel {
+    display:none;
+    text-align:center;
+    padding:20px 0;
+}
+
+.redirect-panel .rp-icon {
+    font-size:52px;
+    margin-bottom:14px;
+}
+
+.redirect-panel h4 {
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.redirect-panel p {
+    font-size:13px;
+    color:#666;
+    margin-bottom:20px;
+    line-height:1.6;
+}
+
+.redirect-btn {
+    display:inline-block;
+    padding:12px 28px;
+    background:var(--yellow);
+    color:var(--black);
+    border:none;
+    border-radius:10px;
+    font-weight:800;
+    font-size:14px;
+    cursor:pointer;
+    font-family:'Syne',sans-serif;
+    text-decoration:none;
+    transition:0.2s;
+}
+
+.redirect-btn:hover {
+    background:var(--yellow-dim);
+}
+
+.res-register-cta {
+    background:linear-gradient(135deg,#1a1a1a,#111);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-top:16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+}
+
+.res-register-cta span {
+    font-size:12px;
+    color:#aaa;
+    line-height:1.4;
+}
+
+.res-register-cta strong {
+    color:#fff;
+    display:block;
+    font-size:13px;
+    margin-bottom:2px;
+}
+
+.res-register-link {
+    padding:8px 16px;
+    background:var(--yellow);
+    color:var(--black);
+    border-radius:8px;
+    font-weight:800;
+    font-size:12px;
+    font-family:'Syne',sans-serif;
+    text-decoration:none;
+    white-space:nowrap;
+    flex-shrink:0;
+    transition:0.2s;
+}
+
+.res-register-link:hover {
+    background:var(--yellow-dim);
+}
+
+.categories {
+    background:#fff;
+    padding:72px 56px;
+    text-align:center;
+}
+
+.categories h2 {
+    font-size:34px;
+    margin-bottom:48px;
+    font-weight:800;
+}
+
+.category-container {
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:32px;
+}
+
+.category-card {
+    width:130px;
+    cursor:pointer;
+    transition:0.25s ease;
+}
+
+.category-card img {
+    width:130px;
+    height:130px;
+    object-fit:cover;
+    border-radius:50%;
+    border:5px solid var(--yellow);
+    transition:0.25s ease;
+    display:block;
+}
+
+.category-card p {
+    margin-top:10px;
+    font-weight:600;
+    font-size:15px;
+}
+
+.category-card:hover {
+    transform:translateY(-8px);
+}
+
+.category-card:hover img {
+    box-shadow:0 8px 32px rgba(255,204,0,0.4);
+}
+
+.section-wrap {
+    padding:48px 56px;
+    background:#f6f6f4;
+}
+
+.section-wrap h2 {
+    font-size:28px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.section-subtitle {
+    font-size:14px;
+    color:#888;
+    margin-bottom:24px;
+}
+
+.res-grid {
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+}
+
+.res-card {
+    padding:16px 20px;
+    background:#fff;
+    border-radius:12px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    box-shadow:var(--shadow);
+    transition:0.2s;
+    border:2px solid transparent;
+    min-width:180px;
+}
+
+.res-card:hover {
+    border-color:var(--yellow);
+    transform:translateY(-2px);
+}
+
+.res-card img {
+    width:44px;
+    height:44px;
+    object-fit:contain;
+    border-radius:8px;
+}
+
+.res-card-info {
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.res-card-info span {
+    font-weight:600;
+    font-size:15px;
+}
+
+.res-card-info small {
+    font-size:11px;
+    color:#888;
+}
+
+.filters-bar {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:28px;
+    padding:16px 20px;
+    background:#fff;
+    border-radius:12px;
+    box-shadow:var(--shadow);
+}
+
+.filter-label {
+    font-weight:700;
+    font-size:13px;
+    color:#555;
+    margin-right:4px;
+}
+
+.filter-btn {
+    padding:7px 16px;
+    border-radius:20px;
+    border:1.5px solid var(--border);
+    background:#fff;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+    font-family:'DM Sans',sans-serif;
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.filter-btn:hover {
+    border-color:var(--yellow);
+}
+
+.filter-btn.active {
+    background:var(--yellow);
+    border-color:var(--yellow);
+    color:var(--black);
+}
+
+.filter-divider {
+    width:1px;
+    height:24px;
+    background:var(--border);
+    margin:0 4px;
+}
+
+.price-range-wrap {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+}
+
+.price-range-wrap input[type=range] {
+    accent-color:var(--yellow);
+    width:100px;
+}
+
+.price-val {
+    font-weight:700;
+    font-size:13px;
+}
+
+.menu-layout {
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:28px;
+    align-items:start;
+}
+
+.menu-sidebar {
+    background:#fff;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:var(--shadow);
+    position:sticky;
+    top:80px;
+}
+
+.menu-sidebar h3 {
+    font-size:15px;
+    font-weight:800;
+    margin-bottom:16px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--yellow);
+}
+
+.sidebar-item {
+    padding:9px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:500;
+    transition:0.15s;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.sidebar-item:hover {
+    background:#fffbea;
+}
+
+.sidebar-item.active {
+    background:var(--yellow);
+    font-weight:700;
+}
+
+.sidebar-item .si-count {
+    margin-left:auto;
+    font-size:11px;
+    background:#f0f0f0;
+    padding:2px 7px;
+    border-radius:10px;
+    font-weight:600;
+}
+
+.sidebar-item.active .si-count {
+    background:rgba(0,0,0,0.1);
+}
+
+.menu-section {
+    margin-bottom:40px;
+}
+
+.menu-section-title {
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:4px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.menu-section-desc {
+    font-size:13px;
+    color:#888;
+    margin-bottom:16px;
+}
+
+.menu-items-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+    gap:16px;
+}
+
+.menu-card {
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    transition:0.2s;
+    position:relative;
+}
+
+.menu-card:hover {
+    transform:translateY(-3px);
+    box-shadow:0 8px 32px rgba(0,0,0,0.12);
+}
+
+.menu-card.hidden {
+    display:none;
+}
+
+.menu-card img {
+    width:100%;
+    height:130px;
+    object-fit:cover;
+    display:block;
+}
+
+.menu-card-body {
+    padding:12px;
+}
+
+.menu-card-top {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:6px;
+    margin-bottom:4px;
+}
+
+.menu-card-top h4 {
+    font-size:14px;
+    font-weight:700;
+    line-height:1.3;
+}
+
+.veg-dot {
+    width:14px;
+    height:14px;
+    border-radius:3px;
+    border:1.5px solid;
+    flex-shrink:0;
+    margin-top:2px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.veg-dot.veg {
+    border-color:var(--veg);
+}
+
+.veg-dot.veg::after {
+    content:'';
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--veg);
+}
+
+.veg-dot.nonveg {
+    border-color:var(--nonveg);
+}
+
+.veg-dot.nonveg::after {
+    content:'';
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--nonveg);
+}
+
+.menu-price {
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.menu-desc {
+    font-size:12px;
+    color:#888;
+    margin-bottom:10px;
+    line-height:1.5;
+}
+
+.best-badge {
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:var(--best);
+    color:#fff;
+    font-size:10px;
+    font-weight:800;
+    padding:3px 8px;
+    border-radius:4px;
+    font-family:'Syne',sans-serif;
+    letter-spacing:0.5px;
+}
+
+.spicy-badge {
+    position:absolute;
+    top:10px;
+    right:10px;
+    font-size:12px;
+}
+
+.qty-control {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:0;
+    border:2px solid var(--yellow);
+    border-radius:8px;
+    overflow:hidden;
+}
+
+.qty-btn {
+    background:var(--yellow);
+    border:none;
+    width:32px;
+    height:32px;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:0.15s;
+    flex-shrink:0;
+}
+
+.qty-btn:hover {
+    background:var(--yellow-dim);
+}
+
+.qty-num {
+    flex:1;
+    text-align:center;
+    font-weight:700;
+    font-size:15px;
+    min-width:32px;
+    background:#fff;
+}
+
+.add-btn {
+    width:100%;
+    background:var(--yellow);
+    border:none;
+    padding:8px 0;
+    border-radius:8px;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    transition:0.2s;
+    font-family:'DM Sans',sans-serif;
+}
+
+.add-btn:hover {
+    background:var(--yellow-dim);
+}
+
+.cart-icon {
+    position:fixed;
+    bottom:28px;
+    right:28px;
+    background:var(--black);
+    color:var(--yellow);
+    padding:14px 20px;
+    border-radius:40px;
+    font-weight:700;
+    cursor:pointer;
+    z-index:600;
+    box-shadow:0 4px 24px rgba(0,0,0,0.35);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:15px;
+    transition:0.2s;
+    font-family:'Syne',sans-serif;
+}
+
+.cart-icon:hover {
+    background:#222;
+    transform:scale(1.05);
+}
+
+.cart-badge {
+    background:var(--yellow);
+    color:var(--black);
+    border-radius:50%;
+    width:22px;
+    height:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:800;
+}
+
+.cart-panel {
+    position:fixed;
+    top:0;
+    right:-420px;
+    width:380px;
+    height:100%;
+    background:#fff;
+    box-shadow:-4px 0 32px rgba(0,0,0,0.15);
+    padding:0;
+    transition:right 0.3s ease;
+    z-index:700;
+    display:flex;
+    flex-direction:column;
+}
+
+.cart-panel.active {
+    right:0;
+}
+
+.cart-header {
+    background:var(--black);
+    color:#fff;
+    padding:20px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.cart-header h3 {
+    font-size:18px;
+    font-weight:800;
+    color:var(--yellow);
+}
+
+.cart-close {
+    cursor:pointer;
+    font-size:22px;
+    color:#fff;
+    background:none;
+    border:none;
+    font-weight:700;
+}
+
+.cart-body {
+    flex:1;
+    overflow-y:auto;
+    padding:20px 24px;
+}
+
+.cart-item {
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    align-items:center;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.cart-item-name {
+    font-weight:600;
+    font-size:14px;
+}
+
+.cart-item-price {
+    font-weight:700;
+    font-size:14px;
+    text-align:right;
+}
+
+.cart-qty-control {
+    display:flex;
+    align-items:center;
+    border:1.5px solid var(--yellow);
+    border-radius:6px;
+    overflow:hidden;
+}
+
+.cart-qty-btn {
+    background:var(--yellow);
+    border:none;
+    width:26px;
+    height:26px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.cart-qty-num {
+    width:28px;
+    text-align:center;
+    font-weight:700;
+    font-size:13px;
+}
+
+.cart-footer {
+    padding:20px 24px;
+    border-top:2px solid var(--border);
+    background:#fafafa;
+}
+
+.cart-row {
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    margin-bottom:6px;
+    color:#555;
+}
+
+.cart-total-row {
+    display:flex;
+    justify-content:space-between;
+    font-size:17px;
+    font-weight:800;
+    margin-top:10px;
+    padding-top:10px;
+    border-top:2px solid var(--border);
+}
+
+.pay-btn {
+    width:100%;
+    margin-top:16px;
+    padding:14px;
+    background:var(--yellow);
+    border:none;
+    border-radius:10px;
+    font-weight:800;
+    font-size:16px;
+    cursor:pointer;
+    font-family:'Syne',sans-serif;
+    transition:0.2s;
+}
+
+.pay-btn:hover {
+    background:var(--yellow-dim);
+}
+
+.empty-cart {
+    text-align:center;
+    color:#aaa;
+    padding:40px 0;
+    font-size:15px;
+}
+
+.pay-modal {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.65);
+    justify-content:center;
+    align-items:center;
+    z-index:3000;
+    backdrop-filter:blur(4px);
+    overflow-y:auto;
+}
+
+.pay-content {
+    background:#fff;
+    width:480px;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.3);
+    animation:popIn 0.25s ease;
+    margin:20px;
+}
+
+.pay-header {
+    background:var(--black);
+    padding:20px 28px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.pay-header h3 {
+    color:var(--yellow);
+    font-size:20px;
+    font-weight:800;
+}
+
+.pay-header .hclose {
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-weight:700;
+}
+
+.pay-body {
+    padding:28px;
+}
+
+.pay-step {
+    display:none;
+}
+
+.pay-step.active {
+    display:block;
+}
+
+.pay-step h4 {
+    font-size:16px;
+    font-weight:800;
+    margin-bottom:16px;
+    color:var(--black);
+}
+
+.form-group {
+    margin-bottom:14px;
+}
+
+.form-group label {
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:#666;
+    margin-bottom:5px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+}
+
+.form-group input,.form-group select,.form-group textarea {
+    width:100%;
+    padding:11px 14px;
+    border:1.5px solid var(--border);
+    border-radius:8px;
+    font-size:14px;
+    font-family:'DM Sans',sans-serif;
+    outline:none;
+    transition:border 0.2s;
+    background:#fff;
+}
+
+.form-group input:focus,.form-group textarea:focus {
+    border-color:var(--yellow);
+}
+
+.form-group textarea {
+    height:80px;
+    resize:vertical;
+}
+
+.form-row {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.input-error {
+    border-color:#e53e3e!important;
+}
+
+.field-error {
+    color:#e53e3e;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.step-btn {
+    width:100%;
+    padding:13px;
+    background:var(--yellow);
+    border:none;
+    border-radius:10px;
+    font-weight:800;
+    font-size:15px;
+    cursor:pointer;
+    font-family:'Syne',sans-serif;
+    transition:0.2s;
+    margin-top:6px;
+}
+
+.step-btn:hover {
+    background:var(--yellow-dim);
+}
+
+.back-link {
+    display:inline-block;
+    margin-top:10px;
+    font-size:13px;
+    color:#666;
+    cursor:pointer;
+    text-decoration:underline;
+}
+
+.card-icons {
+    display:flex;
+    gap:8px;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+}
+
+.card-icon-b {
+    padding:5px 10px;
+    border-radius:6px;
+    border:1.5px solid var(--border);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.5px;
+    color:#555;
+}
+
+.pay-type-row {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.pay-type-btn {
+    padding:14px;
+    border:2px solid var(--border);
+    border-radius:10px;
+    background:#fff;
+    cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    transition:0.2s;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+}
+
+.pay-type-btn .pt-icon {
+    font-size:22px;
+}
+
+.pay-type-btn:hover {
+    border-color:var(--yellow);
+}
+
+.pay-type-btn.selected {
+    border-color:var(--yellow);
+    background:#fffbea;
+}
+
+.order-summary {
+    background:#f9f9f7;
+    border-radius:10px;
+    padding:16px;
+    margin-bottom:18px;
+}
+
+.order-summary-row {
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    margin-bottom:6px;
+}
+
+.success-screen {
+    text-align:center;
+    padding:20px 0;
+}
+
+.success-icon {
+    font-size:64px;
+    margin-bottom:16px;
+}
+
+.success-screen h3 {
+    font-size:24px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.success-screen p {
+    color:#666;
+    font-size:15px;
+    margin-bottom:6px;
+}
+
+.order-id {
+    font-size:13px;
+    color:#aaa;
+    margin-top:4px;
+}
+
+.progress-bar {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:24px;
+    position:relative;
+}
+
+.progress-bar::before {
+    content:'';
+    position:absolute;
+    top:14px;
+    left:0;
+    right:0;
+    height:2px;
+    background:var(--border);
+    z-index:0;
+}
+
+.progress-fill {
+    position:absolute;
+    top:14px;
+    left:0;
+    height:2px;
+    background:var(--yellow);
+    z-index:1;
+    transition:width 0.4s;
+}
+
+.step-dot {
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:700;
+    z-index:2;
+    transition:0.3s;
+}
+
+.step-dot.done {
+    background:var(--yellow);
+    color:var(--black);
+}
+
+.step-dot.active {
+    background:var(--black);
+    color:var(--yellow);
+    box-shadow:0 0 0 3px rgba(255,204,0,0.3);
+}
+
+.step-label {
+    font-size:10px;
+    text-align:center;
+    color:#999;
+    position:absolute;
+    top:34px;
+    white-space:nowrap;
+}
+
+.step-dot-wrap {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    position:relative;
+}
+
+.no-results {
+    text-align:center;
+    padding:48px 20px;
+    color:#aaa;
+}
+
+@media(max-width:900px) {
+    .menu-layout {
+        grid-template-columns:1fr;
+    }
+    .menu-sidebar {
+        position:static;
+    }
+    nav {
+        padding:14px 20px;
+    }
+    .hero {
+        padding:48px 20px;
+        flex-direction:column;
+        gap:24px;
+    }
+    .hero img {
+        width:100%;
+        height:200px;
+        margin-right:0;
+    }
+    .hero-text {
+        max-width:100%;
+    }
+    .section-wrap {
+        padding:32px 20px;
+    }
+    .categories {
+        padding:48px 20px;
+    }
+    .role-selector {
+        grid-template-columns:1fr;
+    }
+}
 </style>
 </head>
 <body>
@@ -237,13 +1604,13 @@ nav{background:var(--black);color:#fff;display:flex;justify-content:space-betwee
   <div class="modal-content">
     <div class="modal-header">
       <h3 id="modalHeading">Welcome to Food Sprint</h3>
-      <button class="modal-header-close" onclick="closeAuthModal()">✕</button>
+      <button class="modal-header-close" onclick="closeAuthModal()">&#10005;</button>
     </div>
     <div class="modal-body">
       <div class="role-selector" id="roleSelector">
-        <button class="role-btn active" id="roleUser" onclick="selectRole('user')"><span class="role-icon">🙋</span><span class="role-label">Customer</span><span class="role-sub">Order food</span></button>
-        <button class="role-btn" id="roleAdmin" onclick="selectRole('admin')"><span class="role-icon">🛡</span><span class="role-label">Super Admin</span><span class="role-sub">Manage platform</span></button>
-        <button class="role-btn" id="roleRestaurant" onclick="selectRole('restaurant')"><span class="role-icon">🏪</span><span class="role-label">Restaurant</span><span class="role-sub">Manage orders</span></button>
+        <button class="role-btn active" id="roleUser" onclick="selectRole('user')"><span class="role-icon">&#128587;</span><span class="role-label">Customer</span><span class="role-sub">Order food</span></button>
+        <button class="role-btn" id="roleAdmin" onclick="selectRole('admin')"><span class="role-icon">&#128737;</span><span class="role-label">Super Admin</span><span class="role-sub">Manage platform</span></button>
+        <button class="role-btn" id="roleRestaurant" onclick="selectRole('restaurant')"><span class="role-icon">&#127978;</span><span class="role-label">Restaurant</span><span class="role-sub">Manage orders</span></button>
       </div>
 
       <!-- USER FORM -->
@@ -253,16 +1620,16 @@ nav{background:var(--black);color:#fff;display:flex;justify-content:space-betwee
           <button class="form-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
         </div>
         <div class="modal-field"><label>Email</label><input type="email" id="userEmail" placeholder="your@email.com"></div>
-        <div class="modal-field"><label>Password</label><input type="password" id="userPass" placeholder="••••••••"></div>
-        <button class="modal-submit" onclick="handleUserAuth()">Continue →</button>
+        <div class="modal-field"><label>Password</label><input type="password" id="userPass" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
+        <button class="modal-submit" onclick="handleUserAuth()">Continue &#8594;</button>
         <div class="modal-msg" id="userMsg"></div>
       </div>
 
       <!-- ADMIN FORM -->
       <div id="adminForm" style="display:none;">
         <div class="modal-field"><label>Admin Email</label><input type="email" id="adminEmail" placeholder="gomathisrisankar696@gmail.com"></div>
-        <div class="modal-field"><label>Password</label><input type="password" id="adminPass" placeholder="••••••••"></div>
-        <button class="modal-submit" onclick="handleAdminAuth()">Access Admin Panel →</button>
+        <div class="modal-field"><label>Password</label><input type="password" id="adminPass" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
+        <button class="modal-submit" onclick="handleAdminAuth()">Access Admin Panel &#8594;</button>
         <div class="modal-msg" id="adminMsg"></div>
       </div>
 
@@ -270,18 +1637,16 @@ nav{background:var(--black);color:#fff;display:flex;justify-content:space-betwee
       <div id="restaurantForm" style="display:none;">
         <div class="modal-field">
           <label>Select Restaurant</label>
-          <select id="resSelect" onchange="onResSelectChange()"><option value="">Choose your restaurant…</option></select>
+          <select id="resSelect" onchange="onResSelectChange()"><option value="">Choose your restaurant&#8230;</option></select>
         </div>
 
-        <!-- State: nothing selected yet -->
         <div id="resNoSelection" style="text-align:center;padding:18px 0 10px;color:#aaa;font-size:13px;">
-          ☝️ Select your restaurant above to continue
+          &#9757;&#65039; Select your restaurant above to continue
         </div>
 
-        <!-- State: first-time — set password -->
         <div id="resFirstTimePanel" style="display:none;">
           <div style="background:#fffbea;border:1.5px solid #ffcc00;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:#7a4700;line-height:1.6;">
-            🔑 <strong>First time logging in?</strong> Create a password for your restaurant dashboard.
+            &#128273; <strong>First time logging in?</strong> Create a password for your restaurant dashboard.
           </div>
           <div class="modal-field"><label>Login Email</label><input type="email" id="resEmail" placeholder="restaurant@foodsprint.in" readonly></div>
           <div class="modal-field">
@@ -292,43 +1657,41 @@ nav{background:var(--black);color:#fff;display:flex;justify-content:space-betwee
             <label>Confirm Password</label>
             <input type="password" id="resConfirmPass" placeholder="Repeat your password">
           </div>
-          <button class="modal-submit" id="resSubmitBtn" onclick="handleRestaurantAuth()">Set Password &amp; Login →</button>
+          <button class="modal-submit" id="resSubmitBtn" onclick="handleRestaurantAuth()">Set Password &amp; Login &#8594;</button>
         </div>
 
-        <!-- State: returning — just login -->
         <div id="resReturningPanel" style="display:none;">
           <div class="modal-field"><label>Login Email</label><input type="email" id="resEmailR" placeholder="restaurant@foodsprint.in" readonly></div>
           <div class="modal-field">
             <label>Password</label>
-            <input type="password" id="resPassR" placeholder="••••••••">
+            <input type="password" id="resPassR" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;">
           </div>
-          <button class="modal-submit" id="resSubmitBtnR" onclick="handleRestaurantAuthR()">Login →</button>
+          <button class="modal-submit" id="resSubmitBtnR" onclick="handleRestaurantAuthR()">Login &#8594;</button>
         </div>
 
         <div class="modal-msg" id="resMsg"></div>
 
-        <!-- NEW RESTAURANT CTA -->
         <div class="res-register-cta">
           <div>
             <strong>New restaurant?</strong>
             <span>Register with your menu, address &amp; details</span>
           </div>
-          <a href="register.html" class="res-register-link">Register →</a>
+          <a href="register.html" class="res-register-link">Register &#8594;</a>
         </div>
       </div>
 
       <!-- REDIRECT PANEL -->
       <div class="redirect-panel" id="redirectPanel">
-        <div class="rp-icon" id="rpIcon">🛡</div>
+        <div class="rp-icon" id="rpIcon">&#128737;</div>
         <h4 id="rpTitle">Access Granted</h4>
         <p id="rpDesc">You are being redirected to your dashboard.</p>
-        <a href="admin.html" class="redirect-btn" id="rpBtn">Open Dashboard →</a>
+        <a href="admin.html" class="redirect-btn" id="rpBtn">Open Dashboard &#8594;</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- HERO -->
+<!-- HERO SECTION -->
 <section class="hero">
   <div class="hero-text">
     <h1 id="heroTitle">Order Healthy And Fresh Food Anytime</h1>
@@ -336,7 +1699,7 @@ nav{background:var(--black);color:#fff;display:flex;justify-content:space-betwee
     <div class="hero-dots" id="heroDots"></div>
     <div class="search-wrap">
       <div class="search-box" id="searchBox">
-        <input type="text" id="searchInput" placeholder="Search food, dishes, restaurants…" autocomplete="off" oninput="handleSearchInput()" onfocus="handleSearchFocus()" onblur="handleSearchBlur()">
+        <input type="text" id="searchInput" placeholder="Search food, dishes, restaurants&#8230;" autocomplete="off" oninput="handleSearchInput()" onfocus="handleSearchFocus()" onblur="handleSearchBlur()">
         <button onclick="doSearch()">Search</button>
       </div>
       <div class="search-suggestions" id="searchSuggestions"></div>
@@ -345,7 +1708,7 @@ nav{background:var(--black);color:#fff;display:flex;justify-content:space-betwee
   <img id="heroImage" src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092" alt="Food">
 </section>
 
-<!-- CATEGORIES -->
+<!-- CATEGORY SECTION -->
 <section class="categories">
   <h2>Explore Categories</h2>
   <div class="category-container">
@@ -364,56 +1727,88 @@ nav{background:var(--black);color:#fff;display:flex;justify-content:space-betwee
   </div>
 </section>
 
+<!-- RESTAURANT LIST SECTION (shown after category/search selection) -->
 <section class="section-wrap" id="restaurantsSection" style="display:none;">
   <h2 id="restaurantTitle">Restaurants</h2>
   <p class="section-subtitle" id="restaurantSubtitle"></p>
   <div class="res-grid" id="restaurantList"></div>
 </section>
 
+<!-- MENU SECTION (shown after restaurant is selected) -->
 <section class="section-wrap" id="menuSection" style="display:none;">
   <h2 id="menuTitle">Menu</h2>
   <p class="section-subtitle" id="menuSubtitle"></p>
+
+  <!-- FILTER BAR -->
   <div class="filters-bar">
     <span class="filter-label">Filter:</span>
-    <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">🍽 All</button>
-    <button class="filter-btn" data-filter="veg" onclick="setFilter('veg',this)">🟢 Veg</button>
-    <button class="filter-btn" data-filter="nonveg" onclick="setFilter('nonveg',this)">🔴 Non-Veg</button>
-    <button class="filter-btn" data-filter="best" onclick="setFilter('best',this)">⭐ Bestsellers</button>
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">&#127869; All</button>
+    <button class="filter-btn" data-filter="veg" onclick="setFilter('veg',this)">&#129001; Veg</button>
+    <button class="filter-btn" data-filter="nonveg" onclick="setFilter('nonveg',this)">&#128308; Non-Veg</button>
+    <button class="filter-btn" data-filter="best" onclick="setFilter('best',this)">&#11088; Bestsellers</button>
     <div class="filter-divider"></div>
-    <div class="price-range-wrap"><span>₹ Max:</span><input type="range" id="priceRange" min="50" max="600" value="600" step="10" oninput="applyFilters()"><span class="price-val" id="priceVal">₹600</span></div>
+    <div class="price-range-wrap">
+      <span>&#8377; Max:</span>
+      <input type="range" id="priceRange" min="50" max="600" value="600" step="10" oninput="applyFilters()">
+      <span class="price-val" id="priceVal">&#8377;600</span>
+    </div>
   </div>
+
+  <!-- MENU LAYOUT: sidebar + content -->
   <div class="menu-layout">
-    <div class="menu-sidebar" id="menuSidebar"><h3>Menu Sections</h3><div id="sidebarLinks"></div></div>
+    <div class="menu-sidebar" id="menuSidebar">
+      <h3>Menu Sections</h3>
+      <div id="sidebarLinks"></div>
+    </div>
     <div class="menu-content" id="menuContent"></div>
   </div>
 </section>
 
-<div class="cart-icon" onclick="openCart()">🛒 <div class="cart-badge" id="cartCount">0</div></div>
+<!-- FLOATING CART ICON -->
+<div class="cart-icon" onclick="openCart()">
+  &#128722;
+  <div class="cart-badge" id="cartCount">0</div>
+</div>
+
+<!-- CART SLIDE-IN PANEL -->
 <div class="cart-panel" id="cartPanel">
-  <div class="cart-header"><h3>🛒 Your Cart</h3><button class="cart-close" onclick="closeCart()">✕</button></div>
-  <div class="cart-body" id="cartBody"><div class="empty-cart">Your cart is empty</div></div>
+  <div class="cart-header">
+    <h3>&#128722; Your Cart</h3>
+    <button class="cart-close" onclick="closeCart()">&#10005;</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="empty-cart">Your cart is empty</div>
+  </div>
   <div class="cart-footer" id="cartFooter" style="display:none;">
-    <div class="cart-row"><span>Subtotal</span><span>₹<span id="subtotal">0</span></span></div>
-    <div class="cart-row"><span>GST (5%)</span><span>₹<span id="gst">0</span></span></div>
-    <div class="cart-row"><span>CGST (2.5%)</span><span>₹<span id="cgst">0</span></span></div>
-    <div class="cart-row"><span>Delivery</span><span>₹<span id="delivery">40</span></span></div>
-    <div class="cart-total-row"><span>Total</span><span>₹<span id="total">0</span></span></div>
-    <button class="pay-btn" onclick="openPayment()">Proceed to Pay →</button>
+    <div class="cart-row"><span>Subtotal</span><span>&#8377;<span id="subtotal">0</span></span></div>
+    <div class="cart-row"><span>GST (5%)</span><span>&#8377;<span id="gst">0</span></span></div>
+    <div class="cart-row"><span>CGST (2.5%)</span><span>&#8377;<span id="cgst">0</span></span></div>
+    <div class="cart-row"><span>Delivery</span><span>&#8377;<span id="delivery">40</span></span></div>
+    <div class="cart-total-row"><span>Total</span><span>&#8377;<span id="total">0</span></span></div>
+    <button class="pay-btn" onclick="openPayment()">Proceed to Pay &#8594;</button>
   </div>
 </div>
 
+<!-- PAYMENT MODAL -->
 <div class="pay-modal" id="payModal">
   <div class="pay-content">
-    <div class="pay-header"><h3>Checkout</h3><button class="hclose" onclick="closePayment()">✕</button></div>
+    <div class="pay-header">
+      <h3>Checkout</h3>
+      <button class="hclose" onclick="closePayment()">&#10005;</button>
+    </div>
     <div class="pay-body">
+
+      <!-- PROGRESS BAR -->
       <div class="progress-bar" style="margin-bottom:40px;">
         <div class="progress-fill" id="progressFill" style="width:0%"></div>
         <div class="step-dot-wrap"><div class="step-dot active" id="dot1">1</div><span class="step-label">Address</span></div>
         <div class="step-dot-wrap"><div class="step-dot" id="dot2">2</div><span class="step-label">Payment</span></div>
         <div class="step-dot-wrap"><div class="step-dot" id="dot3">3</div><span class="step-label">Review</span></div>
       </div>
+
+      <!-- STEP 1: Delivery Address -->
       <div class="pay-step active" id="step1">
-        <h4>📍 Delivery Address</h4>
+        <h4>&#128205; Delivery Address</h4>
         <div class="form-group"><label>Full Name</label><input type="text" id="addr-name" placeholder="Your full name"><div class="field-error" id="err-name"></div></div>
         <div class="form-group"><label>Phone Number</label><input type="tel" id="addr-phone" placeholder="10-digit mobile number"><div class="field-error" id="err-phone"></div></div>
         <div class="form-group"><label>Address Line</label><textarea id="addr-line" placeholder="Flat/House no., Building, Street"></textarea><div class="field-error" id="err-addr"></div></div>
@@ -421,97 +1816,402 @@ nav{background:var(--black);color:#fff;display:flex;justify-content:space-betwee
           <div class="form-group"><label>City</label><input type="text" id="addr-city" placeholder="City"><div class="field-error" id="err-city"></div></div>
           <div class="form-group"><label>PIN Code</label><input type="text" id="addr-pin" placeholder="6-digit PIN"><div class="field-error" id="err-pin"></div></div>
         </div>
-        <button class="step-btn" onclick="goToStep2()">Continue to Payment →</button>
+        <button class="step-btn" onclick="goToStep2()">Continue to Payment &#8594;</button>
       </div>
+
+      <!-- STEP 2: Payment Method -->
       <div class="pay-step" id="step2">
-        <h4>💳 Payment Method</h4>
+        <h4>&#128179; Payment Method</h4>
         <div class="pay-type-row">
-          <button class="pay-type-btn selected" id="ptOnline" onclick="selectPayType('paid')"><span class="pt-icon">💳</span><span>Pay Online</span><span style="font-size:11px;color:#888;font-weight:400;">Card / UPI</span></button>
-          <button class="pay-type-btn" id="ptCOD" onclick="selectPayType('cod')"><span class="pt-icon">💵</span><span>Cash on Delivery</span><span style="font-size:11px;color:#888;font-weight:400;">Pay when delivered</span></button>
+          <button class="pay-type-btn selected" id="ptOnline" onclick="selectPayType('paid')"><span class="pt-icon">&#128179;</span><span>Pay Online</span><span style="font-size:11px;color:#888;font-weight:400;">Card / UPI</span></button>
+          <button class="pay-type-btn" id="ptCOD" onclick="selectPayType('cod')"><span class="pt-icon">&#128181;</span><span>Cash on Delivery</span><span style="font-size:11px;color:#888;font-weight:400;">Pay when delivered</span></button>
         </div>
         <div id="cardFields">
-          <div class="card-icons"><span class="card-icon-b">VISA</span><span class="card-icon-b">MC</span><span class="card-icon-b">AMEX</span><span class="card-icon-b">RuPay</span></div>
+          <div class="card-icons">
+            <span class="card-icon-b">VISA</span>
+            <span class="card-icon-b">MC</span>
+            <span class="card-icon-b">AMEX</span>
+            <span class="card-icon-b">RuPay</span>
+          </div>
           <div class="form-group"><label>Cardholder Name</label><input type="text" id="card-name" placeholder="Name on card"><div class="field-error" id="err-card-name"></div></div>
           <div class="form-group"><label>Card Number</label><input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)"><div class="field-error" id="err-card-number"></div></div>
           <div class="form-row">
             <div class="form-group"><label>Expiry (MM/YY)</label><input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)"><div class="field-error" id="err-card-expiry"></div></div>
-            <div class="form-group"><label>CVV</label><input type="password" id="card-cvv" placeholder="•••" maxlength="4"><div class="field-error" id="err-card-cvv"></div></div>
+            <div class="form-group"><label>CVV</label><input type="password" id="card-cvv" placeholder="&#8226;&#8226;&#8226;" maxlength="4"><div class="field-error" id="err-card-cvv"></div></div>
           </div>
         </div>
-        <div id="codNote" style="display:none;background:#fffbea;border:1.5px solid var(--yellow);border-radius:10px;padding:16px;font-size:14px;line-height:1.6;margin-bottom:14px;">🛵 <strong>Cash on Delivery</strong><br>Pay in cash when your order arrives.</div>
-        <button class="step-btn" onclick="goToStep3()">Review Order →</button>
-        <div class="back-link" onclick="goStep(1)">← Back to Address</div>
+        <div id="codNote" style="display:none;background:#fffbea;border:1.5px solid var(--yellow);border-radius:10px;padding:16px;font-size:14px;line-height:1.6;margin-bottom:14px;">&#128661; <strong>Cash on Delivery</strong><br>Pay in cash when your order arrives.</div>
+        <button class="step-btn" onclick="goToStep3()">Review Order &#8594;</button>
+        <div class="back-link" onclick="goStep(1)">&#8592; Back to Address</div>
       </div>
+
+      <!-- STEP 3: Order Review -->
       <div class="pay-step" id="step3">
-        <h4>🧾 Order Summary</h4>
+        <h4>&#129534; Order Summary</h4>
         <div class="order-summary" id="orderSummary"></div>
-        <div style="background:#f0f9f0;border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;"><strong>📍 Delivering to:</strong><br><span id="review-addr" style="color:#555;white-space:pre-line;"></span></div>
+        <div style="background:#f0f9f0;border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;"><strong>&#128205; Delivering to:</strong><br><span id="review-addr" style="color:#555;white-space:pre-line;"></span></div>
         <div id="review-payment-badge" style="margin-bottom:16px;"></div>
-        <button class="step-btn" onclick="placeOrder()">🎉 Place Order &amp; Pay</button>
-        <div class="back-link" onclick="goStep(2)">← Back to Payment</div>
+        <button class="step-btn" onclick="placeOrder()">&#127881; Place Order &amp; Pay</button>
+        <div class="back-link" onclick="goStep(2)">&#8592; Back to Payment</div>
       </div>
+
+      <!-- STEP 4: Success Screen -->
       <div class="pay-step" id="step4">
-        <div class="success-screen"><div class="success-icon">✅</div><h3>Order Placed!</h3><p>Your food is being prepared.</p><p style="color:#888;font-size:13px;">Estimated delivery: <strong>30–45 mins</strong></p><div class="order-id" id="orderId"></div><button class="step-btn" style="margin-top:24px;" onclick="closePayment();closeCart();">Back to Menu</button></div>
+        <div class="success-screen">
+          <div class="success-icon">&#9989;</div>
+          <h3>Order Placed!</h3>
+          <p>Your food is being prepared.</p>
+          <p style="color:#888;font-size:13px;">Estimated delivery: <strong>30&#8211;45 mins</strong></p>
+          <div class="order-id" id="orderId"></div>
+          <button class="step-btn" style="margin-top:24px;" onclick="closePayment();closeCart();">Back to Menu</button>
+        </div>
       </div>
+
     </div>
   </div>
 </div>
 
 <script>
-/* ── CONSTANTS ── */
+/* ══════════════════════════════════════════════════════════
+   CONSTANTS
+   ══════════════════════════════════════════════════════════ */
+
+// Super-admin credentials (hardcoded for demo)
 const SUPER_EMAIL = "gomathisrisankar696@gmail.com";
 const SUPER_PASS  = "sri060524";
 
+// Default list of well-known restaurant names
 const HARDCODED_RESTAURANTS = [
-  "McDonald's","Burger King","KFC","Domino's","Pizza Hut",
-  "Wow China","Wow Momo","Behrouz Biryani","Haldiram's"
+  "McDonald's", "Burger King", "KFC", "Domino's", "Pizza Hut",
+  "Wow China", "Wow Momo", "Behrouz Biryani", "Haldiram's"
 ];
 
-/* ── STORAGE HELPERS ── */
-function getResAdmins()    { return JSON.parse(localStorage.getItem("fs_res_admins") || "{}"); }
-function saveResAdmins(d)  { localStorage.setItem("fs_res_admins", JSON.stringify(d)); }
-function getStoredMenus()  { return JSON.parse(localStorage.getItem("fs_restaurant_menus") || "{}"); }
-function getResMeta()      { return JSON.parse(localStorage.getItem("fs_restaurants_meta") || "{}"); }
-/* ✅ FIX 2: Helper to load custom menu items added via restaurant dashboard */
+/* ══════════════════════════════════════════════════════════
+   LOCAL-STORAGE HELPERS
+   ══════════════════════════════════════════════════════════ */
+
+// Get the map of restaurant admin credentials from localStorage
+function getResAdmins()   { return JSON.parse(localStorage.getItem("fs_res_admins") || "{}"); }
+
+// Persist the restaurant admin credentials map to localStorage
+function saveResAdmins(d) { localStorage.setItem("fs_res_admins", JSON.stringify(d)); }
+
+// Get full menus registered via the restaurant registration flow
+function getStoredMenus() { return JSON.parse(localStorage.getItem("fs_restaurant_menus") || "{}"); }
+
+// Get restaurant metadata (logo, subtitle, category, etc.)
+function getResMeta()     { return JSON.parse(localStorage.getItem("fs_restaurants_meta") || "{}"); }
+
+// Get custom menu items added through the restaurant dashboard
 function getCustomMenuItems() { return JSON.parse(localStorage.getItem("fs_custom_menus") || "{}"); }
 
-/* ── DATA ── */
+/* ══════════════════════════════════════════════════════════
+   RESTAURANT LOGOS MAP
+   ══════════════════════════════════════════════════════════ */
+
+// Map of restaurant name → logo image URL
 const restaurantLogos = {
-  "McDonald's":"https://upload.wikimedia.org/wikipedia/commons/4/4e/McDonald%27s_logo.svg",
-  "Burger King":"https://upload.wikimedia.org/wikipedia/commons/0/0b/Burger_King_2020.svg",
-  "KFC":"https://upload.wikimedia.org/wikipedia/sco/thumb/b/bf/KFC_logo.svg/512px-KFC_logo.svg.png",
-  "Domino's":"https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg",
-  "Pizza Hut":"https://upload.wikimedia.org/wikipedia/commons/d/d2/Pizza_Hut_logo.svg"
+  "McDonald's":  "https://upload.wikimedia.org/wikipedia/commons/4/4e/McDonald%27s_logo.svg",
+  "Burger King": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Burger_King_2020.svg",
+  "KFC":         "https://upload.wikimedia.org/wikipedia/sco/thumb/b/bf/KFC_logo.svg/512px-KFC_logo.svg.png",
+  "Domino's":    "https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg",
+  "Pizza Hut":   "https://upload.wikimedia.org/wikipedia/commons/d/d2/Pizza_Hut_logo.svg"
 };
 
-/* Hardcoded menus */
-const restaurantMenus = {"McDonald's":{subtitle:"American fast food chain • Burgers, Fries & More",sections:[{id:"burgers",title:"🍔 Burgers",desc:"Our iconic signature burgers",items:[{name:"McAloo Tikki",price:120,img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300",veg:true,best:true,spicy:false,desc:"Crispy aloo tikki with tangy sauce",category:["burger"]},{name:"McVeggie",price:140,img:"https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300",veg:true,best:false,spicy:false,desc:"Veg patty with fresh lettuce and mayo",category:["burger"]},{name:"McChicken Burger",price:160,img:"https://images.unsplash.com/photo-1550547660-d9450f859349?w=300",veg:false,best:true,spicy:false,desc:"Crispy chicken fillet with lettuce",category:["burger","chicken"]},{name:"Spicy McChicken",price:180,img:"https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=300",veg:false,best:false,spicy:true,desc:"Fiery spiced chicken with jalapeños",category:["burger","chicken"]}]},{id:"sides",title:"🍟 Sides & Snacks",desc:"Perfect companions",items:[{name:"Crispy Fries",price:90,img:"https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=300",veg:true,best:true,spicy:false,desc:"Golden crispy french fries",category:["fries","sides"]},{name:"Piri Piri Fries",price:110,img:"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=300",veg:true,best:false,spicy:true,desc:"Fries with spicy piri piri",category:["fries","sides"]},{name:"Chicken McNuggets (6pc)",price:150,img:"https://images.unsplash.com/photo-1562967914-608f82629710?w=300",veg:false,best:true,spicy:false,desc:"6 crispy golden nuggets",category:["chicken","sides"]}]},{id:"drinks",title:"🥤 Beverages",desc:"Cold drinks & McFlurry",items:[{name:"McFlurry Oreo",price:100,img:"https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300",veg:true,best:true,spicy:false,desc:"Vanilla soft serve with Oreo",category:["dessert","drinks"]},{name:"Mango Smoothie",price:90,img:"https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=300",veg:true,best:false,spicy:false,desc:"Fresh mango blended smoothie",category:["drinks"]}]}]},"Burger King":{subtitle:"Home of the Whopper • Flame-grilled burgers",sections:[{id:"whoppers",title:"🔥 Whopper Range",desc:"Flame-grilled to perfection",items:[{name:"Whopper",price:220,img:"https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=300",veg:false,best:true,spicy:false,desc:"Quarter-pound flame-grilled beef",category:["burger","beef"]},{name:"Veg Whopper",price:200,img:"https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=300",veg:true,best:true,spicy:false,desc:"Plant-based patty Whopper",category:["burger"]},{name:"Spicy Crispy Chicken",price:210,img:"https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=300",veg:false,best:false,spicy:true,desc:"Spicy crispy chicken fillet",category:["burger","chicken"]}]},{id:"king-sides",title:"👑 King Sides",desc:"",items:[{name:"King Fries",price:100,img:"https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=300",veg:true,best:false,spicy:false,desc:"Generous crispy fries",category:["fries","sides"]},{name:"Onion Rings",price:120,img:"https://images.unsplash.com/photo-1624395213076-8dad2bd67e64?w=300",veg:true,best:true,spicy:false,desc:"Golden battered onion rings",category:["sides"]}]}]},"KFC":{subtitle:"It's finger lickin' good • Fried Chicken Specialists",sections:[{id:"chicken",title:"🍗 Fried Chicken",desc:"11 secret herbs & spices",items:[{name:"Crispy Chicken (2pc)",price:170,img:"https://images.unsplash.com/photo-1562967914-608f82629710?w=300",veg:false,best:true,spicy:false,desc:"2 pieces original recipe chicken",category:["chicken"]},{name:"Hot & Crispy (2pc)",price:190,img:"https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=300",veg:false,best:false,spicy:true,desc:"Extra spicy crispy chicken",category:["chicken"]},{name:"Popcorn Chicken",price:130,img:"https://images.unsplash.com/photo-1562967914-608f82629710?w=300",veg:false,best:true,spicy:false,desc:"Bite-sized crispy pieces",category:["chicken","snacks"]}]},{id:"burgers-kfc",title:"🍔 Burgers",desc:"",items:[{name:"Zinger Burger",price:210,img:"https://images.unsplash.com/photo-1550547660-d9450f859349?w=300",veg:false,best:true,spicy:true,desc:"Spicy chicken fillet with coleslaw",category:["burger","chicken"]},{name:"Tower Burger",price:250,img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300",veg:false,best:false,spicy:false,desc:"Loaded tower burger",category:["burger","chicken"]}]}]},"Domino's":{subtitle:"Pizza delivery experts • Fresh dough daily",sections:[{id:"veg-pizza",title:"🌿 Veg Pizzas",desc:"Fresh veggies on classic crust",items:[{name:"Margherita",price:250,img:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300",veg:true,best:true,spicy:false,desc:"Classic tomato base with mozzarella",category:["pizza"]},{name:"Farmhouse",price:350,img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300",veg:true,best:true,spicy:false,desc:"Capsicum, onion, tomato & mushroom",category:["pizza"]},{name:"Peppy Paneer",price:320,img:"https://images.unsplash.com/photo-1628840042765-356cda07504e?w=300",veg:true,best:false,spicy:true,desc:"Spicy paneer with chillies",category:["pizza","paneer"]}]},{id:"nonveg-pizza",title:"🍗 Non-Veg Pizzas",desc:"",items:[{name:"Chicken Dominator",price:420,img:"https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=300",veg:false,best:true,spicy:false,desc:"5 types of chicken toppings",category:["pizza","chicken"]},{name:"Keema Do Pyaaza",price:380,img:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300",veg:false,best:false,spicy:true,desc:"Minced chicken keema with onions",category:["pizza","chicken"]}]},{id:"sides-dominos",title:"🥖 Sides",desc:"",items:[{name:"Garlic Bread",price:110,img:"https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=300",veg:true,best:true,spicy:false,desc:"Crispy herb garlic bread sticks",category:["bread","sides"]},{name:"Choco Lava Cake",price:99,img:"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=300",veg:true,best:true,spicy:false,desc:"Warm molten chocolate cake",category:["dessert","cake"]}]}]},"Pizza Hut":{subtitle:"Pan pizza pioneers • Dine-in & delivery",sections:[{id:"pan-pizza",title:"🍕 Pan Pizzas",desc:"Thick buttery pan crust",items:[{name:"Veggie Supreme",price:280,img:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300",veg:true,best:true,spicy:false,desc:"Loaded pan pizza with 6 veggies",category:["pizza"]},{name:"BBQ Chicken Pan",price:400,img:"https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=300",veg:false,best:true,spicy:false,desc:"Smoky BBQ chicken on pan crust",category:["pizza","chicken"]}]}]},"Wow Momo":{subtitle:"India's favourite momo chain • Steam, fry & more",sections:[{id:"steamed",title:"♨️ Steamed Momos",desc:"",items:[{name:"Veg Steamed (8pc)",price:120,img:"https://images.unsplash.com/photo-1534422298391-e4f8c172789a?w=300",veg:true,best:true,spicy:false,desc:"Classic veg steamed momos",category:["momo"]},{name:"Chicken Steamed (8pc)",price:140,img:"https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=300",veg:false,best:true,spicy:false,desc:"Juicy chicken momos",category:["momo","chicken"]}]},{id:"fried",title:"🔥 Fried Momos",desc:"",items:[{name:"Veg Fried (8pc)",price:140,img:"https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=300",veg:true,best:false,spicy:false,desc:"Crispy fried veg momos",category:["momo"]},{name:"Chicken Fried (8pc)",price:160,img:"https://images.unsplash.com/photo-1534422298391-e4f8c172789a?w=300",veg:false,best:true,spicy:false,desc:"Crunchy fried chicken momos",category:["momo","chicken"]}]}]},"Wow China":{subtitle:"Indo-Chinese favourites • Fried rice, noodles & more",sections:[{id:"fried-rice",title:"🍚 Fried Rice",desc:"",items:[{name:"Veg Fried Rice",price:150,img:"https://images.unsplash.com/photo-1512058556646-c4da40fba323?w=300",veg:true,best:true,spicy:false,desc:"Wok-tossed rice with veggies",category:["fried rice"]},{name:"Chicken Fried Rice",price:190,img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=300",veg:false,best:false,spicy:false,desc:"Juicy chicken wok fried rice",category:["fried rice","chicken"]}]},{id:"noodles",title:"🍜 Noodles",desc:"",items:[{name:"Veg Hakka Noodles",price:150,img:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=300",veg:true,best:true,spicy:false,desc:"Stir-fried thin noodles",category:["noodles"]},{name:"Schezwan Noodles",price:170,img:"https://images.unsplash.com/photo-1555126634-323283e090fa?w=300",veg:true,best:false,spicy:true,desc:"Fiery schezwan noodles",category:["noodles"]}]}]},"Behrouz Biryani":{subtitle:"Royal Mughal-inspired biryanis • Slow cooked dum style",sections:[{id:"nonveg-biryani",title:"🍗 Non-Veg Biryanis",desc:"",items:[{name:"Royal Chicken Biryani",price:380,img:"https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300",veg:false,best:true,spicy:false,desc:"Tender chicken with fragrant basmati",category:["biryani","chicken"]},{name:"Mutton Dum Biryani",price:450,img:"https://images.unsplash.com/photo-1596797038530-2c107229654b?w=300",veg:false,best:true,spicy:false,desc:"Slow cooked mutton saffron rice",category:["biryani"]}]},{id:"veg-biryani",title:"🌿 Veg Biryanis",desc:"",items:[{name:"Veg Dum Biryani",price:300,img:"https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=300",veg:true,best:true,spicy:false,desc:"Seasonal veggies in aromatic rice",category:["biryani"]}]}]},"Haldiram's":{subtitle:"Iconic Indian sweets & snacks since 1937",sections:[{id:"chaat",title:"🥘 Chaats",desc:"",items:[{name:"Pani Puri (8pc)",price:80,img:"https://images.unsplash.com/photo-1606491048802-8342506d6471?w=300",veg:true,best:true,spicy:true,desc:"Crispy puris with spiced water",category:["chaat"]},{name:"Dahi Bhalla",price:100,img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=300",veg:true,best:true,spicy:false,desc:"Soft vada in chilled yoghurt",category:["chaat"]}]},{id:"sweets",title:"🍬 Sweets",desc:"",items:[{name:"Gulab Jamun (4pc)",price:90,img:"https://images.unsplash.com/photo-1574226516831-e1dff420e562?w=300",veg:true,best:true,spicy:false,desc:"Milk solids balls in sugar syrup",category:["sweets","dessert"]},{name:"Kaju Katli (200g)",price:280,img:"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=300",veg:true,best:true,spicy:false,desc:"Classic cashew fudge barfi",category:["sweets"]}]}]}};
+/* ══════════════════════════════════════════════════════════
+   HARDCODED RESTAURANT MENUS
+   (each entry has a subtitle and an array of menu sections)
+   ══════════════════════════════════════════════════════════ */
 
-const categoryRestaurants = {"Fried Rice":["Wow China","McDonald's"],"Noodles":["Wow China"],"Momos":["Wow Momo"],"Rolls":["McDonald's","KFC"],"Pizza":["Domino's","Pizza Hut"],"Burger":["McDonald's","Burger King","KFC"],"Biryani":["Behrouz Biryani"],"Pasta":["Pizza Hut","Domino's"],"Thali":["Behrouz Biryani"],"Sandwich":["McDonald's","Burger King"],"Chaat":["Haldiram's"],"Cake":["Haldiram's","Domino's"]};
+const restaurantMenus = {
 
-/* ── MERGE REGISTERED RESTAURANTS INTO LIVE MENUS ── */
+  /* ── McDonald's ── */
+  "McDonald's": {
+    subtitle: "American fast food chain • Burgers, Fries & More",
+    sections: [
+      {
+        id: "burgers",
+        title: "🍔 Burgers",
+        desc: "Our iconic signature burgers",
+        items: [
+          { name: "McAloo Tikki",      price: 120, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300", veg: true,  best: true,  spicy: false, desc: "Crispy aloo tikki with tangy sauce",         category: ["burger"] },
+          { name: "McVeggie",          price: 140, img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300", veg: true,  best: false, spicy: false, desc: "Veg patty with fresh lettuce and mayo",      category: ["burger"] },
+          { name: "McChicken Burger",  price: 160, img: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=300", veg: false, best: true,  spicy: false, desc: "Crispy chicken fillet with lettuce",         category: ["burger", "chicken"] },
+          { name: "Spicy McChicken",   price: 180, img: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=300", veg: false, best: false, spicy: true,  desc: "Fiery spiced chicken with jalapeños",       category: ["burger", "chicken"] }
+        ]
+      },
+      {
+        id: "sides",
+        title: "🍟 Sides & Snacks",
+        desc: "Perfect companions",
+        items: [
+          { name: "Crispy Fries",            price: 90,  img: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=300", veg: true,  best: true,  spicy: false, desc: "Golden crispy french fries",         category: ["fries", "sides"] },
+          { name: "Piri Piri Fries",         price: 110, img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=300", veg: true,  best: false, spicy: true,  desc: "Fries with spicy piri piri",        category: ["fries", "sides"] },
+          { name: "Chicken McNuggets (6pc)", price: 150, img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=300", veg: false, best: true,  spicy: false, desc: "6 crispy golden nuggets",             category: ["chicken", "sides"] }
+        ]
+      },
+      {
+        id: "drinks",
+        title: "🥤 Beverages",
+        desc: "Cold drinks & McFlurry",
+        items: [
+          { name: "McFlurry Oreo", price: 100, img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300", veg: true, best: true,  spicy: false, desc: "Vanilla soft serve with Oreo",      category: ["dessert", "drinks"] },
+          { name: "Mango Smoothie", price: 90,  img: "https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=300", veg: true, best: false, spicy: false, desc: "Fresh mango blended smoothie",     category: ["drinks"] }
+        ]
+      }
+    ]
+  },
+
+  /* ── Burger King ── */
+  "Burger King": {
+    subtitle: "Home of the Whopper • Flame-grilled burgers",
+    sections: [
+      {
+        id: "whoppers",
+        title: "🔥 Whopper Range",
+        desc: "Flame-grilled to perfection",
+        items: [
+          { name: "Whopper",              price: 220, img: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=300", veg: false, best: true,  spicy: false, desc: "Quarter-pound flame-grilled beef",   category: ["burger", "beef"] },
+          { name: "Veg Whopper",          price: 200, img: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=300", veg: true,  best: true,  spicy: false, desc: "Plant-based patty Whopper",        category: ["burger"] },
+          { name: "Spicy Crispy Chicken", price: 210, img: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=300", veg: false, best: false, spicy: true,  desc: "Spicy crispy chicken fillet",     category: ["burger", "chicken"] }
+        ]
+      },
+      {
+        id: "king-sides",
+        title: "👑 King Sides",
+        desc: "",
+        items: [
+          { name: "King Fries",   price: 100, img: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=300", veg: true, best: false, spicy: false, desc: "Generous crispy fries",          category: ["fries", "sides"] },
+          { name: "Onion Rings",  price: 120, img: "https://images.unsplash.com/photo-1624395213076-8dad2bd67e64?w=300", veg: true, best: true,  spicy: false, desc: "Golden battered onion rings",    category: ["sides"] }
+        ]
+      }
+    ]
+  },
+
+  /* ── KFC ── */
+  "KFC": {
+    subtitle: "It's finger lickin' good • Fried Chicken Specialists",
+    sections: [
+      {
+        id: "chicken",
+        title: "🍗 Fried Chicken",
+        desc: "11 secret herbs & spices",
+        items: [
+          { name: "Crispy Chicken (2pc)", price: 170, img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=300", veg: false, best: true,  spicy: false, desc: "2 pieces original recipe chicken",  category: ["chicken"] },
+          { name: "Hot & Crispy (2pc)",   price: 190, img: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=300", veg: false, best: false, spicy: true,  desc: "Extra spicy crispy chicken",      category: ["chicken"] },
+          { name: "Popcorn Chicken",      price: 130, img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=300", veg: false, best: true,  spicy: false, desc: "Bite-sized crispy pieces",         category: ["chicken", "snacks"] }
+        ]
+      },
+      {
+        id: "burgers-kfc",
+        title: "🍔 Burgers",
+        desc: "",
+        items: [
+          { name: "Zinger Burger", price: 210, img: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=300", veg: false, best: true,  spicy: true,  desc: "Spicy chicken fillet with coleslaw", category: ["burger", "chicken"] },
+          { name: "Tower Burger",  price: 250, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300", veg: false, best: false, spicy: false, desc: "Loaded tower burger",                 category: ["burger", "chicken"] }
+        ]
+      }
+    ]
+  },
+
+  /* ── Domino's ── */
+  "Domino's": {
+    subtitle: "Pizza delivery experts • Fresh dough daily",
+    sections: [
+      {
+        id: "veg-pizza",
+        title: "🌿 Veg Pizzas",
+        desc: "Fresh veggies on classic crust",
+        items: [
+          { name: "Margherita",   price: 250, img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300", veg: true, best: true,  spicy: false, desc: "Classic tomato base with mozzarella", category: ["pizza"] },
+          { name: "Farmhouse",    price: 350, img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300", veg: true, best: true,  spicy: false, desc: "Capsicum, onion, tomato & mushroom",  category: ["pizza"] },
+          { name: "Peppy Paneer", price: 320, img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=300", veg: true, best: false, spicy: true,  desc: "Spicy paneer with chillies",         category: ["pizza", "paneer"] }
+        ]
+      },
+      {
+        id: "nonveg-pizza",
+        title: "🍗 Non-Veg Pizzas",
+        desc: "",
+        items: [
+          { name: "Chicken Dominator", price: 420, img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=300", veg: false, best: true,  spicy: false, desc: "5 types of chicken toppings",      category: ["pizza", "chicken"] },
+          { name: "Keema Do Pyaaza",   price: 380, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300", veg: false, best: false, spicy: true,  desc: "Minced chicken keema with onions", category: ["pizza", "chicken"] }
+        ]
+      },
+      {
+        id: "sides-dominos",
+        title: "🥖 Sides",
+        desc: "",
+        items: [
+          { name: "Garlic Bread",    price: 110, img: "https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=300", veg: true, best: true, spicy: false, desc: "Crispy herb garlic bread sticks", category: ["bread", "sides"] },
+          { name: "Choco Lava Cake", price: 99,  img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=300", veg: true, best: true, spicy: false, desc: "Warm molten chocolate cake",      category: ["dessert", "cake"] }
+        ]
+      }
+    ]
+  },
+
+  /* ── Pizza Hut ── */
+  "Pizza Hut": {
+    subtitle: "Pan pizza pioneers • Dine-in & delivery",
+    sections: [
+      {
+        id: "pan-pizza",
+        title: "🍕 Pan Pizzas",
+        desc: "Thick buttery pan crust",
+        items: [
+          { name: "Veggie Supreme",   price: 280, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300", veg: true,  best: true, spicy: false, desc: "Loaded pan pizza with 6 veggies",   category: ["pizza"] },
+          { name: "BBQ Chicken Pan",  price: 400, img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=300", veg: false, best: true, spicy: false, desc: "Smoky BBQ chicken on pan crust",    category: ["pizza", "chicken"] }
+        ]
+      }
+    ]
+  },
+
+  /* ── Wow Momo ── */
+  "Wow Momo": {
+    subtitle: "India's favourite momo chain • Steam, fry & more",
+    sections: [
+      {
+        id: "steamed",
+        title: "♨️ Steamed Momos",
+        desc: "",
+        items: [
+          { name: "Veg Steamed (8pc)",     price: 120, img: "https://images.unsplash.com/photo-1534422298391-e4f8c172789a?w=300", veg: true,  best: true, spicy: false, desc: "Classic veg steamed momos",  category: ["momo"] },
+          { name: "Chicken Steamed (8pc)", price: 140, img: "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=300", veg: false, best: true, spicy: false, desc: "Juicy chicken momos",         category: ["momo", "chicken"] }
+        ]
+      },
+      {
+        id: "fried",
+        title: "🔥 Fried Momos",
+        desc: "",
+        items: [
+          { name: "Veg Fried (8pc)",     price: 140, img: "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=300", veg: true,  best: false, spicy: false, desc: "Crispy fried veg momos",       category: ["momo"] },
+          { name: "Chicken Fried (8pc)", price: 160, img: "https://images.unsplash.com/photo-1534422298391-e4f8c172789a?w=300", veg: false, best: true,  spicy: false, desc: "Crunchy fried chicken momos",  category: ["momo", "chicken"] }
+        ]
+      }
+    ]
+  },
+
+  /* ── Wow China ── */
+  "Wow China": {
+    subtitle: "Indo-Chinese favourites • Fried rice, noodles & more",
+    sections: [
+      {
+        id: "fried-rice",
+        title: "🍚 Fried Rice",
+        desc: "",
+        items: [
+          { name: "Veg Fried Rice",     price: 150, img: "https://images.unsplash.com/photo-1512058556646-c4da40fba323?w=300", veg: true,  best: true,  spicy: false, desc: "Wok-tossed rice with veggies",    category: ["fried rice"] },
+          { name: "Chicken Fried Rice", price: 190, img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=300", veg: false, best: false, spicy: false, desc: "Juicy chicken wok fried rice",    category: ["fried rice", "chicken"] }
+        ]
+      },
+      {
+        id: "noodles",
+        title: "🍜 Noodles",
+        desc: "",
+        items: [
+          { name: "Veg Hakka Noodles",  price: 150, img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=300", veg: true, best: true,  spicy: false, desc: "Stir-fried thin noodles",     category: ["noodles"] },
+          { name: "Schezwan Noodles",   price: 170, img: "https://images.unsplash.com/photo-1555126634-323283e090fa?w=300", veg: true, best: false, spicy: true,  desc: "Fiery schezwan noodles",     category: ["noodles"] }
+        ]
+      }
+    ]
+  },
+
+  /* ── Behrouz Biryani ── */
+  "Behrouz Biryani": {
+    subtitle: "Royal Mughal-inspired biryanis • Slow cooked dum style",
+    sections: [
+      {
+        id: "nonveg-biryani",
+        title: "🍗 Non-Veg Biryanis",
+        desc: "",
+        items: [
+          { name: "Royal Chicken Biryani", price: 380, img: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300", veg: false, best: true, spicy: false, desc: "Tender chicken with fragrant basmati", category: ["biryani", "chicken"] },
+          { name: "Mutton Dum Biryani",    price: 450, img: "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=300", veg: false, best: true, spicy: false, desc: "Slow cooked mutton saffron rice",     category: ["biryani"] }
+        ]
+      },
+      {
+        id: "veg-biryani",
+        title: "🌿 Veg Biryanis",
+        desc: "",
+        items: [
+          { name: "Veg Dum Biryani", price: 300, img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=300", veg: true, best: true, spicy: false, desc: "Seasonal veggies in aromatic rice", category: ["biryani"] }
+        ]
+      }
+    ]
+  },
+
+  /* ── Haldiram's ── */
+  "Haldiram's": {
+    subtitle: "Iconic Indian sweets & snacks since 1937",
+    sections: [
+      {
+        id: "chaat",
+        title: "🥘 Chaats",
+        desc: "",
+        items: [
+          { name: "Pani Puri (8pc)", price: 80,  img: "https://images.unsplash.com/photo-1606491048802-8342506d6471?w=300", veg: true, best: true, spicy: true,  desc: "Crispy puris with spiced water",  category: ["chaat"] },
+          { name: "Dahi Bhalla",     price: 100, img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=300", veg: true, best: true, spicy: false, desc: "Soft vada in chilled yoghurt",    category: ["chaat"] }
+        ]
+      },
+      {
+        id: "sweets",
+        title: "🍬 Sweets",
+        desc: "",
+        items: [
+          { name: "Gulab Jamun (4pc)", price: 90,  img: "https://images.unsplash.com/photo-1574226516831-e1dff420e562?w=300", veg: true, best: true, spicy: false, desc: "Milk solids balls in sugar syrup", category: ["sweets", "dessert"] },
+          { name: "Kaju Katli (200g)", price: 280, img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=300", veg: true, best: true, spicy: false, desc: "Classic cashew fudge barfi",       category: ["sweets"] }
+        ]
+      }
+    ]
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   CATEGORY → RESTAURANTS MAP
+   (which restaurants serve which food categories)
+   ══════════════════════════════════════════════════════════ */
+
+const categoryRestaurants = {
+  "Fried Rice": ["Wow China", "McDonald's"],
+  "Noodles":    ["Wow China"],
+  "Momos":      ["Wow Momo"],
+  "Rolls":      ["McDonald's", "KFC"],
+  "Pizza":      ["Domino's", "Pizza Hut"],
+  "Burger":     ["McDonald's", "Burger King", "KFC"],
+  "Biryani":    ["Behrouz Biryani"],
+  "Pasta":      ["Pizza Hut", "Domino's"],
+  "Thali":      ["Behrouz Biryani"],
+  "Sandwich":   ["McDonald's", "Burger King"],
+  "Chaat":      ["Haldiram's"],
+  "Cake":       ["Haldiram's", "Domino's"]
+};
+
+/* ══════════════════════════════════════════════════════════
+   MERGE REGISTERED RESTAURANTS INTO LIVE MENUS
+   Combines hardcoded menus with any restaurants registered
+   via the restaurant registration or dashboard flows.
+   ══════════════════════════════════════════════════════════ */
+
 function mergeRegisteredRestaurants() {
-  const stored = getStoredMenus();
-  const meta   = getResMeta();
-  const custom = getCustomMenuItems(); // ✅ FIX 2: load custom items
+  const stored = getStoredMenus();      // Menus registered via registration form
+  const meta   = getResMeta();          // Restaurant metadata (logo, subtitle, etc.)
+  const custom = getCustomMenuItems();  // Items added via restaurant dashboard
 
-  // Merge self-registered restaurants
+  // Add self-registered restaurants that aren't already in the hardcoded list
   Object.keys(stored).forEach(name => {
     if (!restaurantMenus[name]) {
-      restaurantMenus[name] = stored[name];
+      restaurantMenus[name] = stored[name]; // Import full menu object
       if (meta[name]?.logo && !restaurantLogos[name]) {
-        restaurantLogos[name] = meta[name].logo;
+        restaurantLogos[name] = meta[name].logo; // Import logo if available
       }
     }
   });
 
-  // ✅ FIX 2: Merge custom menu items added via restaurant dashboard
-  // These are stored in fs_custom_menus as flat arrays per restaurant
+  // Merge custom menu items added via the restaurant dashboard
   Object.keys(custom).forEach(resName => {
     const items = custom[resName];
-    if (!items || !items.length) return;
+    if (!items || !items.length) return; // Skip if no custom items
 
-    // Convert to storefront item format
+    // Convert dashboard item format to storefront item format
     const convertedItems = items.map(it => ({
       name:     it.name,
       price:    it.price || 0,
@@ -524,219 +2224,1222 @@ function mergeRegisteredRestaurants() {
     }));
 
     if (!restaurantMenus[resName]) {
-      // Brand new restaurant with no menu at all yet
+      // Brand new restaurant — create menu from scratch
       restaurantMenus[resName] = {
         subtitle: meta[resName]?.subtitle || meta[resName]?.category || "Restaurant",
         sections: [{
-          id: "custom_items",
+          id:    "custom_items",
           title: "🍽 Our Menu",
-          desc: "",
+          desc:  "",
           items: convertedItems
         }]
       };
     } else {
-      // Restaurant already has a menu — find or create the "Added Items" section
-      const existing = restaurantMenus[resName].sections;
+      // Existing restaurant — append new items to a dedicated "Added Items" section
+      const existing      = restaurantMenus[resName].sections;
       const existingNames = existing.flatMap(s => s.items.map(i => i.name));
-      const newItems = convertedItems.filter(ci => !existingNames.includes(ci.name));
+      const newItems      = convertedItems.filter(ci => !existingNames.includes(ci.name)); // Avoid duplicates
 
       if (newItems.length) {
         let addedSection = existing.find(s => s.id === "dashboard_added");
         if (!addedSection) {
+          // Create the "Added Items" section if it doesn't exist yet
           addedSection = { id: "dashboard_added", title: "➕ Added Items", desc: "", items: [] };
           existing.push(addedSection);
         }
-        addedSection.items.push(...newItems);
+        addedSection.items.push(...newItems); // Append the new items
       }
     }
   });
 }
+
+// Run merge on page load to initialise combined menu data
 mergeRegisteredRestaurants();
 
-/* ── HERO ── */
-const heroContent=[{title:"Order Healthy And Fresh Food Anytime",desc:"Italian food makes people think of big family dinners.",image:"https://images.unsplash.com/photo-1600891964599-f61ba0e24092"},{title:"Delicious Meals Delivered Fast",desc:"Enjoy your favourite dishes delivered quickly.",image:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c"},{title:"Taste The Best From Around The City",desc:"Discover trending restaurants and explore new flavours.",image:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38"},{title:"Fresh Ingredients. Amazing Taste.",desc:"Quality and freshness in every bite.",image:"https://images.unsplash.com/photo-1504674900247-0877df9cc836"},{title:"Cravings? We've Got You Covered!",desc:"From street food to gourmet cuisine.",image:"https://images.unsplash.com/photo-1551782450-a2132b4ba21d"},{title:"Food That Brings People Together",desc:"Celebrate moments with delicious meals.",image:"https://images.unsplash.com/photo-1525755662778-989d0524087e"}];
-let currentHero=0,heroInterval;
-function createDots(){const c=document.getElementById("heroDots");heroContent.forEach((_,i)=>{const d=document.createElement("span");d.onclick=()=>{currentHero=i;updateHero();resetHeroInterval();};c.appendChild(d);});}
-function updateDots(){document.querySelectorAll(".hero-dots span").forEach((d,i)=>d.classList.toggle("active",i===currentHero));}
-function updateHero(){const t=document.getElementById("heroTitle"),d=document.getElementById("heroDesc"),img=document.getElementById("heroImage");t.style.opacity=d.style.opacity=img.style.opacity=0;setTimeout(()=>{t.innerText=heroContent[currentHero].title;d.innerText=heroContent[currentHero].desc;img.src=heroContent[currentHero].image;t.style.opacity=d.style.opacity=img.style.opacity=1;updateDots();},380);}
-function startHeroInterval(){heroInterval=setInterval(()=>{currentHero=(currentHero+1)%heroContent.length;updateHero();},3200);}
-function resetHeroInterval(){clearInterval(heroInterval);startHeroInterval();}
-createDots();updateDots();startHeroInterval();
+/* ══════════════════════════════════════════════════════════
+   HERO CAROUSEL
+   ══════════════════════════════════════════════════════════ */
 
-/* ── AUTH MODAL ── */
-let activeRole="user",authTabMode="login";
-function openAuthModal(mode){authTabMode=mode||"login";document.getElementById("authModal").classList.add("show");selectRole("user");switchTab(authTabMode);["userMsg","adminMsg","resMsg"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerText="";});populateResSelect();}
-function closeAuthModal(){document.getElementById("authModal").classList.remove("show");}
-function selectRole(role){activeRole=role;["user","admin","restaurant"].forEach(r=>{document.getElementById("role"+r.charAt(0).toUpperCase()+r.slice(1)).classList.toggle("active",r===role);});document.getElementById("userForm").style.display=role==="user"?"":"none";document.getElementById("adminForm").style.display=role==="admin"?"":"none";document.getElementById("restaurantForm").style.display=role==="restaurant"?"":"none";document.getElementById("redirectPanel").style.display="none";document.getElementById("modalHeading").innerText=role==="user"?"Welcome to Food Sprint":role==="admin"?"Super Admin Access":"Restaurant Login";}
-function switchTab(mode){authTabMode=mode;document.getElementById("tabLogin").classList.toggle("active",mode==="login");document.getElementById("tabSignup").classList.toggle("active",mode==="signup");}
+// Slide content: title, description and background image
+const heroContent = [
+  { title: "Order Healthy And Fresh Food Anytime",    desc: "Italian food makes people think of big family dinners.",         image: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092" },
+  { title: "Delicious Meals Delivered Fast",           desc: "Enjoy your favourite dishes delivered quickly.",                  image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c" },
+  { title: "Taste The Best From Around The City",      desc: "Discover trending restaurants and explore new flavours.",        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38" },
+  { title: "Fresh Ingredients. Amazing Taste.",         desc: "Quality and freshness in every bite.",                          image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836" },
+  { title: "Cravings? We've Got You Covered!",          desc: "From street food to gourmet cuisine.",                          image: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d" },
+  { title: "Food That Brings People Together",          desc: "Celebrate moments with delicious meals.",                       image: "https://images.unsplash.com/photo-1525755662778-989d0524087e" }
+];
 
-function handleUserAuth(){const email=document.getElementById("userEmail").value.trim();const pass=document.getElementById("userPass").value;const msg=document.getElementById("userMsg");if(!email||!pass){msg.className="modal-msg err";msg.innerText="Please fill all fields.";return;}if(!/\S+@\S+\.\S+/.test(email)){msg.className="modal-msg err";msg.innerText="Invalid email.";return;}let users=JSON.parse(localStorage.getItem("fs_users")||"{}");if(authTabMode==="login"){if(!users[email]){msg.className="modal-msg err";msg.innerText="Account not found.";return;}if(users[email].password!==pass){msg.className="modal-msg err";msg.innerText="Incorrect password.";return;}localStorage.setItem("loggedInUser",email);localStorage.setItem("loggedInRole","user");msg.className="modal-msg ok";msg.innerText="Welcome back!";setTimeout(()=>{closeAuthModal();updateNavbar();},600);}else{if(users[email]){msg.className="modal-msg err";msg.innerText="Account already exists.";return;}users[email]={password:pass,name:email.split("@")[0]};localStorage.setItem("fs_users",JSON.stringify(users));msg.className="modal-msg ok";msg.innerText="Account created! You can now login.";}}
+let currentHero   = 0;   // Index of the currently visible slide
+let heroInterval;         // Reference to the auto-play interval timer
 
-function handleAdminAuth(){const email=document.getElementById("adminEmail").value.trim();const pass=document.getElementById("adminPass").value;const msg=document.getElementById("adminMsg");if(email===SUPER_EMAIL&&pass===SUPER_PASS){localStorage.setItem("loggedInUser",email);localStorage.setItem("loggedInRole","admin");showRedirect("admin");}else{msg.className="modal-msg err";msg.innerText="Invalid admin credentials.";}}
-
-/* ── RESTAURANT DROPDOWN ── */
-function populateResSelect(){
-  const sel=document.getElementById("resSelect");
-  const admins=getResAdmins();
-  const stored=getStoredMenus();
-  const allNames=[...new Set([...HARDCODED_RESTAURANTS,...Object.keys(admins),...Object.keys(stored)])].sort();
-  sel.innerHTML=`<option value="">Choose your restaurant…</option>`;
-  allNames.forEach(name=>{
-    sel.innerHTML+=`<option value="${name}">${name}</option>`;
+// Dynamically create a dot indicator for each hero slide
+function createDots() {
+  const c = document.getElementById("heroDots");
+  heroContent.forEach((_, i) => {
+    const d    = document.createElement("span");
+    d.onclick  = () => { currentHero = i; updateHero(); resetHeroInterval(); }; // Jump to clicked slide
+    c.appendChild(d);
   });
-  resetResForm();
 }
 
-function resetResForm(){
-  document.getElementById("resMsg").innerHTML="";
-  // Show "nothing selected" hint, hide both panels
-  document.getElementById("resNoSelection").style.display="block";
-  document.getElementById("resFirstTimePanel").style.display="none";
-  document.getElementById("resReturningPanel").style.display="none";
+// Highlight the dot that corresponds to the current slide
+function updateDots() {
+  document.querySelectorAll(".hero-dots span").forEach((d, i) =>
+    d.classList.toggle("active", i === currentHero)
+  );
 }
 
-function onResSelectChange(){
-  const name=document.getElementById("resSelect").value;
-  const admins=getResAdmins();
-  document.getElementById("resMsg").innerHTML="";
-  if(!name){resetResForm();return;}
-  const email=name.toLowerCase().replace(/[^a-z0-9]/g,"")+"\u0040foodsprint.in";
-  const hasPassword=!!admins[name];
-  document.getElementById("resNoSelection").style.display="none";
-  if(hasPassword){
-    // Returning user — show simple login panel
-    document.getElementById("resFirstTimePanel").style.display="none";
-    document.getElementById("resReturningPanel").style.display="block";
-    document.getElementById("resEmailR").value=email;
-    document.getElementById("resPassR").value="";
+// Fade out → swap content → fade in for the current slide
+function updateHero() {
+  const t   = document.getElementById("heroTitle");
+  const d   = document.getElementById("heroDesc");
+  const img = document.getElementById("heroImage");
+
+  // Fade all elements out
+  t.style.opacity = d.style.opacity = img.style.opacity = 0;
+
+  setTimeout(() => {
+    // Swap content after fade
+    t.innerText   = heroContent[currentHero].title;
+    d.innerText   = heroContent[currentHero].desc;
+    img.src       = heroContent[currentHero].image;
+
+    // Fade back in and refresh dot state
+    t.style.opacity = d.style.opacity = img.style.opacity = 1;
+    updateDots();
+  }, 380);
+}
+
+// Auto-advance the carousel every 3.2 seconds
+function startHeroInterval() {
+  heroInterval = setInterval(() => {
+    currentHero = (currentHero + 1) % heroContent.length; // Loop back after last slide
+    updateHero();
+  }, 3200);
+}
+
+// Restart the auto-play timer (called after manual dot click)
+function resetHeroInterval() {
+  clearInterval(heroInterval);
+  startHeroInterval();
+}
+
+// Initialise hero carousel on page load
+createDots();
+updateDots();
+startHeroInterval();
+
+/* ══════════════════════════════════════════════════════════
+   AUTH MODAL
+   ══════════════════════════════════════════════════════════ */
+
+let activeRole  = "user";   // Currently selected role tab (user / admin / restaurant)
+let authTabMode = "login";  // Currently selected form tab (login / signup)
+
+// Open the auth modal and default to the specified tab mode
+function openAuthModal(mode) {
+  authTabMode = mode || "login";
+  document.getElementById("authModal").classList.add("show"); // Show modal overlay
+  selectRole("user");       // Default to Customer role
+  switchTab(authTabMode);   // Switch to the requested tab (login or signup)
+  // Clear any leftover error messages from a previous session
+  ["userMsg", "adminMsg", "resMsg"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = "";
+  });
+  populateResSelect(); // Populate restaurant dropdown in case it's empty
+}
+
+// Close the auth modal overlay
+function closeAuthModal() {
+  document.getElementById("authModal").classList.remove("show");
+}
+
+// Switch the visible role panel (Customer / Super Admin / Restaurant)
+function selectRole(role) {
+  activeRole = role;
+  // Toggle 'active' class on each role button
+  ["user", "admin", "restaurant"].forEach(r => {
+    document.getElementById("role" + r.charAt(0).toUpperCase() + r.slice(1))
+      .classList.toggle("active", r === role);
+  });
+  // Show only the form for the selected role
+  document.getElementById("userForm").style.display       = role === "user"       ? "" : "none";
+  document.getElementById("adminForm").style.display      = role === "admin"      ? "" : "none";
+  document.getElementById("restaurantForm").style.display = role === "restaurant" ? "" : "none";
+  document.getElementById("redirectPanel").style.display  = "none"; // Always hide redirect on role change
+  // Update modal heading to match selected role
+  document.getElementById("modalHeading").innerText =
+    role === "user"       ? "Welcome to Food Sprint" :
+    role === "admin"      ? "Super Admin Access"     : "Restaurant Login";
+}
+
+// Toggle between Login and Sign Up tabs within the user form
+function switchTab(mode) {
+  authTabMode = mode;
+  document.getElementById("tabLogin").classList.toggle("active",  mode === "login");
+  document.getElementById("tabSignup").classList.toggle("active", mode === "signup");
+}
+
+/* ── USER AUTH ─────────────────────────────────────────── */
+
+// Handle login or signup for a regular customer account
+function handleUserAuth() {
+  const email = document.getElementById("userEmail").value.trim();
+  const pass  = document.getElementById("userPass").value;
+  const msg   = document.getElementById("userMsg");
+
+  // Basic validation
+  if (!email || !pass) { msg.className = "modal-msg err"; msg.innerText = "Please fill all fields."; return; }
+  if (!/\S+@\S+\.\S+/.test(email)) { msg.className = "modal-msg err"; msg.innerText = "Invalid email."; return; }
+
+  let users = JSON.parse(localStorage.getItem("fs_users") || "{}");
+
+  if (authTabMode === "login") {
+    // ── Login flow ──
+    if (!users[email]) { msg.className = "modal-msg err"; msg.innerText = "Account not found."; return; }
+    if (users[email].password !== pass) { msg.className = "modal-msg err"; msg.innerText = "Incorrect password."; return; }
+    localStorage.setItem("loggedInUser", email);
+    localStorage.setItem("loggedInRole", "user");
+    msg.className = "modal-msg ok";
+    msg.innerText = "Welcome back!";
+    setTimeout(() => { closeAuthModal(); updateNavbar(); }, 600); // Short delay for feedback
   } else {
-    // First time — show set-password panel
-    document.getElementById("resReturningPanel").style.display="none";
-    document.getElementById("resFirstTimePanel").style.display="block";
-    document.getElementById("resEmail").value=email;
-    document.getElementById("resPass").value="";
-    document.getElementById("resConfirmPass").value="";
+    // ── Sign up flow ──
+    if (users[email]) { msg.className = "modal-msg err"; msg.innerText = "Account already exists."; return; }
+    users[email] = { password: pass, name: email.split("@")[0] }; // Use email prefix as display name
+    localStorage.setItem("fs_users", JSON.stringify(users));
+    msg.className = "modal-msg ok";
+    msg.innerText = "Account created! You can now login.";
   }
 }
 
-/* First-time: set password then login */
-function handleRestaurantAuth(){
-  const res=document.getElementById("resSelect").value;
-  const enteredPass=document.getElementById("resPass").value.trim();
-  const confirmPass=document.getElementById("resConfirmPass").value.trim();
-  const msg=document.getElementById("resMsg");
-  if(!res){msg.className="modal-msg err";msg.innerText="Please select a restaurant.";return;}
-  if(!enteredPass){msg.className="modal-msg err";msg.innerText="Please enter a password.";return;}
-  if(enteredPass.length<4){msg.className="modal-msg err";msg.innerText="Password must be at least 4 characters.";return;}
-  if(!confirmPass){msg.className="modal-msg err";msg.innerText="Please confirm your password.";return;}
-  if(enteredPass!==confirmPass){msg.className="modal-msg err";msg.innerText="Passwords do not match.";return;}
-  let admins=getResAdmins();
-  const email=res.toLowerCase().replace(/[^a-z0-9]/g,"")+"\u0040foodsprint.in";
-  admins[res]={password:enteredPass,email};
+/* ── ADMIN AUTH ─────────────────────────────────────────── */
+
+// Validate super-admin credentials and redirect to admin dashboard
+function handleAdminAuth() {
+  const email = document.getElementById("adminEmail").value.trim();
+  const pass  = document.getElementById("adminPass").value;
+  const msg   = document.getElementById("adminMsg");
+  if (email === SUPER_EMAIL && pass === SUPER_PASS) {
+    localStorage.setItem("loggedInUser", email);
+    localStorage.setItem("loggedInRole", "admin");
+    showRedirect("admin"); // Show the dashboard redirect panel
+  } else {
+    msg.className = "modal-msg err";
+    msg.innerText = "Invalid admin credentials.";
+  }
+}
+
+/* ── RESTAURANT DROPDOWN ─────────────────────────────────── */
+
+// Populate the restaurant <select> with all known restaurants
+function populateResSelect() {
+  const sel    = document.getElementById("resSelect");
+  const admins = getResAdmins();
+  const stored = getStoredMenus();
+  // Combine hardcoded names + admin accounts + stored menus, deduplicated and sorted
+  const allNames = [...new Set([...HARDCODED_RESTAURANTS, ...Object.keys(admins), ...Object.keys(stored)])].sort();
+  sel.innerHTML = `<option value="">Choose your restaurant…</option>`;
+  allNames.forEach(name => {
+    sel.innerHTML += `<option value="${name}">${name}</option>`;
+  });
+  resetResForm(); // Reset visible panels to default state
+}
+
+// Reset the restaurant form to its initial "nothing selected" state
+function resetResForm() {
+  document.getElementById("resMsg").innerHTML          = "";
+  document.getElementById("resNoSelection").style.display  = "block";  // Show hint text
+  document.getElementById("resFirstTimePanel").style.display = "none"; // Hide first-time panel
+  document.getElementById("resReturningPanel").style.display = "none"; // Hide returning panel
+}
+
+// React to user selecting a restaurant from the dropdown
+function onResSelectChange() {
+  const name    = document.getElementById("resSelect").value;
+  const admins  = getResAdmins();
+  document.getElementById("resMsg").innerHTML = ""; // Clear previous messages
+  if (!name) { resetResForm(); return; } // No selection: reset
+
+  // Generate a deterministic email from the restaurant name
+  const email       = name.toLowerCase().replace(/[^a-z0-9]/g, "") + "@foodsprint.in";
+  const hasPassword = !!admins[name]; // Check if password has been set before
+
+  document.getElementById("resNoSelection").style.display = "none"; // Hide hint text
+
+  if (hasPassword) {
+    // Returning restaurant user — show simple login panel
+    document.getElementById("resFirstTimePanel").style.display  = "none";
+    document.getElementById("resReturningPanel").style.display  = "block";
+    document.getElementById("resEmailR").value = email;
+    document.getElementById("resPassR").value  = "";
+  } else {
+    // First-time login — show set-password panel
+    document.getElementById("resReturningPanel").style.display  = "none";
+    document.getElementById("resFirstTimePanel").style.display  = "block";
+    document.getElementById("resEmail").value       = email;
+    document.getElementById("resPass").value        = "";
+    document.getElementById("resConfirmPass").value = "";
+  }
+}
+
+/* ── RESTAURANT AUTH: First-time set password ─────────────── */
+
+// Save a new password for a restaurant and log them in
+function handleRestaurantAuth() {
+  const res         = document.getElementById("resSelect").value;
+  const enteredPass = document.getElementById("resPass").value.trim();
+  const confirmPass = document.getElementById("resConfirmPass").value.trim();
+  const msg         = document.getElementById("resMsg");
+
+  // Validate inputs
+  if (!res)                              { msg.className = "modal-msg err"; msg.innerText = "Please select a restaurant.";                    return; }
+  if (!enteredPass)                      { msg.className = "modal-msg err"; msg.innerText = "Please enter a password.";                       return; }
+  if (enteredPass.length < 4)            { msg.className = "modal-msg err"; msg.innerText = "Password must be at least 4 characters.";        return; }
+  if (!confirmPass)                      { msg.className = "modal-msg err"; msg.innerText = "Please confirm your password.";                  return; }
+  if (enteredPass !== confirmPass)       { msg.className = "modal-msg err"; msg.innerText = "Passwords do not match.";                        return; }
+
+  // Store the new password for this restaurant
+  let admins = getResAdmins();
+  const email = res.toLowerCase().replace(/[^a-z0-9]/g, "") + "@foodsprint.in";
+  admins[res] = { password: enteredPass, email };
   saveResAdmins(admins);
-  msg.className="modal-msg ok";msg.innerText="✅ Password set! Logging you in…";
-  setTimeout(()=>{localStorage.setItem("loggedInUser",email);localStorage.setItem("loggedInRole","restaurant");localStorage.setItem("loggedInRestaurant",res);showRedirect("restaurant",res);},800);
+
+  msg.className = "modal-msg ok";
+  msg.innerText = "✅ Password set! Logging you in…";
+
+  // Brief delay so the user sees the confirmation before redirect
+  setTimeout(() => {
+    localStorage.setItem("loggedInUser",       email);
+    localStorage.setItem("loggedInRole",       "restaurant");
+    localStorage.setItem("loggedInRestaurant", res);
+    showRedirect("restaurant", res);
+  }, 800);
 }
 
-/* Returning: login with existing password */
-function handleRestaurantAuthR(){
-  const res=document.getElementById("resSelect").value;
-  const enteredPass=document.getElementById("resPassR").value.trim();
-  const msg=document.getElementById("resMsg");
-  if(!res){msg.className="modal-msg err";msg.innerText="Please select a restaurant.";return;}
-  if(!enteredPass){msg.className="modal-msg err";msg.innerText="Please enter your password.";return;}
-  const admins=getResAdmins();
-  if(!admins[res]||admins[res].password!==enteredPass){msg.className="modal-msg err";msg.innerText="Incorrect password.";return;}
-  localStorage.setItem("loggedInUser",admins[res].email);localStorage.setItem("loggedInRole","restaurant");localStorage.setItem("loggedInRestaurant",res);
-  showRedirect("restaurant",res);
+/* ── RESTAURANT AUTH: Returning login ─────────────────────── */
+
+// Authenticate a returning restaurant user with their stored password
+function handleRestaurantAuthR() {
+  const res         = document.getElementById("resSelect").value;
+  const enteredPass = document.getElementById("resPassR").value.trim();
+  const msg         = document.getElementById("resMsg");
+
+  if (!res)         { msg.className = "modal-msg err"; msg.innerText = "Please select a restaurant."; return; }
+  if (!enteredPass) { msg.className = "modal-msg err"; msg.innerText = "Please enter your password."; return; }
+
+  const admins = getResAdmins();
+  if (!admins[res] || admins[res].password !== enteredPass) {
+    msg.className = "modal-msg err";
+    msg.innerText = "Incorrect password.";
+    return;
+  }
+
+  // Credentials match — log in and show redirect panel
+  localStorage.setItem("loggedInUser",       admins[res].email);
+  localStorage.setItem("loggedInRole",       "restaurant");
+  localStorage.setItem("loggedInRestaurant", res);
+  showRedirect("restaurant", res);
 }
 
-function showRedirect(role,resName){
-  document.getElementById("userForm").style.display="none";document.getElementById("adminForm").style.display="none";document.getElementById("restaurantForm").style.display="none";
-  const panel=document.getElementById("redirectPanel");panel.style.display="block";
-  if(role==="admin"){document.getElementById("rpIcon").innerText="🛡";document.getElementById("rpTitle").innerText="Super Admin Access Granted";document.getElementById("rpDesc").innerText="You have full access to the Food Sprint admin dashboard.";document.getElementById("rpBtn").href="admin.html";document.getElementById("rpBtn").innerText="Open Admin Dashboard →";}
-  else{document.getElementById("rpIcon").innerText="🏪";document.getElementById("rpTitle").innerText=(resName||"Restaurant")+" — Access Granted";document.getElementById("rpDesc").innerText="You can now manage orders for "+(resName||"your restaurant")+".";document.getElementById("rpBtn").href="restaurant.html";document.getElementById("rpBtn").innerText="Open Restaurant Dashboard →";}
+/* ── SHOW REDIRECT PANEL ─────────────────────────────────── */
+
+// Hide all forms and show the "Access Granted" panel with the correct dashboard link
+function showRedirect(role, resName) {
+  // Hide all form panels
+  document.getElementById("userForm").style.display       = "none";
+  document.getElementById("adminForm").style.display      = "none";
+  document.getElementById("restaurantForm").style.display = "none";
+
+  const panel = document.getElementById("redirectPanel");
+  panel.style.display = "block"; // Show redirect panel
+
+  if (role === "admin") {
+    // Admin redirect — points to admin.html
+    document.getElementById("rpIcon").innerText  = "🛡";
+    document.getElementById("rpTitle").innerText = "Super Admin Access Granted";
+    document.getElementById("rpDesc").innerText  = "You have full access to the Food Sprint admin dashboard.";
+    document.getElementById("rpBtn").href        = "admin.html";
+    document.getElementById("rpBtn").innerText   = "Open Admin Dashboard →";
+  } else {
+    // Restaurant redirect — points to restaurant.html
+    document.getElementById("rpIcon").innerText  = "🏪";
+    document.getElementById("rpTitle").innerText = (resName || "Restaurant") + " — Access Granted";
+    document.getElementById("rpDesc").innerText  = "You can now manage orders for " + (resName || "your restaurant") + ".";
+    document.getElementById("rpBtn").href        = "restaurant.html";
+    document.getElementById("rpBtn").innerText   = "Open Restaurant Dashboard →";
+  }
+
+  updateNavbar(); // Refresh nav to show user info
+}
+
+/* ══════════════════════════════════════════════════════════
+   NAVBAR
+   ══════════════════════════════════════════════════════════ */
+
+// Update the navbar right section based on current login state
+function updateNavbar() {
+  const user = localStorage.getItem("loggedInUser");
+  const role = localStorage.getItem("loggedInRole") || "user";
+  const res  = localStorage.getItem("loggedInRestaurant");
+  const nav  = document.getElementById("navRight");
+
+  if (user) {
+    // Labels and style classes for each role
+    const roleLabels = { user: "Customer", admin: "Super Admin", restaurant: res || "Restaurant" };
+    const roleColors = { user: "user",     admin: "admin",        restaurant: "restaurant" };
+
+    // Optional dashboard shortcut link for admin/restaurant roles
+    let dashBtn = "";
+    if (role === "admin") {
+      dashBtn = `<a href="admin.html" style="background:rgba(255,204,0,0.12);border:1.5px solid rgba(255,204,0,0.4);color:var(--yellow);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">Admin Dashboard ↗</a>`;
+    } else if (role === "restaurant") {
+      dashBtn = `<a href="restaurant.html" style="background:rgba(255,204,0,0.12);border:1.5px solid rgba(255,204,0,0.4);color:var(--yellow);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">Restaurant Dashboard ↗</a>`;
+    }
+
+    // Render user info + logout button
+    nav.innerHTML = `
+      ${dashBtn}
+      <span class="user-info">👤 ${user.split("@")[0]}</span>
+      <span class="role-badge ${roleColors[role]}">${roleLabels[role]}</span>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    `;
+  } else {
+    // Not logged in — show Login / Sign Up buttons
+    nav.innerHTML = `
+      <button class="login-btn"  onclick="openAuthModal('login')">Login</button>
+      <button class="signup-btn" onclick="openAuthModal('signup')">Sign Up</button>
+    `;
+  }
+}
+
+// Clear all session data and reset the navbar
+function doLogout() {
+  localStorage.removeItem("loggedInUser");
+  localStorage.removeItem("loggedInRole");
+  localStorage.removeItem("loggedInRestaurant");
   updateNavbar();
 }
 
-function updateNavbar(){
-  const user=localStorage.getItem("loggedInUser");const role=localStorage.getItem("loggedInRole")||"user";const res=localStorage.getItem("loggedInRestaurant");const nav=document.getElementById("navRight");
-  if(user){
-    const roleLabels={user:"Customer",admin:"Super Admin",restaurant:res||"Restaurant"};const roleColors={user:"user",admin:"admin",restaurant:"restaurant"};
-    let dashBtn="";
-    if(role==="admin")dashBtn=`<a href="admin.html" style="background:rgba(255,204,0,0.12);border:1.5px solid rgba(255,204,0,0.4);color:var(--yellow);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">Admin Dashboard ↗</a>`;
-    else if(role==="restaurant")dashBtn=`<a href="restaurant.html" style="background:rgba(255,204,0,0.12);border:1.5px solid rgba(255,204,0,0.4);color:var(--yellow);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">Restaurant Dashboard ↗</a>`;
-    nav.innerHTML=`${dashBtn}<span class="user-info">👤 ${user.split("@")[0]}</span><span class="role-badge ${roleColors[role]}">${roleLabels[role]}</span><button class="logout-btn" onclick="doLogout()">Logout</button>`;
-  }else{nav.innerHTML=`<button class="login-btn" onclick="openAuthModal('login')">Login</button><button class="signup-btn" onclick="openAuthModal('signup')">Sign Up</button>`;}
-}
-function doLogout(){localStorage.removeItem("loggedInUser");localStorage.removeItem("loggedInRole");localStorage.removeItem("loggedInRestaurant");updateNavbar();}
+// Run on page load to restore previous login state
 updateNavbar();
 
-/* ── SEARCH ── */
-function handleSearchFocus(){document.getElementById("searchBox").classList.add("focused");showSuggestions(document.getElementById("searchInput").value);}
-function handleSearchBlur(){document.getElementById("searchBox").classList.remove("focused");setTimeout(()=>document.getElementById("searchSuggestions").classList.remove("show"),200);}
-function handleSearchInput(){showSuggestions(document.getElementById("searchInput").value);}
-function showSuggestions(q){const box=document.getElementById("searchSuggestions");q=q.trim().toLowerCase();if(!q){box.classList.remove("show");return;}let results=[];for(const[resName,resData]of Object.entries(restaurantMenus)){for(const sec of resData.sections){for(const item of sec.items){if(item.name.toLowerCase().includes(q)||item.category.some(c=>c.includes(q))){results.push({type:"item",name:item.name,sub:resName,icon:item.veg?"🟢":"🔴"});}}}if(resName.toLowerCase().includes(q)){results.push({type:"restaurant",name:resName,sub:"Restaurant",icon:"🏪"});}}const seen=new Set();results=results.filter(r=>{if(seen.has(r.name))return false;seen.add(r.name);return true;}).slice(0,7);if(!results.length){box.classList.remove("show");return;}box.innerHTML=results.map(r=>`<div class="suggestion-item" onclick="selectSuggestion('${r.name.replace(/'/g,"\\'")}','${r.type}')"><span class="sug-icon">${r.icon}</span><span class="sug-name">${r.name}</span><span class="sug-sub">${r.sub}</span></div>`).join("");box.classList.add("show");}
-function selectSuggestion(name,type){document.getElementById("searchInput").value=name;document.getElementById("searchSuggestions").classList.remove("show");if(type==="restaurant")openMenu(name);else doSearch();}
-function doSearch(){const q=document.getElementById("searchInput").value.trim().toLowerCase();if(!q){alert("Please enter a food item or restaurant");return;}let m=[];for(const[rn,rd]of Object.entries(restaurantMenus)){if(rn.toLowerCase().includes(q)){m.push(rn);continue;}for(const sec of rd.sections){for(const item of sec.items){if(item.name.toLowerCase().includes(q)||item.category.some(c=>c.includes(q))){if(!m.includes(rn))m.push(rn);}}}};if(!m.length){alert("No results found for: "+q);return;}document.getElementById("restaurantsSection").style.display="block";document.getElementById("menuSection").style.display="none";document.getElementById("restaurantTitle").innerText=`Search: "${q}"`;document.getElementById("restaurantSubtitle").innerText=`${m.length} restaurant(s) serve this`;renderRestaurantCards(m);document.getElementById("restaurantsSection").scrollIntoView({behavior:"smooth"});}
+/* ══════════════════════════════════════════════════════════
+   SEARCH
+   ══════════════════════════════════════════════════════════ */
 
-/* ── RESTAURANTS ── */
-function openRestaurantsByCategory(cat){document.getElementById("restaurantsSection").style.display="block";document.getElementById("menuSection").style.display="none";document.getElementById("restaurantTitle").innerText=cat+" — Restaurants";const base=categoryRestaurants[cat]||[];const stored=Object.keys(getStoredMenus());const extra=stored.filter(n=>{const m=getStoredMenus()[n];return m.sections&&m.sections.some(s=>s.items.some(i=>i.category&&i.category.some(c=>c.toLowerCase().includes(cat.toLowerCase()))));});const list=[...new Set([...base,...extra])];if(!list.length)list.push(...Object.keys(restaurantMenus).slice(0,3));document.getElementById("restaurantSubtitle").innerText=`${list.length} restaurant(s) available`;renderRestaurantCards(list);document.getElementById("restaurantsSection").scrollIntoView({behavior:"smooth"});}
-function renderRestaurantCards(list){const el=document.getElementById("restaurantList");el.innerHTML="";list.forEach(res=>{const data=restaurantMenus[res];const meta=getResMeta()[res];const card=document.createElement("div");card.className="res-card";const img=document.createElement("img");const logoUrl=restaurantLogos[res]||(meta&&meta.logo)||`https://ui-avatars.com/api/?name=${encodeURIComponent(res)}&background=ffcc00&color=000&size=44`;img.src=logoUrl;img.onerror=()=>img.src=`https://ui-avatars.com/api/?name=${encodeURIComponent(res)}&background=ffcc00&color=000&size=44`;const info=document.createElement("div");info.className="res-card-info";const name=document.createElement("span");name.innerText=res;const sub=document.createElement("small");sub.innerText=(data&&data.subtitle)||"";info.appendChild(name);info.appendChild(sub);card.appendChild(img);card.appendChild(info);card.onclick=()=>openMenu(res);el.appendChild(card);});}
-
-/* ── MENU ──
-   ✅ FIX 2: Re-run merge every time a menu is opened so newly added
-   dashboard items appear without a page reload. */
-let currentRestaurant="",activeFilter="all",maxPrice=600;
-function openMenu(restaurant){
-  mergeRegisteredRestaurants(); // refresh to pick up any newly added items
-  currentRestaurant=restaurant;
-  const data=restaurantMenus[restaurant];
-  document.getElementById("menuSection").style.display="block";
-  document.getElementById("menuTitle").innerText=restaurant;
-  document.getElementById("menuSubtitle").innerText=data?data.subtitle:"";
-  activeFilter="all";maxPrice=600;
-  document.getElementById("priceRange").value=600;
-  document.getElementById("priceVal").innerText="₹600";
-  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
-  document.querySelector("[data-filter='all']").classList.add("active");
-  renderMenu(restaurant);
-  document.getElementById("menuSection").scrollIntoView({behavior:"smooth"});
+// Add focus ring styling when search input gains focus
+function handleSearchFocus() {
+  document.getElementById("searchBox").classList.add("focused");
+  showSuggestions(document.getElementById("searchInput").value); // Show suggestions immediately
 }
-function renderMenu(restaurant){const data=restaurantMenus[restaurant];if(!data||!data.sections||!data.sections.length){document.getElementById("menuContent").innerHTML="<div class='no-results'><div style='font-size:48px'>🍽</div><p>Menu coming soon.</p></div>";document.getElementById("sidebarLinks").innerHTML="";return;}const sidebar=document.getElementById("sidebarLinks");sidebar.innerHTML="";data.sections.forEach((sec,i)=>{const div=document.createElement("div");div.className="sidebar-item"+(i===0?" active":"");div.id="si-"+sec.id;const vc=sec.items.filter(item=>passesFilter(item)).length;div.innerHTML=`${sec.title} <span class="si-count">${vc}</span>`;div.onclick=()=>{document.querySelectorAll(".sidebar-item").forEach(s=>s.classList.remove("active"));div.classList.add("active");const el=document.getElementById("ms-"+sec.id);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});};sidebar.appendChild(div);});const content=document.getElementById("menuContent");content.innerHTML="";let anyVisible=false;data.sections.forEach(sec=>{const wrap=document.createElement("div");wrap.className="menu-section";wrap.id="ms-"+sec.id;wrap.innerHTML=`<div class="menu-section-title">${sec.title}</div>${sec.desc?`<div class="menu-section-desc">${sec.desc}</div>`:""}`;const grid=document.createElement("div");grid.className="menu-items-grid";let sv=0;sec.items.forEach(item=>{const card=buildMenuCard(item);if(!passesFilter(item))card.classList.add("hidden");else sv++;grid.appendChild(card);});wrap.appendChild(grid);if(sv===0)wrap.style.display="none";else anyVisible=true;content.appendChild(wrap);const si=document.getElementById("si-"+sec.id);if(si){const cnt=si.querySelector(".si-count");if(cnt)cnt.innerText=sv;}});if(!anyVisible)content.innerHTML=`<div class="no-results"><div style="font-size:48px">🍽</div><p>No items match your filters.</p></div>`;}
-function passesFilter(item){if(activeFilter==="veg"&&!item.veg)return false;if(activeFilter==="nonveg"&&item.veg)return false;if(activeFilter==="best"&&!item.best)return false;if(item.price>maxPrice)return false;return true;}
-function setFilter(f,btn){activeFilter=f;document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");applyFilters();}
-function applyFilters(){maxPrice=parseInt(document.getElementById("priceRange").value);document.getElementById("priceVal").innerText="₹"+maxPrice;if(currentRestaurant)renderMenu(currentRestaurant);}
-function buildMenuCard(item){const card=document.createElement("div");card.className="menu-card";card.id="mcard-"+item.name.replace(/\s+/g,"-").replace(/[()]/g,"");const img=document.createElement("img");img.src=item.img||"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300";img.alt=item.name;img.onerror=()=>img.src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300";if(item.best){const b=document.createElement("div");b.className="best-badge";b.innerText="⭐ BESTSELLER";card.appendChild(b);}if(item.spicy){const s=document.createElement("div");s.className="spicy-badge";s.innerText="🌶";card.appendChild(s);}card.appendChild(img);const body=document.createElement("div");body.className="menu-card-body";const top=document.createElement("div");top.className="menu-card-top";const name=document.createElement("h4");name.innerText=item.name;const dot=document.createElement("div");dot.className="veg-dot "+(item.veg?"veg":"nonveg");top.appendChild(name);top.appendChild(dot);const price=document.createElement("div");price.className="menu-price";price.innerText="₹"+item.price;const desc=document.createElement("div");desc.className="menu-desc";desc.innerText=item.desc||"";body.appendChild(top);body.appendChild(price);body.appendChild(desc);const cw=document.createElement("div");cw.id="ctrl-"+item.name.replace(/\s+/g,"-").replace(/[()]/g,"");renderMenuControl(cw,item);body.appendChild(cw);card.appendChild(body);return card;}
-function renderMenuControl(wrap,item){wrap.innerHTML="";const existing=cart.find(c=>c.name===item.name);if(!existing){const btn=document.createElement("button");btn.className="add-btn";btn.innerText="Add to Cart";btn.onclick=()=>{if(!localStorage.getItem("loggedInUser")||localStorage.getItem("loggedInRole")!=="user"){alert("Please login as a Customer to add items.");openAuthModal("login");return;}addToCart(item);renderMenuControl(wrap,item);refreshCartPanel();};wrap.appendChild(btn);}else{const ctrl=document.createElement("div");ctrl.className="qty-control";const minus=document.createElement("button");minus.className="qty-btn";minus.innerText="−";const num=document.createElement("span");num.className="qty-num";num.innerText=existing.qty;const plus=document.createElement("button");plus.className="qty-btn";plus.innerText="+";minus.onclick=()=>{existing.qty--;if(existing.qty<=0)cart=cart.filter(c=>c.name!==item.name);updateCartCount();renderMenuControl(wrap,item);refreshCartPanel();};plus.onclick=()=>{existing.qty++;updateCartCount();renderMenuControl(wrap,item);refreshCartPanel();};ctrl.appendChild(minus);ctrl.appendChild(num);ctrl.appendChild(plus);wrap.appendChild(ctrl);}}
 
-/* ── CART ── */
-let cart=[];
-function addToCart(item){const ex=cart.find(c=>c.name===item.name);if(ex)ex.qty++;else cart.push({name:item.name,price:item.price,qty:1,restaurant:currentRestaurant});updateCartCount();}
-function updateCartCount(){document.getElementById("cartCount").innerText=cart.reduce((s,i)=>s+i.qty,0);}
-function refreshCartPanel(){if(document.getElementById("cartPanel").classList.contains("active"))renderCart();}
-function openCart(){document.getElementById("cartPanel").classList.add("active");renderCart();}
-function closeCart(){document.getElementById("cartPanel").classList.remove("active");}
-function renderCart(){const body=document.getElementById("cartBody");const footer=document.getElementById("cartFooter");body.innerHTML="";if(cart.length===0){body.innerHTML='<div class="empty-cart">Your cart is empty</div>';footer.style.display="none";return;}footer.style.display="block";let subtotal=0;cart.forEach((item,idx)=>{const lineTotal=item.price*item.qty;subtotal+=lineTotal;const row=document.createElement("div");row.className="cart-item";const nameEl=document.createElement("span");nameEl.className="cart-item-name";nameEl.innerText=item.name;const ctrl=document.createElement("div");ctrl.className="cart-qty-control";const minus=document.createElement("button");minus.className="cart-qty-btn";minus.innerText="−";const num=document.createElement("span");num.className="cart-qty-num";num.innerText=item.qty;const plus=document.createElement("button");plus.className="cart-qty-btn";plus.innerText="+";minus.onclick=()=>{item.qty--;if(item.qty<=0)cart.splice(idx,1);updateCartCount();renderCart();const w=document.getElementById("ctrl-"+item.name.replace(/\s+/g,"-").replace(/[()]/g,""));if(w)renderMenuControl(w,item);};plus.onclick=()=>{item.qty++;updateCartCount();renderCart();const w=document.getElementById("ctrl-"+item.name.replace(/\s+/g,"-").replace(/[()]/g,""));if(w)renderMenuControl(w,item);};ctrl.appendChild(minus);ctrl.appendChild(num);ctrl.appendChild(plus);const priceEl=document.createElement("span");priceEl.className="cart-item-price";priceEl.innerText="₹"+lineTotal.toFixed(0);row.appendChild(nameEl);row.appendChild(ctrl);row.appendChild(priceEl);body.appendChild(row);});const gst=subtotal*0.05,cgst=subtotal*0.025,delivery=40,total=subtotal+gst+cgst+delivery;document.getElementById("subtotal").innerText=subtotal.toFixed(0);document.getElementById("gst").innerText=gst.toFixed(0);document.getElementById("cgst").innerText=cgst.toFixed(0);document.getElementById("delivery").innerText=delivery;document.getElementById("total").innerText=total.toFixed(0);}
+// Remove focus ring when search input loses focus
+function handleSearchBlur() {
+  document.getElementById("searchBox").classList.remove("focused");
+  // Small delay so a suggestion click can register before hiding
+  setTimeout(() => document.getElementById("searchSuggestions").classList.remove("show"), 200);
+}
 
-/* ── PAYMENT ── */
-let payStep=1,selectedPayType="paid";
-function selectPayType(type){selectedPayType=type;document.getElementById("ptOnline").classList.toggle("selected",type==="paid");document.getElementById("ptCOD").classList.toggle("selected",type==="cod");document.getElementById("cardFields").style.display=type==="paid"?"":"none";document.getElementById("codNote").style.display=type==="cod"?"":"none";}
-function openPayment(){if(cart.length===0){alert("Your cart is empty!");return;}document.getElementById("payModal").style.display="flex";goStep(1);selectPayType("paid");}
-function closePayment(){document.getElementById("payModal").style.display="none";}
-function goStep(n){payStep=n;[1,2,3,4].forEach(i=>{document.getElementById("step"+i).classList.toggle("active",i===n);const dot=document.getElementById("dot"+i);if(dot){dot.classList.toggle("active",i===n);dot.classList.toggle("done",i<n);}});const fills=[0,0,50,100];const fill=document.getElementById("progressFill");if(fill)fill.style.width=(fills[n-1]||0)+"%";}
-function clearErr2(...ids){ids.forEach(id=>{const el=document.getElementById(id);if(el){el.innerText="";const inp=document.getElementById(id.replace("err-","addr-"));if(inp)inp.classList.remove("input-error");}});}
-function showErr2(id,msg){const el=document.getElementById(id);if(el)el.innerText=msg;const inp=document.getElementById(id.replace("err-","addr-"));if(inp)inp.classList.add("input-error");}
-function goToStep2(){const name=document.getElementById("addr-name").value.trim();const phone=document.getElementById("addr-phone").value.trim();const addr=document.getElementById("addr-line").value.trim();const city=document.getElementById("addr-city").value.trim();const pin=document.getElementById("addr-pin").value.trim();let valid=true;clearErr2("err-name","err-phone","err-addr","err-city","err-pin");if(!name){showErr2("err-name","Name is required");valid=false;}if(!/^[6-9]\d{9}$/.test(phone)){showErr2("err-phone","Enter valid 10-digit number");valid=false;}if(!addr||addr.length<5){showErr2("err-addr","Enter full address");valid=false;}if(!city){showErr2("err-city","City is required");valid=false;}if(!/^\d{6}$/.test(pin)){showErr2("err-pin","Enter valid 6-digit PIN");valid=false;}if(valid)goStep(2);}
-function formatCardNumber(el){let v=el.value.replace(/\D/g,"").substring(0,16);el.value=v.replace(/(.{4})/g,"$1 ").trim();}
-function formatExpiry(el){let v=el.value.replace(/\D/g,"");if(v.length>=2)v=v.substring(0,2)+"/"+v.substring(2,4);el.value=v;}
-function luhn(num){let s=0,alt=false;for(let i=num.length-1;i>=0;i--){let d=parseInt(num[i]);if(alt){d*=2;if(d>9)d-=9;}s+=d;alt=!alt;}return s%10===0;}
-function goToStep3(){if(selectedPayType==="cod"){buildReview();goStep(3);return;}const cname=document.getElementById("card-name").value.trim();const cnum=document.getElementById("card-number").value.replace(/\s/g,"");const cexp=document.getElementById("card-expiry").value.trim();const ccvv=document.getElementById("card-cvv").value.trim();let valid=true;["err-card-name","err-card-number","err-card-expiry","err-card-cvv"].forEach(id=>{document.getElementById(id).innerText="";const inp=document.getElementById(id.replace("err-card-","card-"));if(inp)inp.classList.remove("input-error");});function se(id,m){document.getElementById(id).innerText=m;const inp=document.getElementById(id.replace("err-card-","card-"));if(inp)inp.classList.add("input-error");valid=false;}if(!cname||cname.split(" ").length<2)se("err-card-name","Enter full cardholder name");if(cnum.length<15||!luhn(cnum))se("err-card-number","Enter a valid card number");if(!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cexp))se("err-card-expiry","Enter valid expiry MM/YY");else{const[mm,yy]=cexp.split("/");if(new Date(2000+parseInt(yy),parseInt(mm)-1,1)<new Date())se("err-card-expiry","Card has expired");}if(!/^\d{3,4}$/.test(ccvv))se("err-card-cvv","Enter valid CVV");if(!valid)return;buildReview();goStep(3);}
-function buildReview(){const name=document.getElementById("addr-name").value.trim();const phone=document.getElementById("addr-phone").value.trim();const addr=document.getElementById("addr-line").value.trim();const city=document.getElementById("addr-city").value.trim();const pin=document.getElementById("addr-pin").value.trim();document.getElementById("review-addr").innerText=`${name} (${phone})\n${addr}, ${city} – ${pin}`;let subtotal=cart.reduce((s,i)=>s+i.price*i.qty,0);let gst=subtotal*0.05,cgst=subtotal*0.025,delivery=40,total=subtotal+gst+cgst+delivery;const summary=document.getElementById("orderSummary");summary.innerHTML=cart.map(i=>`<div class="order-summary-row"><span>${i.name} x${i.qty}</span><span>₹${(i.price*i.qty).toFixed(0)}</span></div>`).join("")+`<div class="order-summary-row"><span>GST+CGST</span><span>₹${(gst+cgst).toFixed(0)}</span></div><div class="order-summary-row"><span>Delivery</span><span>₹40</span></div><div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;padding-top:8px;border-top:1.5px solid #e8e8e8;margin-top:6px;"><span>Total</span><span>₹${total.toFixed(0)}</span></div>`;document.getElementById("review-payment-badge").innerHTML=selectedPayType==="paid"?`<span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#22c55e;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;">💳 Paying Online</span>`:`<span style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);color:#f97316;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;">💵 Cash on Delivery</span>`;}
-function placeOrder(){const orderId="FS"+Date.now().toString().slice(-8);const name=document.getElementById("addr-name").value.trim();const phone=document.getElementById("addr-phone").value.trim();const addr=document.getElementById("addr-line").value.trim();const city=document.getElementById("addr-city").value.trim();const pin=document.getElementById("addr-pin").value.trim();const email=localStorage.getItem("loggedInUser")||"guest@foodsprint.in";let subtotal=cart.reduce((s,i)=>s+i.price*i.qty,0);let gst=subtotal*0.05,cgst=subtotal*0.025,delivery=40,total=subtotal+gst+cgst+delivery;const order={id:orderId,ts:new Date().toISOString(),time:new Date().toISOString(),customer:{name,phone,email},customerName:name,address:`${addr}, ${city} – ${pin}`,restaurant:cart[0]?.restaurant||currentRestaurant||"Unknown",items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price})),subtotal:parseFloat(subtotal.toFixed(2)),gst:parseFloat(gst.toFixed(2)),cgst:parseFloat(cgst.toFixed(2)),delivery,total:parseFloat(total.toFixed(2)),paymentType:selectedPayType,paymentMode:selectedPayType,status:"Pending"};const orders=JSON.parse(localStorage.getItem("fs_orders")||"[]");orders.unshift(order);localStorage.setItem("fs_orders",JSON.stringify(orders));document.getElementById("orderId").innerText="Order ID: "+orderId;cart=[];updateCartCount();document.querySelectorAll("[id^='ctrl-']").forEach(wrap=>{const iN=wrap.id.replace("ctrl-","").replace(/-/g," ");const mI=Object.values(restaurantMenus).flatMap(r=>r.sections.flatMap(s=>s.items)).find(i=>i.name===iN);if(mI)renderMenuControl(wrap,mI);});goStep(4);}
+// Re-render suggestions whenever the user types a character
+function handleSearchInput() {
+  showSuggestions(document.getElementById("searchInput").value);
+}
 
-document.getElementById("authModal").onclick=function(e){if(e.target===this)closeAuthModal();};
-document.getElementById("payModal").onclick=function(e){if(e.target===this)closePayment();};
+// Build and display autocomplete suggestions matching the query
+function showSuggestions(q) {
+  const box = document.getElementById("searchSuggestions");
+  q = q.trim().toLowerCase();
+  if (!q) { box.classList.remove("show"); return; } // Hide if query is empty
+
+  let results = [];
+  // Search through every item in every restaurant
+  for (const [resName, resData] of Object.entries(restaurantMenus)) {
+    for (const sec of resData.sections) {
+      for (const item of sec.items) {
+        if (item.name.toLowerCase().includes(q) || item.category.some(c => c.includes(q))) {
+          results.push({ type: "item", name: item.name, sub: resName, icon: item.veg ? "🟢" : "🔴" });
+        }
+      }
+    }
+    // Also match the restaurant name itself
+    if (resName.toLowerCase().includes(q)) {
+      results.push({ type: "restaurant", name: resName, sub: "Restaurant", icon: "🏪" });
+    }
+  }
+
+  // Deduplicate by name and limit to 7 suggestions
+  const seen = new Set();
+  results = results.filter(r => {
+    if (seen.has(r.name)) return false;
+    seen.add(r.name);
+    return true;
+  }).slice(0, 7);
+
+  if (!results.length) { box.classList.remove("show"); return; }
+
+  // Render suggestion items as HTML
+  box.innerHTML = results.map(r =>
+    `<div class="suggestion-item" onclick="selectSuggestion('${r.name.replace(/'/g, "\\'")}','${r.type}')">
+       <span class="sug-icon">${r.icon}</span>
+       <span class="sug-name">${r.name}</span>
+       <span class="sug-sub">${r.sub}</span>
+     </div>`
+  ).join("");
+  box.classList.add("show"); // Display the suggestions dropdown
+}
+
+// Handle when user clicks a suggestion item
+function selectSuggestion(name, type) {
+  document.getElementById("searchInput").value = name;
+  document.getElementById("searchSuggestions").classList.remove("show");
+  if (type === "restaurant") openMenu(name); // Go straight to menu for restaurants
+  else doSearch();                            // Otherwise run a full search
+}
+
+// Execute a search and display matching restaurants
+function doSearch() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  if (!q) { alert("Please enter a food item or restaurant"); return; }
+
+  let m = [];
+  for (const [rn, rd] of Object.entries(restaurantMenus)) {
+    if (rn.toLowerCase().includes(q)) { m.push(rn); continue; } // Restaurant name matches
+    for (const sec of rd.sections) {
+      for (const item of sec.items) {
+        if (item.name.toLowerCase().includes(q) || item.category.some(c => c.includes(q))) {
+          if (!m.includes(rn)) m.push(rn); // Item/category matches this restaurant
+        }
+      }
+    }
+  }
+
+  if (!m.length) { alert("No results found for: " + q); return; }
+
+  // Show the restaurants section with search results
+  document.getElementById("restaurantsSection").style.display = "block";
+  document.getElementById("menuSection").style.display        = "none";
+  document.getElementById("restaurantTitle").innerText        = `Search: "${q}"`;
+  document.getElementById("restaurantSubtitle").innerText     = `${m.length} restaurant(s) serve this`;
+  renderRestaurantCards(m);
+  document.getElementById("restaurantsSection").scrollIntoView({ behavior: "smooth" });
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESTAURANT LISTING
+   ══════════════════════════════════════════════════════════ */
+
+// Show restaurants that serve a particular food category
+function openRestaurantsByCategory(cat) {
+  document.getElementById("restaurantsSection").style.display = "block";
+  document.getElementById("menuSection").style.display        = "none";
+  document.getElementById("restaurantTitle").innerText        = cat + " — Restaurants";
+
+  const base   = categoryRestaurants[cat] || [];
+  const stored = Object.keys(getStoredMenus());
+  // Also include registered restaurants whose menus contain the category
+  const extra  = stored.filter(n => {
+    const m = getStoredMenus()[n];
+    return m.sections && m.sections.some(s =>
+      s.items.some(i => i.category && i.category.some(c => c.toLowerCase().includes(cat.toLowerCase())))
+    );
+  });
+
+  let list = [...new Set([...base, ...extra])];
+  if (!list.length) list.push(...Object.keys(restaurantMenus).slice(0, 3)); // Fallback: show first 3
+
+  document.getElementById("restaurantSubtitle").innerText = `${list.length} restaurant(s) available`;
+  renderRestaurantCards(list);
+  document.getElementById("restaurantsSection").scrollIntoView({ behavior: "smooth" });
+}
+
+// Render a row of restaurant cards from a list of names
+function renderRestaurantCards(list) {
+  const el = document.getElementById("restaurantList");
+  el.innerHTML = "";
+  list.forEach(res => {
+    const data = restaurantMenus[res];
+    const meta = getResMeta()[res];
+    const card = document.createElement("div");
+    card.className = "res-card";
+
+    // Restaurant logo with fallback to auto-generated avatar
+    const img    = document.createElement("img");
+    const logoUrl = restaurantLogos[res] || (meta && meta.logo) ||
+      `https://ui-avatars.com/api/?name=${encodeURIComponent(res)}&background=ffcc00&color=000&size=44`;
+    img.src = logoUrl;
+    img.onerror = () => img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(res)}&background=ffcc00&color=000&size=44`;
+
+    // Restaurant name and subtitle text
+    const info  = document.createElement("div");
+    info.className = "res-card-info";
+    const name  = document.createElement("span");
+    name.innerText = res;
+    const sub   = document.createElement("small");
+    sub.innerText  = (data && data.subtitle) || "";
+
+    info.appendChild(name);
+    info.appendChild(sub);
+    card.appendChild(img);
+    card.appendChild(info);
+    card.onclick = () => openMenu(res); // Click opens this restaurant's menu
+    el.appendChild(card);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   MENU DISPLAY
+   ══════════════════════════════════════════════════════════ */
+
+let currentRestaurant = ""; // Name of the currently open restaurant
+let activeFilter      = "all"; // Current filter (all / veg / nonveg / best)
+let maxPrice          = 600;   // Current max-price slider value
+
+// Open and display the full menu for a given restaurant
+function openMenu(restaurant) {
+  mergeRegisteredRestaurants(); // Re-merge to pick up any recently added dashboard items
+  currentRestaurant = restaurant;
+  const data = restaurantMenus[restaurant];
+
+  // Show menu section, hide restaurant list
+  document.getElementById("menuSection").style.display = "block";
+  document.getElementById("menuTitle").innerText       = restaurant;
+  document.getElementById("menuSubtitle").innerText    = data ? data.subtitle : "";
+
+  // Reset all filters to defaults
+  activeFilter = "all";
+  maxPrice     = 600;
+  document.getElementById("priceRange").value = 600;
+  document.getElementById("priceVal").innerText = "₹600";
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  document.querySelector("[data-filter='all']").classList.add("active");
+
+  renderMenu(restaurant); // Render the menu grid and sidebar
+  document.getElementById("menuSection").scrollIntoView({ behavior: "smooth" });
+}
+
+// Build and render the full menu (sidebar + item cards) for a restaurant
+function renderMenu(restaurant) {
+  const data = restaurantMenus[restaurant];
+
+  if (!data || !data.sections || !data.sections.length) {
+    // No menu data available
+    document.getElementById("menuContent").innerHTML = "<div class='no-results'><div style='font-size:48px'>🍽</div><p>Menu coming soon.</p></div>";
+    document.getElementById("sidebarLinks").innerHTML = "";
+    return;
+  }
+
+  // Build sidebar navigation links for each menu section
+  const sidebar = document.getElementById("sidebarLinks");
+  sidebar.innerHTML = "";
+  data.sections.forEach((sec, i) => {
+    const div = document.createElement("div");
+    div.className = "sidebar-item" + (i === 0 ? " active" : "");
+    div.id = "si-" + sec.id;
+
+    // Count visible items after applying current filters
+    const vc = sec.items.filter(item => passesFilter(item)).length;
+    div.innerHTML = `${sec.title} <span class="si-count">${vc}</span>`;
+
+    div.onclick = () => {
+      // Activate clicked sidebar item and scroll to its section
+      document.querySelectorAll(".sidebar-item").forEach(s => s.classList.remove("active"));
+      div.classList.add("active");
+      const el = document.getElementById("ms-" + sec.id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    sidebar.appendChild(div);
+  });
+
+  // Build menu item cards grouped by section
+  const content = document.getElementById("menuContent");
+  content.innerHTML = "";
+  let anyVisible = false;
+
+  data.sections.forEach(sec => {
+    const wrap = document.createElement("div");
+    wrap.className = "menu-section";
+    wrap.id        = "ms-" + sec.id;
+    wrap.innerHTML = `<div class="menu-section-title">${sec.title}</div>` +
+                     (sec.desc ? `<div class="menu-section-desc">${sec.desc}</div>` : "");
+
+    const grid = document.createElement("div");
+    grid.className = "menu-items-grid";
+    let sv = 0; // Count of visible items in this section
+
+    sec.items.forEach(item => {
+      const card = buildMenuCard(item);
+      if (!passesFilter(item)) card.classList.add("hidden"); // Hide filtered-out items
+      else sv++;
+      grid.appendChild(card);
+    });
+
+    wrap.appendChild(grid);
+    if (sv === 0) wrap.style.display = "none"; // Hide section if all items filtered out
+    else anyVisible = true;
+    content.appendChild(wrap);
+
+    // Update the sidebar count badge for this section
+    const si  = document.getElementById("si-" + sec.id);
+    if (si) {
+      const cnt = si.querySelector(".si-count");
+      if (cnt) cnt.innerText = sv;
+    }
+  });
+
+  // Show "no results" message if every section is hidden
+  if (!anyVisible) {
+    content.innerHTML = `<div class="no-results"><div style="font-size:48px">🍽</div><p>No items match your filters.</p></div>`;
+  }
+}
+
+// Returns true if a menu item passes all currently active filters
+function passesFilter(item) {
+  if (activeFilter === "veg"    && !item.veg)  return false; // Veg filter: exclude non-veg
+  if (activeFilter === "nonveg" && item.veg)   return false; // Non-veg filter: exclude veg
+  if (activeFilter === "best"   && !item.best) return false; // Bestseller filter
+  if (item.price > maxPrice)                   return false; // Price cap filter
+  return true;
+}
+
+// Activate a filter button and re-render the menu
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  applyFilters();
+}
+
+// Read the price slider value and re-render the menu
+function applyFilters() {
+  maxPrice = parseInt(document.getElementById("priceRange").value);
+  document.getElementById("priceVal").innerText = "₹" + maxPrice;
+  if (currentRestaurant) renderMenu(currentRestaurant);
+}
+
+// Build a single menu item card DOM element
+function buildMenuCard(item) {
+  const card = document.createElement("div");
+  card.className = "menu-card";
+  card.id        = "mcard-" + item.name.replace(/\s+/g, "-").replace(/[()]/g, "");
+
+  // Item thumbnail image with fallback
+  const img   = document.createElement("img");
+  img.src     = item.img || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300";
+  img.alt     = item.name;
+  img.onerror = () => img.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300";
+
+  // Bestseller ribbon badge (absolute positioned over image)
+  if (item.best) {
+    const b       = document.createElement("div");
+    b.className   = "best-badge";
+    b.innerText   = "⭐ BESTSELLER";
+    card.appendChild(b);
+  }
+
+  // Spicy chilli emoji badge (absolute positioned over image)
+  if (item.spicy) {
+    const s       = document.createElement("div");
+    s.className   = "spicy-badge";
+    s.innerText   = "🌶";
+    card.appendChild(s);
+  }
+
+  card.appendChild(img);
+
+  // Card body: name, veg dot, price, description, add/qty control
+  const body  = document.createElement("div");
+  body.className = "menu-card-body";
+
+  const top   = document.createElement("div");
+  top.className = "menu-card-top";
+
+  const name  = document.createElement("h4");
+  name.innerText = item.name;
+
+  // Coloured veg/non-veg indicator square
+  const dot   = document.createElement("div");
+  dot.className = "veg-dot " + (item.veg ? "veg" : "nonveg");
+
+  top.appendChild(name);
+  top.appendChild(dot);
+
+  const price = document.createElement("div");
+  price.className = "menu-price";
+  price.innerText = "₹" + item.price;
+
+  const desc  = document.createElement("div");
+  desc.className = "menu-desc";
+  desc.innerText = item.desc || "";
+
+  body.appendChild(top);
+  body.appendChild(price);
+  body.appendChild(desc);
+
+  // Quantity control wrapper (renders Add button or +/- spinner)
+  const cw  = document.createElement("div");
+  cw.id     = "ctrl-" + item.name.replace(/\s+/g, "-").replace(/[()]/g, "");
+  renderMenuControl(cw, item);
+
+  body.appendChild(cw);
+  card.appendChild(body);
+  return card;
+}
+
+// Render either an "Add to Cart" button or a quantity spinner inside the given wrapper
+function renderMenuControl(wrap, item) {
+  wrap.innerHTML = "";
+  const existing = cart.find(c => c.name === item.name); // Check if item already in cart
+
+  if (!existing) {
+    // Item not in cart — show simple "Add to Cart" button
+    const btn     = document.createElement("button");
+    btn.className = "add-btn";
+    btn.innerText = "Add to Cart";
+    btn.onclick   = () => {
+      // Only logged-in customers can add items
+      if (!localStorage.getItem("loggedInUser") || localStorage.getItem("loggedInRole") !== "user") {
+        alert("Please login as a Customer to add items.");
+        openAuthModal("login");
+        return;
+      }
+      addToCart(item);
+      renderMenuControl(wrap, item); // Swap button for qty spinner
+      refreshCartPanel();            // Refresh cart if it's open
+    };
+    wrap.appendChild(btn);
+  } else {
+    // Item already in cart — show quantity +/- control
+    const ctrl    = document.createElement("div");
+    ctrl.className = "qty-control";
+
+    const minus   = document.createElement("button");
+    minus.className = "qty-btn";
+    minus.innerText = "−";
+
+    const num     = document.createElement("span");
+    num.className = "qty-num";
+    num.innerText = existing.qty;
+
+    const plus    = document.createElement("button");
+    plus.className = "qty-btn";
+    plus.innerText = "+";
+
+    minus.onclick = () => {
+      existing.qty--;
+      if (existing.qty <= 0) cart = cart.filter(c => c.name !== item.name); // Remove if qty hits 0
+      updateCartCount();
+      renderMenuControl(wrap, item);
+      refreshCartPanel();
+    };
+    plus.onclick = () => {
+      existing.qty++;
+      updateCartCount();
+      renderMenuControl(wrap, item);
+      refreshCartPanel();
+    };
+
+    ctrl.appendChild(minus);
+    ctrl.appendChild(num);
+    ctrl.appendChild(plus);
+    wrap.appendChild(ctrl);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   CART
+   ══════════════════════════════════════════════════════════ */
+
+let cart = []; // Array of cart items: { name, price, qty, restaurant }
+
+// Add an item to the cart (or increment qty if already present)
+function addToCart(item) {
+  const ex = cart.find(c => c.name === item.name);
+  if (ex) ex.qty++;
+  else cart.push({ name: item.name, price: item.price, qty: 1, restaurant: currentRestaurant });
+  updateCartCount();
+}
+
+// Update the floating cart badge count
+function updateCartCount() {
+  document.getElementById("cartCount").innerText = cart.reduce((s, i) => s + i.qty, 0);
+}
+
+// Re-render the cart panel contents only if the panel is currently open
+function refreshCartPanel() {
+  if (document.getElementById("cartPanel").classList.contains("active")) renderCart();
+}
+
+// Slide open the cart panel and render its contents
+function openCart() {
+  document.getElementById("cartPanel").classList.add("active");
+  renderCart();
+}
+
+// Slide the cart panel closed
+function closeCart() {
+  document.getElementById("cartPanel").classList.remove("active");
+}
+
+// Build and display all cart items, subtotals and taxes in the cart panel
+function renderCart() {
+  const body   = document.getElementById("cartBody");
+  const footer = document.getElementById("cartFooter");
+  body.innerHTML = "";
+
+  if (cart.length === 0) {
+    body.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+    footer.style.display = "none"; // Hide totals footer when cart is empty
+    return;
+  }
+
+  footer.style.display = "block";
+  let subtotal = 0;
+
+  cart.forEach((item, idx) => {
+    const lineTotal = item.price * item.qty;
+    subtotal += lineTotal;
+
+    const row = document.createElement("div");
+    row.className = "cart-item";
+
+    // Item name label
+    const nameEl = document.createElement("span");
+    nameEl.className = "cart-item-name";
+    nameEl.innerText = item.name;
+
+    // Inline quantity control for the cart row
+    const ctrl  = document.createElement("div");
+    ctrl.className = "cart-qty-control";
+
+    const minus = document.createElement("button");
+    minus.className = "cart-qty-btn";
+    minus.innerText = "−";
+
+    const num   = document.createElement("span");
+    num.className = "cart-qty-num";
+    num.innerText = item.qty;
+
+    const plus  = document.createElement("button");
+    plus.className = "cart-qty-btn";
+    plus.innerText = "+";
+
+    minus.onclick = () => {
+      item.qty--;
+      if (item.qty <= 0) cart.splice(idx, 1); // Remove item from cart
+      updateCartCount();
+      renderCart(); // Re-render cart with updated quantities
+      // Also refresh the menu card control if menu is visible
+      const w = document.getElementById("ctrl-" + item.name.replace(/\s+/g, "-").replace(/[()]/g, ""));
+      if (w) renderMenuControl(w, item);
+    };
+    plus.onclick = () => {
+      item.qty++;
+      updateCartCount();
+      renderCart();
+      const w = document.getElementById("ctrl-" + item.name.replace(/\s+/g, "-").replace(/[()]/g, ""));
+      if (w) renderMenuControl(w, item);
+    };
+
+    ctrl.appendChild(minus);
+    ctrl.appendChild(num);
+    ctrl.appendChild(plus);
+
+    // Line total price for this item
+    const priceEl = document.createElement("span");
+    priceEl.className = "cart-item-price";
+    priceEl.innerText = "₹" + lineTotal.toFixed(0);
+
+    row.appendChild(nameEl);
+    row.appendChild(ctrl);
+    row.appendChild(priceEl);
+    body.appendChild(row);
+  });
+
+  // Calculate taxes and delivery, then update footer totals
+  const gst      = subtotal * 0.05;   // 5% GST
+  const cgst     = subtotal * 0.025;  // 2.5% CGST
+  const delivery = 40;                 // Flat delivery fee
+  const total    = subtotal + gst + cgst + delivery;
+
+  document.getElementById("subtotal").innerText = subtotal.toFixed(0);
+  document.getElementById("gst").innerText      = gst.toFixed(0);
+  document.getElementById("cgst").innerText     = cgst.toFixed(0);
+  document.getElementById("delivery").innerText = delivery;
+  document.getElementById("total").innerText    = total.toFixed(0);
+}
+
+/* ══════════════════════════════════════════════════════════
+   PAYMENT FLOW
+   ══════════════════════════════════════════════════════════ */
+
+let payStep         = 1;       // Current checkout step (1=Address, 2=Payment, 3=Review, 4=Success)
+let selectedPayType = "paid";  // Payment type: "paid" (online) or "cod" (cash on delivery)
+
+// Toggle between online and COD payment types
+function selectPayType(type) {
+  selectedPayType = type;
+  document.getElementById("ptOnline").classList.toggle("selected", type === "paid");
+  document.getElementById("ptCOD").classList.toggle("selected",    type === "cod");
+  document.getElementById("cardFields").style.display = type === "paid" ? "" : "none"; // Show card fields only for online
+  document.getElementById("codNote").style.display    = type === "cod"  ? "" : "none"; // Show COD note only for COD
+}
+
+// Open the payment modal at step 1
+function openPayment() {
+  if (cart.length === 0) { alert("Your cart is empty!"); return; }
+  document.getElementById("payModal").style.display = "flex";
+  goStep(1);
+  selectPayType("paid"); // Default to online payment
+}
+
+// Close the payment modal
+function closePayment() {
+  document.getElementById("payModal").style.display = "none";
+}
+
+// Navigate to a specific checkout step and update progress indicators
+function goStep(n) {
+  payStep = n;
+  [1, 2, 3, 4].forEach(i => {
+    document.getElementById("step" + i).classList.toggle("active", i === n); // Show active step
+    const dot = document.getElementById("dot" + i);
+    if (dot) {
+      dot.classList.toggle("active", i === n);     // Highlight current step dot
+      dot.classList.toggle("done",   i < n);       // Mark completed step dots
+    }
+  });
+  // Update the progress bar fill width based on current step
+  const fills = [0, 0, 50, 100];
+  const fill  = document.getElementById("progressFill");
+  if (fill) fill.style.width = (fills[n - 1] || 0) + "%";
+}
+
+// Clear field-level validation error messages and border highlights
+function clearErr2(...ids) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.innerText = "";
+      const inp = document.getElementById(id.replace("err-", "addr-")); // Find corresponding input
+      if (inp) inp.classList.remove("input-error");
+    }
+  });
+}
+
+// Display a field-level validation error message and highlight the input
+function showErr2(id, msg) {
+  const el = document.getElementById(id);
+  if (el) el.innerText = msg;
+  const inp = document.getElementById(id.replace("err-", "addr-"));
+  if (inp) inp.classList.add("input-error"); // Red border on invalid field
+}
+
+// Validate Step 1 (address fields) before advancing to Step 2
+function goToStep2() {
+  const name  = document.getElementById("addr-name").value.trim();
+  const phone = document.getElementById("addr-phone").value.trim();
+  const addr  = document.getElementById("addr-line").value.trim();
+  const city  = document.getElementById("addr-city").value.trim();
+  const pin   = document.getElementById("addr-pin").value.trim();
+  let valid   = true;
+
+  clearErr2("err-name", "err-phone", "err-addr", "err-city", "err-pin");
+
+  if (!name)                         { showErr2("err-name",  "Name is required");                  valid = false; }
+  if (!/^[6-9]\d{9}$/.test(phone))  { showErr2("err-phone", "Enter valid 10-digit number");        valid = false; }
+  if (!addr || addr.length < 5)      { showErr2("err-addr",  "Enter full address");                 valid = false; }
+  if (!city)                         { showErr2("err-city",  "City is required");                   valid = false; }
+  if (!/^\d{6}$/.test(pin))          { showErr2("err-pin",   "Enter valid 6-digit PIN");            valid = false; }
+
+  if (valid) goStep(2); // Advance only if all fields are valid
+}
+
+// Auto-format card number input with spaces every 4 digits
+function formatCardNumber(el) {
+  let v = el.value.replace(/\D/g, "").substring(0, 16); // Strip non-digits, cap at 16
+  el.value = v.replace(/(.{4})/g, "$1 ").trim();         // Insert space every 4 chars
+}
+
+// Auto-format expiry date input as MM/YY
+function formatExpiry(el) {
+  let v = el.value.replace(/\D/g, "");
+  if (v.length >= 2) v = v.substring(0, 2) + "/" + v.substring(2, 4);
+  el.value = v;
+}
+
+// Validate a credit card number using the Luhn algorithm
+function luhn(num) {
+  let s = 0, alt = false;
+  for (let i = num.length - 1; i >= 0; i--) {
+    let d = parseInt(num[i]);
+    if (alt) { d *= 2; if (d > 9) d -= 9; }
+    s += d;
+    alt = !alt;
+  }
+  return s % 10 === 0; // Valid if sum is divisible by 10
+}
+
+// Validate Step 2 (payment fields) before advancing to Step 3
+function goToStep3() {
+  if (selectedPayType === "cod") {
+    buildReview(); // No card validation needed for COD
+    goStep(3);
+    return;
+  }
+
+  // Validate card fields for online payment
+  const cname = document.getElementById("card-name").value.trim();
+  const cnum  = document.getElementById("card-number").value.replace(/\s/g, "");
+  const cexp  = document.getElementById("card-expiry").value.trim();
+  const ccvv  = document.getElementById("card-cvv").value.trim();
+  let valid   = true;
+
+  // Clear previous errors
+  ["err-card-name", "err-card-number", "err-card-expiry", "err-card-cvv"].forEach(id => {
+    document.getElementById(id).innerText = "";
+    const inp = document.getElementById(id.replace("err-card-", "card-"));
+    if (inp) inp.classList.remove("input-error");
+  });
+
+  // Inline helper: show error and mark field invalid
+  function se(id, m) {
+    document.getElementById(id).innerText = m;
+    const inp = document.getElementById(id.replace("err-card-", "card-"));
+    if (inp) inp.classList.add("input-error");
+    valid = false;
+  }
+
+  if (!cname || cname.split(" ").length < 2) se("err-card-name",   "Enter full cardholder name");
+  if (cnum.length < 15 || !luhn(cnum))        se("err-card-number", "Enter a valid card number");
+  if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cexp)) se("err-card-expiry", "Enter valid expiry MM/YY");
+  else {
+    const [mm, yy] = cexp.split("/");
+    // Check the card hasn't expired
+    if (new Date(2000 + parseInt(yy), parseInt(mm) - 1, 1) < new Date()) se("err-card-expiry", "Card has expired");
+  }
+  if (!/^\d{3,4}$/.test(ccvv)) se("err-card-cvv", "Enter valid CVV");
+
+  if (!valid) return; // Abort if any validation failed
+
+  buildReview(); // Build the order review summary
+  goStep(3);
+}
+
+// Populate the Step 3 review panel with address, items and totals
+function buildReview() {
+  const name = document.getElementById("addr-name").value.trim();
+  const phone= document.getElementById("addr-phone").value.trim();
+  const addr = document.getElementById("addr-line").value.trim();
+  const city = document.getElementById("addr-city").value.trim();
+  const pin  = document.getElementById("addr-pin").value.trim();
+
+  // Display formatted delivery address
+  document.getElementById("review-addr").innerText = `${name} (${phone})\n${addr}, ${city} – ${pin}`;
+
+  // Calculate totals
+  let subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  let gst      = subtotal * 0.05;
+  let cgst     = subtotal * 0.025;
+  let delivery = 40;
+  let total    = subtotal + gst + cgst + delivery;
+
+  // Build item-by-item summary table
+  const summary = document.getElementById("orderSummary");
+  summary.innerHTML =
+    cart.map(i =>
+      `<div class="order-summary-row"><span>${i.name} x${i.qty}</span><span>₹${(i.price * i.qty).toFixed(0)}</span></div>`
+    ).join("") +
+    `<div class="order-summary-row"><span>GST+CGST</span><span>₹${(gst + cgst).toFixed(0)}</span></div>` +
+    `<div class="order-summary-row"><span>Delivery</span><span>₹40</span></div>` +
+    `<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;padding-top:8px;border-top:1.5px solid #e8e8e8;margin-top:6px;">` +
+    `<span>Total</span><span>₹${total.toFixed(0)}</span></div>`;
+
+  // Show payment method badge
+  document.getElementById("review-payment-badge").innerHTML = selectedPayType === "paid"
+    ? `<span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#22c55e;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;">💳 Paying Online</span>`
+    : `<span style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);color:#f97316;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;">💵 Cash on Delivery</span>`;
+}
+
+// Finalise and save the order, then show the success screen
+function placeOrder() {
+  // Generate a unique order ID from the current timestamp
+  const orderId = "FS" + Date.now().toString().slice(-8);
+
+  // Read delivery address fields
+  const name  = document.getElementById("addr-name").value.trim();
+  const phone = document.getElementById("addr-phone").value.trim();
+  const addr  = document.getElementById("addr-line").value.trim();
+  const city  = document.getElementById("addr-city").value.trim();
+  const pin   = document.getElementById("addr-pin").value.trim();
+  const email = localStorage.getItem("loggedInUser") || "guest@foodsprint.in";
+
+  // Recalculate totals
+  let subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  let gst      = subtotal * 0.05;
+  let cgst     = subtotal * 0.025;
+  let delivery = 40;
+  let total    = subtotal + gst + cgst + delivery;
+
+  // Build the order object to persist
+  const order = {
+    id:            orderId,
+    ts:            new Date().toISOString(),
+    time:          new Date().toISOString(),
+    customer:      { name, phone, email },
+    customerName:  name,
+    address:       `${addr}, ${city} – ${pin}`,
+    restaurant:    cart[0]?.restaurant || currentRestaurant || "Unknown",
+    items:         cart.map(i => ({ name: i.name, qty: i.qty, price: i.price })),
+    subtotal:      parseFloat(subtotal.toFixed(2)),
+    gst:           parseFloat(gst.toFixed(2)),
+    cgst:          parseFloat(cgst.toFixed(2)),
+    delivery,
+    total:         parseFloat(total.toFixed(2)),
+    paymentType:   selectedPayType,
+    paymentMode:   selectedPayType,
+    status:        "Pending"
+  };
+
+  // Append order to the persistent orders list in localStorage
+  const orders = JSON.parse(localStorage.getItem("fs_orders") || "[]");
+  orders.unshift(order); // Add to front so newest appears first
+  localStorage.setItem("fs_orders", JSON.stringify(orders));
+
+  // Display the order ID on the success screen
+  document.getElementById("orderId").innerText = "Order ID: " + orderId;
+
+  // Clear the cart
+  cart = [];
+  updateCartCount();
+
+  // Reset all visible menu-card quantity controls back to "Add to Cart" buttons
+  document.querySelectorAll("[id^='ctrl-']").forEach(wrap => {
+    const iN = wrap.id.replace("ctrl-", "").replace(/-/g, " ");
+    const mI = Object.values(restaurantMenus)
+      .flatMap(r => r.sections.flatMap(s => s.items))
+      .find(i => i.name === iN);
+    if (mI) renderMenuControl(wrap, mI);
+  });
+
+  goStep(4); // Advance to success screen
+}
+
+/* ══════════════════════════════════════════════════════════
+   MODAL CLOSE ON BACKDROP CLICK
+   ══════════════════════════════════════════════════════════ */
+
+// Close auth modal when clicking the dark overlay backdrop
+document.getElementById("authModal").onclick = function (e) {
+  if (e.target === this) closeAuthModal();
+};
+
+// Close payment modal when clicking the dark overlay backdrop
+document.getElementById("payModal").onclick = function (e) {
+  if (e.target === this) closePayment();
+};
 </script>
 </body>
 </html>
