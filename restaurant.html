@@ -1,0 +1,2146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Sprint — Restaurant Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+
+    /* ── RESET ───────────────────────────────────────────────── */
+    * {
+      margin:     0;
+      padding:    0;
+      box-sizing: border-box;
+    }
+
+    /* ── CSS VARIABLES ───────────────────────────────────────── */
+    :root {
+      --black:       #0a0a0a;
+      --yellow:      #ffcc00;
+      --yellow-dim:  #e6b800;
+      --yellow-soft: rgba(255, 204, 0, 0.12);
+      --white:       #fff;
+      --gray:        #f4f4f4;
+      --border:      #e8e8e8;
+      --shadow:      0 4px 24px rgba(0, 0, 0, 0.08);
+      --sidebar-w:   250px;
+      --red:         #ef4444;
+      --blue:        #3b82f6;
+      --green:       #22c55e;
+      --orange:      #f97316;
+      --purple:      #8b5cf6;
+    }
+
+    /* ── BASE BODY ───────────────────────────────────────────── */
+    body {
+      background:     #f0f0ee;
+      font-family:    'DM Sans', sans-serif;
+      color:          var(--black);
+      display:        flex;
+      min-height:     100vh;
+    }
+
+    /* ── HEADING FONT ────────────────────────────────────────── */
+    h1, h2, h3, h4, .brand {
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────── */
+    .sidebar {
+      width:           var(--sidebar-w);
+      background:      var(--black);
+      color:           #fff;
+      display:         flex;
+      flex-direction:  column;
+      position:        fixed;
+      top:             0;
+      left:            0;
+      height:          100vh;
+      z-index:         200;
+      overflow-y:      auto;
+    }
+
+    /* ── SIDEBAR LOGO ROW ────────────────────────────────────── */
+    .sidebar-logo {
+      padding:       22px 18px 18px;
+      display:       flex;
+      align-items:   center;
+      gap:           10px;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .sidebar-logo img {
+      height: 36px;
+    }
+
+    .brand {
+      color:       var(--yellow);
+      font-size:   16px;
+      font-weight: 800;
+    }
+
+    /* ── RESTAURANT NAME TAG IN SIDEBAR ──────────────────────── */
+    .res-name-tag {
+      background:    rgba(59, 130, 246, 0.15);
+      color:         #3b82f6;
+      padding:       2px 8px;
+      border-radius: 10px;
+      font-size:     10px;
+      font-weight:   700;
+      margin-left:   auto;
+      white-space:   nowrap;
+      overflow:      hidden;
+      text-overflow: ellipsis;
+      max-width:     80px;
+    }
+
+    /* ── SIDEBAR SECTION LABEL ───────────────────────────────── */
+    .nav-section {
+      padding:        18px 14px 6px;
+      font-size:      10px;
+      font-weight:    700;
+      color:          #555;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── SIDEBAR NAV ITEM ────────────────────────────────────── */
+    .nav-item {
+      display:       flex;
+      align-items:   center;
+      gap:           10px;
+      padding:       10px 14px;
+      border-radius: 8px;
+      cursor:        pointer;
+      font-size:     13px;
+      font-weight:   500;
+      color:         #aaa;
+      transition:    0.2s;
+      margin:        1px 6px;
+    }
+
+    .nav-item:hover {
+      background: #1a1a1a;
+      color:      #fff;
+    }
+
+    /* Active nav item highlighted in yellow */
+    .nav-item.active {
+      background:  var(--yellow-soft);
+      color:       var(--yellow);
+      font-weight: 700;
+    }
+
+    /* Icon inside nav item */
+    .nav-item .ni-icon {
+      font-size:  15px;
+      width:      18px;
+      text-align: center;
+    }
+
+    /* Red badge showing pending order count */
+    .ni-badge {
+      margin-left:   auto;
+      background:    #ef4444;
+      color:         #fff;
+      border-radius: 10px;
+      font-size:     10px;
+      font-weight:   800;
+      padding:       2px 6px;
+      min-width:     18px;
+      text-align:    center;
+    }
+
+    /* ── SIDEBAR FOOTER ──────────────────────────────────────── */
+    .sidebar-bottom {
+      margin-top:  auto;
+      padding:     14px;
+      border-top:  1px solid #1a1a1a;
+    }
+
+    /* User card inside sidebar footer */
+    .res-user {
+      display:       flex;
+      align-items:   center;
+      gap:           10px;
+      padding:       10px 8px;
+      border-radius: 8px;
+      background:    #111;
+    }
+
+    /* Circular avatar with initial letter */
+    .res-user .ru-avatar {
+      width:           34px;
+      height:          34px;
+      background:      var(--blue);
+      border-radius:   50%;
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      font-weight:     800;
+      font-size:       12px;
+      color:           #fff;
+    }
+
+    /* Username text in sidebar footer */
+    .ru-info .ru-name {
+      font-size:     12px;
+      font-weight:   700;
+      color:         #fff;
+      overflow:      hidden;
+      white-space:   nowrap;
+      text-overflow: ellipsis;
+      max-width:     120px;
+    }
+
+    /* Role label below username */
+    .ru-info .ru-role {
+      font-size:   10px;
+      color:       #3b82f6;
+      font-weight: 600;
+    }
+
+    /* ── MAIN CONTENT AREA ───────────────────────────────────── */
+    .main {
+      margin-left:    var(--sidebar-w);
+      flex:           1;
+      display:        flex;
+      flex-direction: column;
+      min-height:     100vh;
+    }
+
+    /* ── TOP BAR ─────────────────────────────────────────────── */
+    .topbar {
+      background:      #fff;
+      padding:         14px 28px;
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+      border-bottom:   1px solid var(--border);
+      position:        sticky;
+      top:             0;
+      z-index:         100;
+      box-shadow:      0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .topbar-left {
+      display:        flex;
+      flex-direction: column;
+    }
+
+    .topbar h2 {
+      font-size:   18px;
+      font-weight: 800;
+      color:       var(--black);
+    }
+
+    /* Small restaurant name subtitle below page title */
+    .topbar-sub {
+      font-size:  12px;
+      color:      #888;
+      margin-top: 1px;
+    }
+
+    .topbar-right {
+      display:     flex;
+      align-items: center;
+      gap:         10px;
+    }
+
+    /* ── ONLINE/OFFLINE STATUS BADGE ─────────────────────────── */
+    .live-badge {
+      display:       flex;
+      align-items:   center;
+      gap:           6px;
+      background:    #f0fdf4;
+      border:        1.5px solid #86efac;
+      border-radius: 20px;
+      padding:       6px 14px;
+      font-size:     12px;
+      font-weight:   700;
+      color:         #16a34a;
+      cursor:        pointer;
+      transition:    0.2s;
+    }
+
+    /* Pulsing green dot when online */
+    .live-badge .dot {
+      width:         7px;
+      height:        7px;
+      background:    #22c55e;
+      border-radius: 50%;
+      animation:     pulse 1.5s infinite;
+    }
+
+    /* Offline style — red background */
+    .live-badge.offline {
+      background:   #fef2f2;
+      border-color: #fca5a5;
+      color:        #dc2626;
+    }
+
+    /* Static red dot when offline */
+    .live-badge.offline .dot {
+      background: #ef4444;
+      animation:  none;
+    }
+
+    /* Pulse animation for online dot */
+    @keyframes pulse {
+      0%,  100% { opacity: 1; }
+      50%        { opacity: 0.4; }
+    }
+
+    /* Clock display in top bar */
+    .tb-time {
+      font-size: 12px;
+      color:     #888;
+    }
+
+    /* ── PAGE SECTIONS ───────────────────────────────────────── */
+    .page {
+      display: none;
+      padding: 24px 28px;
+      flex:    1;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ── STATS GRID (4 columns) ──────────────────────────────── */
+    .stats-grid {
+      display:               grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:                   14px;
+      margin-bottom:         22px;
+    }
+
+    /* Individual stat card */
+    .stat-card {
+      background:    #fff;
+      border-radius: 12px;
+      padding:       18px 20px;
+      box-shadow:    var(--shadow);
+      position:      relative;
+      overflow:      hidden;
+      transition:    0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Coloured top border stripe via pseudo-element */
+    .stat-card::before {
+      content:  '';
+      position: absolute;
+      top:      0;
+      left:     0;
+      right:    0;
+      height:   3px;
+    }
+
+    .stat-card.yellow::before { background: var(--yellow); }
+    .stat-card.green::before  { background: var(--green);  }
+    .stat-card.blue::before   { background: var(--blue);   }
+    .stat-card.orange::before { background: var(--orange); }
+
+    .stat-icon {
+      font-size:     24px;
+      margin-bottom: 8px;
+    }
+
+    /* Uppercase label above stat value */
+    .stat-label {
+      font-size:      11px;
+      color:          #888;
+      font-weight:    600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom:  3px;
+    }
+
+    /* Large number */
+    .stat-value {
+      font-size:   24px;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* Small helper text below value */
+    .stat-sub {
+      font-size:  11px;
+      color:      #aaa;
+      margin-top: 3px;
+    }
+
+    /* ── WHITE CARD ──────────────────────────────────────────── */
+    .card {
+      background:    #fff;
+      border-radius: 12px;
+      box-shadow:    var(--shadow);
+      overflow:      hidden;
+      margin-bottom: 18px;
+    }
+
+    .card-header {
+      padding:         16px 20px;
+      border-bottom:   1px solid var(--border);
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+    }
+
+    .card-header h3 {
+      font-size:   15px;
+      font-weight: 800;
+    }
+
+    /* ── GENERIC BUTTON ──────────────────────────────────────── */
+    .btn {
+      padding:       7px 14px;
+      border-radius: 7px;
+      border:        none;
+      cursor:        pointer;
+      font-family:   'DM Sans', sans-serif;
+      font-size:     12px;
+      font-weight:   600;
+      transition:    0.2s;
+    }
+
+    .btn-yellow           { background: var(--yellow); color: var(--black); }
+    .btn-yellow:hover     { background: var(--yellow-dim); }
+    .btn-outline          { background: #fff; border: 1.5px solid var(--border); color: #555; }
+    .btn-outline:hover    { border-color: var(--yellow); }
+    .btn-green            { background: #dcfce7; color: #16a34a; border: 1.5px solid #86efac; }
+    .btn-red              { background: #fee2e2; color: #dc2626; border: 1.5px solid #fca5a5; }
+    .btn-blue             { background: #dbeafe; color: #1d4ed8; border: 1.5px solid #93c5fd; }
+    .btn-sm               { padding: 4px 10px; font-size: 11px; }
+
+    /* ── DATA TABLE ──────────────────────────────────────────── */
+    table {
+      width:           100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      padding:        10px 16px;
+      text-align:     left;
+      font-size:      10px;
+      font-weight:    700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color:          #888;
+      background:     #fafafa;
+      border-bottom:  1px solid var(--border);
+    }
+
+    td {
+      padding:        12px 16px;
+      font-size:      13px;
+      border-bottom:  1px solid #f5f5f5;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #fffcf0;
+    }
+
+    /* ── STATUS BADGES ───────────────────────────────────────── */
+    .badge {
+      display:       inline-flex;
+      align-items:   center;
+      padding:       3px 8px;
+      border-radius: 16px;
+      font-size:     11px;
+      font-weight:   700;
+    }
+
+    .badge-green  { background: #dcfce7; color: #16a34a; }
+    .badge-yellow { background: #fef9c3; color: #854d0e; }
+    .badge-red    { background: #fee2e2; color: #dc2626; }
+    .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+    .badge-orange { background: #ffedd5; color: #c2410c; }
+    .badge-purple { background: #ede9fe; color: #7c3aed; }
+    .badge-gray   { background: #f3f4f6; color: #6b7280; }
+
+    /* ── EMPTY STATE ─────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding:    40px;
+      color:      #aaa;
+    }
+
+    .empty-state .es-icon {
+      font-size:     36px;
+      margin-bottom: 10px;
+    }
+
+    /* ── KANBAN BOARD ────────────────────────────────────────── */
+    .kanban {
+      display:               grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:                   14px;
+      margin-bottom:         20px;
+    }
+
+    /* Single kanban column */
+    .kanban-col {
+      background:    #f9f9f7;
+      border-radius: 12px;
+      padding:       14px;
+    }
+
+    .kanban-col-header {
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+      margin-bottom:   12px;
+    }
+
+    .kanban-col-title {
+      font-size:   13px;
+      font-weight: 800;
+    }
+
+    /* Pill showing order count in each column */
+    .kanban-col-count {
+      background:    #eee;
+      border-radius: 10px;
+      padding:       2px 8px;
+      font-size:     11px;
+      font-weight:   700;
+    }
+
+    /* ── KANBAN ORDER CARD ───────────────────────────────────── */
+    .order-card {
+      background:    #fff;
+      border-radius: 10px;
+      padding:       14px;
+      margin-bottom: 10px;
+      box-shadow:    0 2px 10px rgba(0, 0, 0, 0.06);
+      border-left:   3px solid #eee;
+      transition:    0.2s;
+      cursor:        pointer;
+    }
+
+    .order-card:hover {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Left border colours by status */
+    .order-card.pending   { border-left-color: var(--orange); }
+    .order-card.preparing { border-left-color: var(--yellow); }
+    .order-card.delivering{ border-left-color: var(--blue);   }
+
+    .order-card-id {
+      font-size:     11px;
+      font-weight:   700;
+      color:         #888;
+      margin-bottom: 4px;
+    }
+
+    .order-card-customer {
+      font-size:     13px;
+      font-weight:   700;
+      margin-bottom: 4px;
+    }
+
+    .order-card-items {
+      font-size:     11px;
+      color:         #666;
+      margin-bottom: 8px;
+      line-height:   1.5;
+    }
+
+    .order-card-footer {
+      display:         flex;
+      justify-content: space-between;
+      align-items:     center;
+    }
+
+    .order-card-amount {
+      font-size:   13px;
+      font-weight: 700;
+    }
+
+    .order-card-time {
+      font-size: 10px;
+      color:     #aaa;
+    }
+
+    /* Row of quick-action buttons on each kanban card */
+    .order-actions {
+      display:    flex;
+      gap:        6px;
+      margin-top: 8px;
+    }
+
+    /* Quick status button inside kanban card */
+    .quick-status-btn {
+      flex:        1;
+      padding:     5px 0;
+      border-radius: 6px;
+      border:      none;
+      font-size:   11px;
+      font-weight: 700;
+      cursor:      pointer;
+      transition:  0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── MODAL OVERLAY ───────────────────────────────────────── */
+    .modal-overlay {
+      display:         none;
+      position:        fixed;
+      top:             0;
+      left:            0;
+      width:           100%;
+      height:          100%;
+      background:      rgba(0, 0, 0, 0.6);
+      z-index:         500;
+      justify-content: center;
+      align-items:     center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    /* ── MODAL BOX ───────────────────────────────────────────── */
+    .modal-box {
+      background:    #fff;
+      border-radius: 16px;
+      width:         460px;
+      max-width:     95vw;
+      max-height:    90vh;
+      overflow-y:    auto;
+      box-shadow:    0 24px 80px rgba(0, 0, 0, 0.3);
+      animation:     popIn 0.25s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    /* ── MODAL HEADER ────────────────────────────────────────── */
+    .modal-head {
+      background:      var(--black);
+      padding:         18px 22px;
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+      border-radius:   16px 16px 0 0;
+    }
+
+    .modal-head h3 {
+      color:       var(--yellow);
+      font-size:   17px;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      background: none;
+      border:     none;
+      color:      #aaa;
+      font-size:  20px;
+      cursor:     pointer;
+    }
+
+    .modal-close:hover {
+      color: #fff;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    /* ── MODAL FORM FIELD ────────────────────────────────────── */
+    .form-field {
+      margin-bottom: 13px;
+    }
+
+    .form-field label {
+      display:        block;
+      font-size:      10px;
+      font-weight:    700;
+      color:          #666;
+      margin-bottom:  4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width:         100%;
+      padding:       9px 12px;
+      border:        1.5px solid var(--border);
+      border-radius: 7px;
+      font-size:     13px;
+      font-family:   'DM Sans', sans-serif;
+      outline:       none;
+      transition:    border 0.2s;
+      background:    #fff;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: var(--yellow);
+    }
+
+    .form-field textarea {
+      min-height: 70px;
+      resize:     vertical;
+    }
+
+    /* Two-column field layout */
+    .form-row {
+      display:               grid;
+      grid-template-columns: 1fr 1fr;
+      gap:                   10px;
+    }
+
+    /* ── MODAL FOOTER ────────────────────────────────────────── */
+    .modal-footer {
+      padding:         14px 20px;
+      border-top:      1px solid var(--border);
+      display:         flex;
+      gap:             8px;
+      justify-content: flex-end;
+    }
+
+    /* ── TOAST NOTIFICATIONS ─────────────────────────────────── */
+    .toast-container {
+      position:       fixed;
+      bottom:         20px;
+      right:          20px;
+      z-index:        9999;
+      display:        flex;
+      flex-direction: column;
+      gap:            7px;
+    }
+
+    .toast {
+      background:  var(--black);
+      color:       #fff;
+      padding:     11px 16px;
+      border-radius: 9px;
+      font-size:   12px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      display:     flex;
+      align-items: center;
+      gap:         7px;
+      box-shadow:  0 4px 24px rgba(0, 0, 0, 0.3);
+      animation:   slideUp 0.3s ease;
+      min-width:   180px;
+    }
+
+    /* Icon prefixes for each toast type */
+    .toast.success::before { content: '✅'; }
+    .toast.error::before   { content: '❌'; }
+    .toast.info::before    { content: 'ℹ️'; }
+    .toast.order::before   { content: '🛒'; }
+
+    @keyframes slideUp {
+      from { transform: translateY(16px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    /* ── MINI BAR CHART ──────────────────────────────────────── */
+    .mini-chart {
+      background:    #fff;
+      border-radius: 12px;
+      padding:       18px;
+      box-shadow:    var(--shadow);
+    }
+
+    .mini-chart h4 {
+      font-size:     13px;
+      font-weight:   800;
+      margin-bottom: 14px;
+    }
+
+    .bar-row {
+      display:       flex;
+      align-items:   center;
+      gap:           8px;
+      margin-bottom: 7px;
+    }
+
+    /* Label on the left of each bar */
+    .bar-label {
+      font-size:     11px;
+      color:         #555;
+      width:         70px;
+      flex-shrink:   0;
+      font-weight:   500;
+      overflow:      hidden;
+      text-overflow: ellipsis;
+      white-space:   nowrap;
+    }
+
+    /* Grey background track */
+    .bar-track {
+      flex:          1;
+      background:    #f0f0f0;
+      border-radius: 4px;
+      height:        7px;
+      overflow:      hidden;
+    }
+
+    /* Yellow fill that grows to the data value */
+    .bar-fill {
+      height:        100%;
+      border-radius: 4px;
+      background:    var(--yellow);
+      transition:    width 1s ease;
+    }
+
+    /* Value label on the right */
+    .bar-val {
+      font-size:   11px;
+      font-weight: 700;
+      width:       32px;
+      text-align:  right;
+      color:       #555;
+    }
+
+    /* Two-column grid for charts */
+    .two-col {
+      display:               grid;
+      grid-template-columns: 1fr 1fr;
+      gap:                   14px;
+      margin-bottom:         18px;
+    }
+
+    /* ── FILTER CONTROLS ─────────────────────────────────────── */
+    .filters {
+      display:     flex;
+      gap:         8px;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap:   wrap;
+    }
+
+    .filter-input {
+      padding:       7px 12px;
+      border:        1.5px solid var(--border);
+      border-radius: 7px;
+      font-size:     12px;
+      font-family:   'DM Sans', sans-serif;
+      outline:       none;
+      background:    #fff;
+      transition:    border 0.2s;
+    }
+
+    .filter-input:focus {
+      border-color: var(--yellow);
+    }
+
+    .filter-select {
+      padding:       7px 10px;
+      border:        1.5px solid var(--border);
+      border-radius: 7px;
+      font-size:     12px;
+      font-family:   'DM Sans', sans-serif;
+      outline:       none;
+      background:    #fff;
+      cursor:        pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       SIDEBAR — fixed left navigation panel
+  ============================================================ -->
+  <aside class="sidebar">
+
+    <!-- Logo, brand name and restaurant tag -->
+    <div class="sidebar-logo">
+      <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="logo">
+      <span class="brand">Food Sprint</span>
+      <!-- Restaurant name injected by JS -->
+      <span class="res-name-tag" id="sidebarResName">Restaurant</span>
+    </div>
+
+    <!-- Live View section -->
+    <div class="nav-section">Live View</div>
+
+    <!-- Live orders link with pending count badge -->
+    <div class="nav-item active" onclick="showPage('live', this)">
+      <span class="ni-icon">🔴</span>
+      Live Orders
+      <span class="ni-badge" id="liveBadge">0</span>
+    </div>
+
+    <!-- Overview / analytics link -->
+    <div class="nav-item" onclick="showPage('overview', this)">
+      <span class="ni-icon">📊</span>
+      Overview
+    </div>
+
+    <!-- Management section -->
+    <div class="nav-section">Management</div>
+
+    <!-- All orders history link -->
+    <div class="nav-item" onclick="showPage('orders', this)">
+      <span class="ni-icon">📦</span>
+      All Orders
+    </div>
+
+    <!-- Menu management link -->
+    <div class="nav-item" onclick="showPage('menu', this)">
+      <span class="ni-icon">🍽</span>
+      Menu
+    </div>
+
+    <!-- Restaurant info / profile link -->
+    <div class="nav-item" onclick="showPage('profile', this)">
+      <span class="ni-icon">🏪</span>
+      Restaurant Info
+    </div>
+
+    <!-- Sidebar footer: user identity and logout -->
+    <div class="sidebar-bottom">
+
+      <!-- User identity card -->
+      <div class="res-user">
+        <!-- Avatar shows first letter of restaurant name -->
+        <div class="ru-avatar" id="resAvatarSidebar">R</div>
+        <div class="ru-info">
+          <!-- Username injected by JS -->
+          <div class="ru-name" id="resUserName">restaurant</div>
+          <div class="ru-role">Restaurant Partner</div>
+        </div>
+      </div>
+
+      <!-- Logout button -->
+      <button
+        style="width:100%; margin-top:8px; background:none; border:none; color:#555;
+               cursor:pointer; font-size:12px; text-align:left; padding:7px 8px;
+               border-radius:6px; font-family:'DM Sans',sans-serif;"
+        onclick="doLogout()"
+      >
+        ← Logout
+      </button>
+
+    </div>
+
+  </aside>
+  <!-- END SIDEBAR -->
+
+
+  <!-- ============================================================
+       MAIN — content area to the right of the sidebar
+  ============================================================ -->
+  <main class="main">
+
+    <!-- ── TOP BAR ─────────────────────────────────────────── -->
+    <div class="topbar">
+
+      <div class="topbar-left">
+        <!-- Current page title — updated by JS -->
+        <h2 id="pageTitle">Live Orders</h2>
+        <!-- Restaurant name subtitle — injected by JS -->
+        <div class="topbar-sub" id="resNameTopbar">Loading…</div>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Online / offline toggle badge -->
+        <div class="live-badge" id="liveStatusBadge" onclick="toggleLiveStatus()">
+          <span class="dot"></span>
+          <span id="liveStatusText">Online</span>
+        </div>
+
+        <!-- Live clock — updated every second by JS -->
+        <span class="tb-time" id="tbTime"></span>
+
+        <!-- Top-bar logout shortcut -->
+        <button
+          style="background:none; border:none; color:#888; cursor:pointer; font-size:13px;"
+          onclick="doLogout()"
+        >
+          Logout →
+        </button>
+      </div>
+
+    </div>
+    <!-- END TOP BAR -->
+
+
+    <!-- ========================================================
+         PAGE: LIVE ORDERS — kanban board of active orders
+    ======================================================== -->
+    <div class="page active" id="page-live">
+
+      <!-- Four live stat counters -->
+      <div class="stats-grid">
+
+        <!-- Count of pending / accepted orders -->
+        <div class="stat-card yellow">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-label">Pending</div>
+          <div class="stat-value" id="l-pending">0</div>
+        </div>
+
+        <!-- Count of orders currently being prepared -->
+        <div class="stat-card blue">
+          <div class="stat-icon">👨‍🍳</div>
+          <div class="stat-label">Preparing</div>
+          <div class="stat-value" id="l-preparing">0</div>
+        </div>
+
+        <!-- Count of orders out for delivery -->
+        <div class="stat-card orange">
+          <div class="stat-icon">🛵</div>
+          <div class="stat-label">Out for Delivery</div>
+          <div class="stat-value" id="l-delivering">0</div>
+        </div>
+
+        <!-- Count of orders delivered today -->
+        <div class="stat-card green">
+          <div class="stat-icon">✅</div>
+          <div class="stat-label">Delivered Today</div>
+          <div class="stat-value" id="l-delivered">0</div>
+        </div>
+
+      </div>
+      <!-- END stats-grid -->
+
+      <!-- Three-column kanban: Pending | Preparing | Out for Delivery -->
+      <div class="kanban">
+
+        <!-- PENDING column -->
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">⏳ Pending</span>
+            <span class="kanban-col-count" id="kc-pending">0</span>
+          </div>
+          <!-- Cards injected by JS -->
+          <div id="kanban-pending"></div>
+        </div>
+
+        <!-- PREPARING column -->
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">👨‍🍳 Preparing</span>
+            <span class="kanban-col-count" id="kc-preparing">0</span>
+          </div>
+          <!-- Cards injected by JS -->
+          <div id="kanban-preparing"></div>
+        </div>
+
+        <!-- OUT FOR DELIVERY column -->
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">🛵 Out for Delivery</span>
+            <span class="kanban-col-count" id="kc-delivering">0</span>
+          </div>
+          <!-- Cards injected by JS -->
+          <div id="kanban-delivering"></div>
+        </div>
+
+      </div>
+      <!-- END kanban -->
+
+      <!-- Delivered today table -->
+      <div class="card">
+        <div class="card-header">
+          <h3>✅ Delivered Today</h3>
+        </div>
+        <!-- Table rows injected by JS -->
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Amount</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="deliveredToday"></tbody>
+        </table>
+        <!-- Shown when no deliveries today -->
+        <div class="empty-state" id="deliveredEmpty" style="display:none;">
+          <div class="es-icon">📭</div>
+          <div>No deliveries yet today</div>
+        </div>
+      </div>
+
+    </div>
+    <!-- END page-live -->
+
+
+    <!-- ========================================================
+         PAGE: OVERVIEW — revenue and performance stats
+    ======================================================== -->
+    <div class="page" id="page-overview">
+
+      <!-- Four summary stat cards -->
+      <div class="stats-grid">
+
+        <!-- All-time revenue -->
+        <div class="stat-card yellow">
+          <div class="stat-icon">💰</div>
+          <div class="stat-label">Total Revenue</div>
+          <div class="stat-value" id="ov-revenue">₹0</div>
+          <div class="stat-sub">All time</div>
+        </div>
+
+        <!-- Total orders placed with this restaurant -->
+        <div class="stat-card green">
+          <div class="stat-icon">📦</div>
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-value" id="ov-orders">0</div>
+          <!-- Today's count updated by JS -->
+          <div class="stat-sub" id="ov-today">Today: 0</div>
+        </div>
+
+        <!-- Average order value -->
+        <div class="stat-card blue">
+          <div class="stat-icon">🧾</div>
+          <div class="stat-label">Avg Order Value</div>
+          <div class="stat-value" id="ov-avg">₹0</div>
+        </div>
+
+        <!-- Percentage of orders successfully delivered -->
+        <div class="stat-card orange">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-label">Completion Rate</div>
+          <div class="stat-value" id="ov-rate">0%</div>
+        </div>
+
+      </div>
+      <!-- END stats-grid -->
+
+      <!-- Two mini bar charts side by side -->
+      <div class="two-col">
+        <div class="mini-chart">
+          <h4>💰 Revenue This Week</h4>
+          <!-- Bar chart injected by JS -->
+          <div id="weekRevChart"></div>
+        </div>
+        <div class="mini-chart">
+          <h4>📦 Orders by Status</h4>
+          <!-- Bar chart injected by JS -->
+          <div id="statusChart"></div>
+        </div>
+      </div>
+
+      <!-- Top selling menu items -->
+      <div class="card">
+        <div class="card-header">
+          <h3>🔥 Top Selling Items</h3>
+        </div>
+        <!-- Bar chart list injected by JS -->
+        <div style="padding:16px;" id="topItemsList"></div>
+      </div>
+
+    </div>
+    <!-- END page-overview -->
+
+
+    <!-- ========================================================
+         PAGE: ALL ORDERS — searchable full order history
+    ======================================================== -->
+    <div class="page" id="page-orders">
+
+      <!-- Search and filter controls -->
+      <div class="filters">
+        <input
+          class="filter-input"
+          type="text"
+          placeholder="🔍 Search orders…"
+          id="allOrderSearch"
+          oninput="renderAllOrders()"
+        >
+        <!-- Status dropdown filter -->
+        <select class="filter-select" id="allOrderStatus" onchange="renderAllOrders()">
+          <option value="">All Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Accepted">Accepted</option>
+          <option value="Preparing">Preparing</option>
+          <option value="Out for Delivery">Out for Delivery</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <!-- Export orders as CSV -->
+        <button class="btn btn-outline" onclick="exportMyOrders()">⬇ Export</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>📦 All My Orders</h3>
+          <!-- Order count injected by JS -->
+          <span id="myOrderCount" style="font-size:12px; color:#888;"></span>
+        </div>
+        <!-- Orders table — rows injected by JS -->
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Amount</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="allOrdersTable"></tbody>
+        </table>
+        <!-- Shown when no orders match the filter -->
+        <div class="empty-state" id="allOrdersEmpty" style="display:none;">
+          <div class="es-icon">📭</div>
+          <div>No orders found</div>
+        </div>
+      </div>
+
+    </div>
+    <!-- END page-orders -->
+
+
+    <!-- ========================================================
+         PAGE: MENU — manage this restaurant's menu items
+    ======================================================== -->
+    <div class="page" id="page-menu">
+
+      <!-- Add item button -->
+      <div class="filters">
+        <button class="btn btn-yellow" onclick="openAddItemModal()">+ Add Menu Item</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>🍽 My Menu</h3>
+          <!-- Item count injected by JS -->
+          <span id="menuItemCount" style="font-size:12px; color:#888;"></span>
+        </div>
+        <!-- Menu items table — rows injected by JS -->
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Type</th>
+              <th>Bestseller</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="myMenuTable"></tbody>
+        </table>
+        <!-- Shown when no items have been added yet -->
+        <div class="empty-state" id="myMenuEmpty">
+          <div class="es-icon">🍽</div>
+          <div>No menu items yet. Add your first item!</div>
+        </div>
+      </div>
+
+    </div>
+    <!-- END page-menu -->
+
+
+    <!-- ========================================================
+         PAGE: PROFILE — restaurant info and password change
+    ======================================================== -->
+    <div class="page" id="page-profile">
+
+      <!-- Restaurant info form card -->
+      <div class="card" style="max-width:500px;">
+        <div class="card-header">
+          <h3>🏪 Restaurant Info</h3>
+        </div>
+        <div style="padding:20px;">
+
+          <!-- Read-only restaurant name -->
+          <div class="form-field">
+            <label>Restaurant Name</label>
+            <input type="text" id="pr-name" readonly>
+          </div>
+
+          <!-- Read-only login email -->
+          <div class="form-field">
+            <label>Login Email</label>
+            <input type="text" id="pr-email" readonly>
+          </div>
+
+          <!-- Editable cuisine category -->
+          <div class="form-field">
+            <label>Category / Cuisine</label>
+            <input type="text" id="pr-category" placeholder="e.g. Pizza, Burgers">
+          </div>
+
+          <!-- Editable short description -->
+          <div class="form-field">
+            <label>Description</label>
+            <textarea id="pr-desc" placeholder="Brief description"></textarea>
+          </div>
+
+          <!-- Editable logo URL -->
+          <div class="form-field">
+            <label>Logo URL</label>
+            <input type="text" id="pr-logo" placeholder="https://…">
+          </div>
+
+          <!-- Save profile changes -->
+          <button class="btn btn-yellow" onclick="saveProfile()">Save Changes</button>
+
+        </div>
+      </div>
+
+      <!-- Change password card -->
+      <div class="card" style="max-width:500px; margin-top:16px;">
+        <div class="card-header">
+          <h3>🔑 Change Password</h3>
+        </div>
+        <div style="padding:20px;">
+
+          <!-- Current password verification -->
+          <div class="form-field">
+            <label>Current Password</label>
+            <input type="password" id="cp-current" placeholder="••••••••">
+          </div>
+
+          <!-- New password input -->
+          <div class="form-field">
+            <label>New Password</label>
+            <input type="password" id="cp-new" placeholder="Min 4 characters">
+          </div>
+
+          <!-- Confirm new password -->
+          <div class="form-field">
+            <label>Confirm New Password</label>
+            <input type="password" id="cp-confirm" placeholder="Repeat new password">
+          </div>
+
+          <!-- Submit password change -->
+          <button class="btn btn-yellow" onclick="changePassword()">Update Password</button>
+
+        </div>
+      </div>
+
+    </div>
+    <!-- END page-profile -->
+
+  </main>
+  <!-- END MAIN -->
+
+
+  <!-- ============================================================
+       MODAL: ORDER DETAILS — view full order info and update status
+  ============================================================ -->
+  <div class="modal-overlay" id="orderDetailModal">
+    <div class="modal-box">
+
+      <!-- Modal header -->
+      <div class="modal-head">
+        <h3>📦 Order Details</h3>
+        <button class="modal-close" onclick="closeModal('orderDetailModal')">✕</button>
+      </div>
+
+      <!-- Order details injected by JS -->
+      <div class="modal-body" id="orderDetailBody"></div>
+
+      <!-- Footer: close, status selector, update button -->
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('orderDetailModal')">Close</button>
+        <!-- Status options injected by JS -->
+        <select id="orderStatusSel" class="filter-select" style="padding:7px 10px;"></select>
+        <button class="btn btn-yellow" onclick="updateOrderStatus()">Update</button>
+      </div>
+
+    </div>
+  </div>
+  <!-- END orderDetailModal -->
+
+
+  <!-- ============================================================
+       MODAL: ADD / EDIT MENU ITEM
+  ============================================================ -->
+  <div class="modal-overlay" id="addItemModal">
+    <div class="modal-box">
+
+      <!-- Modal header — title changes between Add and Edit mode -->
+      <div class="modal-head">
+        <h3 id="itemModalTitle">➕ Add Menu Item</h3>
+        <button class="modal-close" onclick="closeModal('addItemModal')">✕</button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Item name -->
+        <div class="form-field">
+          <label>Item Name</label>
+          <input type="text" id="ai-name" placeholder="e.g. Margherita Pizza">
+        </div>
+
+        <!-- Price and category side by side -->
+        <div class="form-row">
+          <div class="form-field">
+            <label>Price (₹)</label>
+            <input type="number" id="ai-price" placeholder="199">
+          </div>
+          <div class="form-field">
+            <label>Category</label>
+            <input type="text" id="ai-category" placeholder="e.g. Pizza">
+          </div>
+        </div>
+
+        <!-- Short description -->
+        <div class="form-field">
+          <label>Description</label>
+          <textarea id="ai-desc" placeholder="Short description"></textarea>
+        </div>
+
+        <!-- Optional image URL -->
+        <div class="form-field">
+          <label>Image URL (optional)</label>
+          <input type="text" id="ai-img" placeholder="https://…">
+        </div>
+
+        <!-- Veg/Non-Veg and Bestseller selectors side by side -->
+        <div class="form-row">
+          <div class="form-field">
+            <label>Type</label>
+            <select id="ai-type">
+              <option value="veg">🟢 Veg</option>
+              <option value="nonveg">🔴 Non-Veg</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Bestseller?</label>
+            <select id="ai-best">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+      <!-- END modal-body -->
+
+      <!-- Footer: cancel and save -->
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('addItemModal')">Cancel</button>
+        <!-- Label changes between Add Item and Save Changes -->
+        <button class="btn btn-yellow" id="saveItemBtn" onclick="saveMenuItem()">Add Item</button>
+      </div>
+
+    </div>
+  </div>
+  <!-- END addItemModal -->
+
+
+  <!-- Toast notification container — toasts appended here by JS -->
+  <div class="toast-container" id="toastContainer"></div>
+
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+
+    /* ── AUTH GUARD ───────────────────────────────────────────
+       Redirect to home if not logged in as a restaurant user.
+    ──────────────────────────────────────────────────────────── */
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    const loggedInRole = localStorage.getItem("loggedInRole");
+    const loggedInRes  = localStorage.getItem("loggedInRestaurant");
+
+    if (!loggedInUser || loggedInRole !== "restaurant" || !loggedInRes) {
+      alert("Restaurant access required.");
+      window.location.href = "index.html";
+    }
+
+    /* ── LOGOUT ───────────────────────────────────────────────
+       Clears all auth keys and redirects to the main site.
+    ──────────────────────────────────────────────────────────── */
+    function doLogout() {
+      localStorage.removeItem("loggedInUser");
+      localStorage.removeItem("loggedInRole");
+      localStorage.removeItem("loggedInRestaurant");
+      window.location.href = "index.html";
+    }
+
+    /* ── POPULATE SIDEBAR & TOPBAR WITH RESTAURANT DETAILS ───── */
+    document.getElementById("sidebarResName").innerText  = loggedInRes;
+    document.getElementById("resNameTopbar").innerText   = loggedInRes + " Dashboard";
+    document.getElementById("resUserName").innerText     = loggedInUser ? loggedInUser.split("@")[0] : "restaurant";
+    document.getElementById("resAvatarSidebar").innerText = (loggedInRes || "R").charAt(0).toUpperCase();
+
+    /* ── LIVE CLOCK ───────────────────────────────────────────
+       Updates the top-bar time display every second.
+    ──────────────────────────────────────────────────────────── */
+    function updateClock() {
+      document.getElementById("tbTime").innerText =
+        new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    /* ── ONLINE / OFFLINE STATUS ──────────────────────────────
+       Persisted in localStorage per restaurant so it survives
+       a page refresh.
+    ──────────────────────────────────────────────────────────── */
+    let isOnline = localStorage.getItem("res_online_" + loggedInRes) !== "false";
+
+    /** Renders the correct Online/Offline badge style */
+    function updateLiveBadge() {
+      const b = document.getElementById("liveStatusBadge");
+      b.className = "live-badge" + (isOnline ? "" : " offline");
+      document.getElementById("liveStatusText").innerText = isOnline ? "Online" : "Offline";
+    }
+
+    /** Toggles online status and saves it */
+    function toggleLiveStatus() {
+      isOnline = !isOnline;
+      localStorage.setItem("res_online_" + loggedInRes, isOnline);
+      updateLiveBadge();
+      showToast(isOnline ? "You are now Online" : "You are now Offline", isOnline ? "success" : "info");
+    }
+
+    updateLiveBadge();
+
+    /* ── PAGE NAVIGATION ──────────────────────────────────────
+       Shows the selected page and highlights the nav item.
+    ──────────────────────────────────────────────────────────── */
+    const pageTitles = {
+      live:     "Live Orders",
+      overview: "Overview",
+      orders:   "All Orders",
+      menu:     "My Menu",
+      profile:  "Restaurant Info"
+    };
+
+    function showPage(id, el) {
+      /* Hide all pages */
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+
+      /* Deactivate all nav items */
+      document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+
+      /* Show the selected page */
+      document.getElementById("page-" + id).classList.add("active");
+
+      /* Highlight the clicked nav item */
+      if (el) el.classList.add("active");
+
+      /* Update the topbar heading */
+      document.getElementById("pageTitle").innerText = pageTitles[id] || id;
+
+      /* Load fresh data for this page */
+      refreshPage(id);
+    }
+
+    /** Routes to the correct loader for each page */
+    function refreshPage(id) {
+      if (id === "live")     loadLiveOrders();
+      if (id === "overview") loadOverview();
+      if (id === "orders")   renderAllOrders();
+      if (id === "menu")     renderMyMenu();
+      if (id === "profile")  loadProfile();
+    }
+
+    /* ── LOCAL STORAGE HELPERS ────────────────────────────────── */
+
+    /** Returns all orders across all restaurants */
+    function getOrders() {
+      return JSON.parse(localStorage.getItem("fs_orders") || "[]");
+    }
+
+    /** Returns only orders belonging to this restaurant */
+    function getMyOrders() {
+      return getOrders().filter(o => o.restaurant === loggedInRes);
+    }
+
+    /** Returns this restaurant's custom menu items array */
+    function getMyMenuItems() {
+      return (JSON.parse(localStorage.getItem("fs_custom_menus") || "{}")[loggedInRes] || []);
+    }
+
+    /** Saves the updated menu items array for this restaurant */
+    function saveMyMenuItems(items) {
+      const all = JSON.parse(localStorage.getItem("fs_custom_menus") || "{}");
+      all[loggedInRes] = items;
+      localStorage.setItem("fs_custom_menus", JSON.stringify(all));
+    }
+
+    /* ── STATUS BADGE HELPER ──────────────────────────────────
+       Returns an HTML badge span for the given order status.
+    ──────────────────────────────────────────────────────────── */
+    function statusBadge(st) {
+      const map = {
+        "Pending":          "badge-orange",
+        "Accepted":         "badge-blue",
+        "Preparing":        "badge-yellow",
+        "Out for Delivery": "badge-purple",
+        "Delivered":        "badge-green",
+        "Cancelled":        "badge-red"
+      };
+      return `<span class="badge ${map[st] || 'badge-gray'}">${st || 'Unknown'}</span>`;
+    }
+
+    /* ── FORMAT TIME HELPER ───────────────────────────────────
+       Returns a human-readable date + time string.
+    ──────────────────────────────────────────────────────────── */
+    function formatTime(t) {
+      if (!t) return "—";
+      try {
+        return new Date(t).toLocaleString("en-IN", {
+          day:    "2-digit",
+          month:  "short",
+          hour:   "2-digit",
+          minute: "2-digit"
+        });
+      } catch (e) {
+        return "—";
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       LIVE ORDERS PAGE
+    ══════════════════════════════════════════════════════════ */
+    let prevOrderCount = 0;
+
+    function loadLiveOrders() {
+      const all   = getMyOrders();
+      const today = new Date().toDateString();
+
+      /* Categorise orders by status */
+      const todayOrders = all.filter(o => new Date(o.time).toDateString() === today);
+      const pending     = all.filter(o => (o.status || "Pending") === "Pending" || (o.status || "Pending") === "Accepted");
+      const preparing   = all.filter(o => o.status === "Preparing");
+      const delivering  = all.filter(o => o.status === "Out for Delivery");
+      const delivered   = todayOrders.filter(o => o.status === "Delivered");
+
+      /* Update the four stat card values */
+      document.getElementById("l-pending").innerText   = pending.length;
+      document.getElementById("l-preparing").innerText = preparing.length;
+      document.getElementById("l-delivering").innerText = delivering.length;
+      document.getElementById("l-delivered").innerText  = delivered.length;
+
+      /* Update kanban column header counts */
+      document.getElementById("kc-pending").innerText   = pending.length;
+      document.getElementById("kc-preparing").innerText = preparing.length;
+      document.getElementById("kc-delivering").innerText = delivering.length;
+
+      /* Update sidebar badge with pending count */
+      document.getElementById("liveBadge").innerText = pending.length;
+
+      /* Show toast if a new order arrived since last refresh */
+      if (all.length > prevOrderCount && prevOrderCount > 0) {
+        showToast("🛒 New order received!", "order");
+      }
+      prevOrderCount = all.length;
+
+      /* Render each kanban column with its orders and actions */
+      renderKanbanCol("kanban-pending",    pending,    ["Accepted", "Preparing", "Cancelled"],    ["btn-blue", "btn-green", "btn-red"]);
+      renderKanbanCol("kanban-preparing",  preparing,  ["Out for Delivery", "Cancelled"],         ["btn-blue", "btn-red"]);
+      renderKanbanCol("kanban-delivering", delivering, ["Delivered", "Cancelled"],                ["btn-green", "btn-red"]);
+
+      /* Show or hide the delivered-today empty state */
+      document.getElementById("deliveredEmpty").style.display = delivered.length ? "none" : "block";
+
+      /* Render the delivered today table rows */
+      document.getElementById("deliveredToday").innerHTML = delivered.map(o => `
+        <tr>
+          <td><strong>#${o.id}</strong></td>
+          <td>${o.customerName || o.customer || "Guest"}</td>
+          <td>${(o.items || []).map(i => i.name + (i.qty > 1 ? `×${i.qty}` : "") + ` ₹${i.price}`).join(", ").substring(0, 45)}</td>
+          <td><strong>₹${o.total || 0}</strong></td>
+          <td>${formatTime(o.time)}</td>
+        </tr>
+      `).join("");
+    }
+
+    /* ── renderKanbanCol() ────────────────────────────────────
+       Builds the order cards for one kanban column.
+       nextStatuses: array of status strings for action buttons
+       btnClasses:   matching CSS classes for each button
+    ──────────────────────────────────────────────────────────── */
+    function renderKanbanCol(colId, orders, nextStatuses, btnClasses) {
+      const colName = colId.split("-")[1]; /* e.g. "pending" */
+
+      document.getElementById(colId).innerHTML = orders.length
+        ? orders.map(o => `
+            <div class="order-card ${colName}" onclick="viewOrderDetail('${o.id}')">
+              <!-- Order ID and payment method -->
+              <div class="order-card-id">
+                #${o.id} • ${o.paymentMode === 'cod' ? '💵 COD' : '💳 Online'}
+              </div>
+              <!-- Customer name -->
+              <div class="order-card-customer">👤 ${o.customerName || o.customer || "Guest"}</div>
+              <!-- Truncated item list -->
+              <div class="order-card-items">
+                ${(o.items || []).map(i => i.name + (i.qty > 1 ? ` ×${i.qty}` : "") + ` ₹${i.price}`).join(" • ").substring(0, 80)}
+              </div>
+              <div class="order-card-footer">
+                <span class="order-card-amount">₹${o.total || 0}</span>
+                <span class="order-card-time">${formatTime(o.time)}</span>
+              </div>
+              <!-- Quick action buttons — stop propagation to avoid opening detail modal -->
+              <div class="order-actions" onclick="event.stopPropagation()">
+                ${nextStatuses.map((s, i) => `
+                  <button class="quick-status-btn ${btnClasses[i]}" onclick="quickStatus('${o.id}', '${s}')">
+                    ${s === 'Accepted' ? 'Accept' : s === 'Preparing' ? 'Prepare' : s === 'Out for Delivery' ? 'Dispatch' : s === 'Delivered' ? 'Delivered' : 'Cancel'}
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+          `).join("")
+        : `<div style="text-align:center; color:#ccc; font-size:13px; padding:20px;">No orders</div>`;
+    }
+
+    /* ── quickStatus() ────────────────────────────────────────
+       Updates the status of an order directly from a kanban button.
+    ──────────────────────────────────────────────────────────── */
+    function quickStatus(orderId, status) {
+      const orders = getOrders();
+      const idx    = orders.findIndex(o => o.id === orderId);
+      if (idx === -1) return;
+
+      orders[idx].status = status;
+      localStorage.setItem("fs_orders", JSON.stringify(orders));
+      loadLiveOrders();
+      showToast(`Order #${orderId} → ${status}`, "success");
+    }
+
+    /* ── viewOrderDetail() ────────────────────────────────────
+       Opens the order detail modal with full order information.
+    ──────────────────────────────────────────────────────────── */
+    let currentOrderId = null;
+
+    function viewOrderDetail(id) {
+      const o = getOrders().find(x => x.id === id);
+      if (!o) return;
+      currentOrderId = id;
+
+      /* Build the modal body HTML */
+      document.getElementById("orderDetailBody").innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <strong style="font-size:15px;">Order #${o.id}</strong>
+          ${statusBadge(o.status || "Pending")}
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px; color:#555; margin-bottom:14px;">
+          <div>👤 <strong>${o.customerName || o.customer || "Guest"}</strong></div>
+          <div>📞 ${o.phone || "—"}</div>
+          <div style="grid-column:span 2;">📍 ${o.address || "—"}</div>
+          <div>⏰ ${formatTime(o.time)}</div>
+          <div>💳 ${o.paymentMode === 'cod' ? 'Cash on Delivery' : 'Online'}</div>
+        </div>
+        <div style="background:#f9f9f7; border-radius:8px; padding:12px; font-size:12px;">
+          ${(o.items || []).map(i => `
+            <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #eee;">
+              <span>${i.name} × ${i.qty || 1}</span>
+              <span>₹${i.price * (i.qty || 1)}</span>
+            </div>
+          `).join("")}
+          <div style="display:flex; justify-content:space-between; padding:5px 0; font-weight:800; border-top:1px solid #ddd; margin-top:4px;">
+            <span>Total</span>
+            <span>₹${o.total || 0}</span>
+          </div>
+        </div>
+      `;
+
+      /* Populate the status dropdown with current status pre-selected */
+      const sel = document.getElementById("orderStatusSel");
+      sel.innerHTML = ["Pending", "Accepted", "Preparing", "Out for Delivery", "Delivered", "Cancelled"]
+        .map(s => `<option value="${s}" ${s === (o.status || "Pending") ? "selected" : ""}>${s}</option>`)
+        .join("");
+
+      document.getElementById("orderDetailModal").classList.add("show");
+    }
+
+    /* ── updateOrderStatus() ──────────────────────────────────
+       Saves the new status chosen in the order detail modal.
+    ──────────────────────────────────────────────────────────── */
+    function updateOrderStatus() {
+      const orders = getOrders();
+      const idx    = orders.findIndex(o => o.id === currentOrderId);
+      if (idx === -1) return;
+
+      orders[idx].status = document.getElementById("orderStatusSel").value;
+      localStorage.setItem("fs_orders", JSON.stringify(orders));
+
+      closeModal("orderDetailModal");
+      loadLiveOrders();
+      renderAllOrders();
+      showToast("Order status updated!", "success");
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       OVERVIEW PAGE
+    ══════════════════════════════════════════════════════════ */
+    function loadOverview() {
+      const orders    = getMyOrders();
+      const revenue   = orders.reduce((s, o) => s + (o.total || 0), 0);
+      const delivered = orders.filter(o => o.status === "Delivered");
+      const avg       = orders.length ? Math.round(revenue / orders.length) : 0;
+      const rate      = orders.length ? Math.round(delivered.length / orders.length * 100) : 0;
+      const today     = new Date().toDateString();
+
+      /* Fill the stat cards */
+      document.getElementById("ov-revenue").innerText = "₹" + revenue.toLocaleString();
+      document.getElementById("ov-orders").innerText  = orders.length;
+      document.getElementById("ov-today").innerText   = "Today: " + orders.filter(o => new Date(o.time).toDateString() === today).length;
+      document.getElementById("ov-avg").innerText     = "₹" + avg;
+      document.getElementById("ov-rate").innerText    = rate + "%";
+
+      /* ── Orders by Status bar chart ── */
+      const statusCount  = {};
+      orders.forEach(o => { const s = o.status || "Pending"; statusCount[s] = (statusCount[s] || 0) + 1; });
+      const maxSt = Math.max(...Object.values(statusCount), 1);
+      const statusColors = {
+        "Pending":          "#f97316",
+        "Accepted":         "#3b82f6",
+        "Preparing":        "#eab308",
+        "Out for Delivery": "#8b5cf6",
+        "Delivered":        "#22c55e",
+        "Cancelled":        "#ef4444"
+      };
+
+      document.getElementById("statusChart").innerHTML = Object.entries(statusCount).length
+        ? Object.entries(statusCount).map(([s, c]) => `
+            <div class="bar-row">
+              <div class="bar-label">${s}</div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:${(c / maxSt * 100).toFixed(1)}%; background:${statusColors[s] || '#aaa'}"></div>
+              </div>
+              <div class="bar-val">${c}</div>
+            </div>
+          `).join("")
+        : "<div style='color:#aaa; font-size:12px;'>No data</div>";
+
+      /* ── Revenue this week bar chart (by day of week) ── */
+      const days    = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const now     = new Date();
+      const weekRev = Array(7).fill(0);
+
+      orders.forEach(o => {
+        const d    = new Date(o.time);
+        const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+        if (diff < 7) weekRev[d.getDay()] = (weekRev[d.getDay()] || 0) + (o.total || 0);
+      });
+
+      const maxW = Math.max(...weekRev, 1);
+      document.getElementById("weekRevChart").innerHTML = weekRev.map((v, i) => `
+        <div class="bar-row">
+          <div class="bar-label">${days[i]}</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${(v / maxW * 100).toFixed(1)}%"></div>
+          </div>
+          <div class="bar-val">${v > 999 ? Math.round(v / 1000) + "k" : v}</div>
+        </div>
+      `).join("");
+
+      /* ── Top 5 selling items ── */
+      const itemCount = {};
+      orders.forEach(o => (o.items || []).forEach(i => {
+        itemCount[i.name] = (itemCount[i.name] || 0) + (i.qty || 1);
+      }));
+
+      const top  = Object.entries(itemCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      const maxI = top[0] ? top[0][1] : 1;
+
+      document.getElementById("topItemsList").innerHTML = top.length
+        ? top.map(([n, c]) => `
+            <div class="bar-row">
+              <div class="bar-label" title="${n}" style="width:120px;">${n}</div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:${(c / maxI * 100).toFixed(1)}%; background:#f97316"></div>
+              </div>
+              <div class="bar-val">${c}</div>
+            </div>
+          `).join("")
+        : "<div style='color:#aaa; font-size:12px; text-align:center; padding:20px;'>No orders yet</div>";
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       ALL ORDERS PAGE
+    ══════════════════════════════════════════════════════════ */
+    function renderAllOrders() {
+      const orders = getMyOrders();
+      const search = (document.getElementById("allOrderSearch") || { value: "" }).value.toLowerCase();
+      const status = (document.getElementById("allOrderStatus") || { value: "" }).value;
+
+      /* Filter by search term and status, then sort newest first */
+      const filtered = orders
+        .filter(o => {
+          const matchSearch = !search
+            || o.id.toString().includes(search)
+            || (o.customerName || o.customer || "").toLowerCase().includes(search);
+          const matchStatus = !status || (o.status || "Pending") === status;
+          return matchSearch && matchStatus;
+        })
+        .sort((a, b) => new Date(b.time) - new Date(a.time));
+
+      document.getElementById("myOrderCount").innerText     = `${filtered.length} orders`;
+      document.getElementById("allOrdersEmpty").style.display = filtered.length ? "none" : "block";
+
+      document.getElementById("allOrdersTable").innerHTML = filtered.map(o => `
+        <tr>
+          <td><strong>#${o.id}</strong></td>
+          <td>${o.customerName || o.customer || "Guest"}</td>
+          <td>${(o.items || []).map(i => i.name + (i.qty > 1 ? `×${i.qty}` : "") + ` ₹${i.price}`).join(", ").substring(0, 45)}…</td>
+          <td><strong>₹${o.total || 0}</strong></td>
+          <td>
+            <span class="badge ${o.paymentMode === 'cod' ? 'badge-green' : 'badge-blue'}">
+              ${o.paymentMode === 'cod' ? 'COD' : 'Online'}
+            </span>
+          </td>
+          <td>${statusBadge(o.status || "Pending")}</td>
+          <td>${formatTime(o.time)}</td>
+          <td>
+            <button class="btn btn-outline btn-sm" onclick="viewOrderDetail('${o.id}')">View</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    /* ── exportMyOrders() ─────────────────────────────────────
+       Downloads this restaurant's orders as a CSV file.
+    ──────────────────────────────────────────────────────────── */
+    function exportMyOrders() {
+      const orders = getMyOrders();
+      const header = "Order ID,Customer,Total,Payment,Status,Time\n";
+      const rows   = orders.map(o =>
+        `#${o.id},"${o.customerName || o.customer || "Guest"}",${o.total || 0},"${o.paymentMode === "cod" ? "COD" : "Online"}","${o.status || "Pending"}","${formatTime(o.time)}"`
+      ).join("\n");
+
+      const blob = new Blob([header + rows], { type: "text/csv" });
+      const a    = document.createElement("a");
+      a.href     = URL.createObjectURL(blob);
+      a.download = `${loggedInRes}_orders.csv`;
+      a.click();
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       MENU PAGE
+    ══════════════════════════════════════════════════════════ */
+    let editingIdx = null;
+
+    /** Renders the menu items table */
+    function renderMyMenu() {
+      const items = getMyMenuItems();
+      document.getElementById("menuItemCount").innerText     = `${items.length} items`;
+      document.getElementById("myMenuEmpty").style.display   = items.length ? "none" : "block";
+
+      document.getElementById("myMenuTable").innerHTML = items.map((item, idx) => `
+        <tr>
+          <td>
+            <strong>${item.name}</strong>
+            <br>
+            <small style="color:#888;">${item.desc || ""}</small>
+          </td>
+          <td><span class="badge badge-blue">${item.category || "—"}</span></td>
+          <td><strong>₹${item.price || 0}</strong></td>
+          <td>
+            <span class="badge ${item.type === 'veg' ? 'badge-green' : 'badge-red'}">
+              ${item.type === 'veg' ? '🟢 Veg' : '🔴 Non-Veg'}
+            </span>
+          </td>
+          <td>
+            ${item.best
+              ? '<span class="badge badge-orange">⭐ Yes</span>'
+              : '<span class="badge badge-gray">No</span>'}
+          </td>
+          <td>
+            <button class="btn btn-outline btn-sm" onclick="editMenuItem(${idx})">Edit</button>
+            <button class="btn btn-red btn-sm"     onclick="deleteMenuItem(${idx})">Delete</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    /** Opens the Add Item modal in add mode */
+    function openAddItemModal() {
+      editingIdx = null;
+      document.getElementById("itemModalTitle").innerText = "➕ Add Menu Item";
+      document.getElementById("saveItemBtn").innerText    = "Add Item";
+
+      /* Clear all fields */
+      ["ai-name", "ai-price", "ai-category", "ai-desc", "ai-img"].forEach(id => {
+        document.getElementById(id).value = "";
+      });
+      document.getElementById("ai-type").value = "veg";
+      document.getElementById("ai-best").value = "false";
+
+      document.getElementById("addItemModal").classList.add("show");
+    }
+
+    /** Opens the Add Item modal in edit mode pre-filled with existing data */
+    function editMenuItem(idx) {
+      const item = getMyMenuItems()[idx];
+      editingIdx = idx;
+
+      document.getElementById("itemModalTitle").innerText = "✏️ Edit Menu Item";
+      document.getElementById("saveItemBtn").innerText    = "Save Changes";
+      document.getElementById("ai-name").value     = item.name     || "";
+      document.getElementById("ai-price").value    = item.price    || "";
+      document.getElementById("ai-category").value = item.category || "";
+      document.getElementById("ai-desc").value     = item.desc     || "";
+      document.getElementById("ai-img").value      = item.img      || "";
+      document.getElementById("ai-type").value     = item.type     || "veg";
+      document.getElementById("ai-best").value     = item.best ? "true" : "false";
+
+      document.getElementById("addItemModal").classList.add("show");
+    }
+
+    /** Saves a new or edited menu item */
+    function saveMenuItem() {
+      const name     = document.getElementById("ai-name").value.trim();
+      const price    = parseInt(document.getElementById("ai-price").value);
+      const category = document.getElementById("ai-category").value.trim();
+      const desc     = document.getElementById("ai-desc").value.trim();
+      const img      = document.getElementById("ai-img").value.trim();
+      const type     = document.getElementById("ai-type").value;
+      const best     = document.getElementById("ai-best").value === "true";
+
+      if (!name || !price) {
+        showToast("Name and price required", "error");
+        return;
+      }
+
+      const items   = getMyMenuItems();
+      const newItem = { name, price, category, desc, img, type, best };
+
+      /* Overwrite existing or push new */
+      if (editingIdx !== null) items[editingIdx] = newItem;
+      else                     items.push(newItem);
+
+      saveMyMenuItems(items);
+      closeModal("addItemModal");
+      renderMyMenu();
+      showToast(editingIdx !== null ? `${name} updated` : `${name} added`, "success");
+    }
+
+    /** Deletes a menu item after confirmation */
+    function deleteMenuItem(idx) {
+      if (!confirm("Delete this item?")) return;
+      const items = getMyMenuItems();
+      const name  = items[idx].name;
+      items.splice(idx, 1);
+      saveMyMenuItems(items);
+      renderMyMenu();
+      showToast(`${name} removed`, "info");
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       PROFILE PAGE
+    ══════════════════════════════════════════════════════════ */
+
+    /** Loads the restaurant's saved metadata into the profile form */
+    function loadProfile() {
+      const meta = (JSON.parse(localStorage.getItem("fs_restaurants_meta") || "{}")[loggedInRes] || {});
+      document.getElementById("pr-name").value     = loggedInRes;
+      document.getElementById("pr-email").value    = loggedInUser;
+      document.getElementById("pr-category").value = meta.category || "";
+      document.getElementById("pr-desc").value     = meta.desc     || "";
+      document.getElementById("pr-logo").value     = meta.logo     || "";
+    }
+
+    /** Saves the profile fields back to localStorage */
+    function saveProfile() {
+      const meta = JSON.parse(localStorage.getItem("fs_restaurants_meta") || "{}");
+      if (!meta[loggedInRes]) meta[loggedInRes] = {};
+
+      meta[loggedInRes].category = document.getElementById("pr-category").value.trim();
+      meta[loggedInRes].desc     = document.getElementById("pr-desc").value.trim();
+      meta[loggedInRes].logo     = document.getElementById("pr-logo").value.trim();
+
+      localStorage.setItem("fs_restaurants_meta", JSON.stringify(meta));
+      showToast("Profile saved!", "success");
+    }
+
+    /** Validates and updates the restaurant's login password */
+    function changePassword() {
+      const current = document.getElementById("cp-current").value;
+      const newP    = document.getElementById("cp-new").value;
+      const confirm = document.getElementById("cp-confirm").value;
+
+      if (!current || !newP || !confirm) { showToast("Fill all fields", "error"); return; }
+      if (newP !== confirm)              { showToast("Passwords don't match", "error"); return; }
+      if (newP.length < 4)               { showToast("Min 4 characters", "error"); return; }
+
+      const admins = JSON.parse(localStorage.getItem("fs_res_admins") || "{}");
+
+      /* Verify current password before allowing change */
+      if (!admins[loggedInRes] || admins[loggedInRes].password !== current) {
+        showToast("Current password incorrect", "error");
+        return;
+      }
+
+      admins[loggedInRes].password = newP;
+      localStorage.setItem("fs_res_admins", JSON.stringify(admins));
+
+      /* Clear all password fields */
+      ["cp-current", "cp-new", "cp-confirm"].forEach(id => {
+        document.getElementById(id).value = "";
+      });
+
+      showToast("Password updated!", "success");
+    }
+
+    /* ── MODAL HELPERS ────────────────────────────────────────── */
+
+    /** Closes a modal by removing the .show class */
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("show");
+    }
+
+    /* Close any modal when clicking the dark backdrop */
+    document.querySelectorAll(".modal-overlay").forEach(m => {
+      m.addEventListener("click", e => {
+        if (e.target === m) m.classList.remove("show");
+      });
+    });
+
+    /* ── TOAST HELPER ─────────────────────────────────────────
+       Creates a self-removing notification toast.
+    ──────────────────────────────────────────────────────────── */
+    function showToast(msg, type = "info") {
+      const c = document.getElementById("toastContainer");
+      const t = document.createElement("div");
+      t.className = `toast ${type}`;
+      t.innerText = msg;
+      c.appendChild(t);
+      setTimeout(() => t.style.opacity = "0", 2500);
+      setTimeout(() => t.remove(), 3000);
+    }
+
+    /* ── AUTO-REFRESH LIVE ORDERS ─────────────────────────────
+       Polls for new orders every 10 seconds while the live page
+       is active.
+    ──────────────────────────────────────────────────────────── */
+    setInterval(() => {
+      const active = document.querySelector(".page.active");
+      if (active && active.id === "page-live") loadLiveOrders();
+    }, 10000);
+
+    /* ── INITIAL LOAD ─────────────────────────────────────────── */
+    loadLiveOrders();
+    loadProfile();
+
+  </script>
+
+</body>
+</html>

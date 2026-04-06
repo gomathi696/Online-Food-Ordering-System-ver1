@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Sprint — Admin Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+
+    /* ── RESET ────────────────────────────────────────────────── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ── CSS CUSTOM PROPERTIES ───────────────────────────────── */
+    :root {
+      --black:   #0a0a0a;
+      --yellow:  #ffcc00;
+      --ydim:    #e6b800;
+      --ylight:  #fffbea;
+      --white:   #fff;
+      --gray:    #f5f5f2;
+      --border:  #e8e8e8;
+      --shadow:  0 4px 24px rgba(0, 0, 0, 0.08);
+      --green:   #22c55e;
+      --red:     #ef4444;
+      --blue:    #3b82f6;
+      --sw:      260px;
+    }
+
+    /* ── BASE BODY ───────────────────────────────────────────── */
+    body {
+      background:      var(--gray);
+      font-family:     'DM Sans', sans-serif;
+      color:           var(--black);
+      display:         flex;
+      min-height:      100vh;
+    }
+
+    /* ── HEADING & BRAND FONT ────────────────────────────────── */
+    h1,
+    h2,
+    h3,
+    .brand {
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────── */
+    .sidebar {
+      width:           var(--sw);
+      background:      var(--black);
+      min-height:      100vh;
+      display:         flex;
+      flex-direction:  column;
+      position:        fixed;
+      top:             0;
+      left:            0;
+      z-index:         200;
+    }
+
+    /* ── SIDEBAR LOGO AREA ───────────────────────────────────── */
+    .sidebar-logo {
+      padding:        22px 20px 18px;
+      border-bottom:  1px solid #1a1a1a;
+      display:        flex;
+      align-items:    center;
+      gap:            10px;
+    }
+
+    .sidebar-logo img {
+      height: 36px;
+    }
+
+    .brand {
+      color:       var(--yellow);
+      font-size:   17px;
+      font-weight: 800;
+    }
+
+    /* ── SIDEBAR NAVIGATION ──────────────────────────────────── */
+    .sidebar-nav {
+      flex:    1;
+      padding: 16px 12px;
+    }
+
+    /* Section label above groups of nav links */
+    .nav-section-label {
+      font-size:      9px;
+      font-weight:    700;
+      color:          #555;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding:        14px 8px 5px;
+    }
+
+    /* Individual sidebar navigation link */
+    .sidebar-item {
+      display:        flex;
+      align-items:    center;
+      gap:            10px;
+      padding:        11px 12px;
+      border-radius:  9px;
+      cursor:         pointer;
+      transition:     0.2s;
+      margin-bottom:  2px;
+      font-size:      13px;
+      font-weight:    500;
+      color:          #aaa;
+    }
+
+    /* Icon inside sidebar link */
+    .sidebar-item span {
+      font-size:  16px;
+      width:      20px;
+      text-align: center;
+    }
+
+    .sidebar-item:hover {
+      background: #1a1a1a;
+      color:      #fff;
+    }
+
+    /* Highlighted active link */
+    .sidebar-item.active {
+      background:  var(--yellow);
+      color:       var(--black);
+      font-weight: 700;
+    }
+
+    /* ── SIDEBAR FOOTER ──────────────────────────────────────── */
+    .sidebar-footer {
+      padding:    14px;
+      border-top: 1px solid #1a1a1a;
+    }
+
+    /* ── MAIN CONTENT AREA ───────────────────────────────────── */
+    .main {
+      margin-left:     var(--sw);
+      flex:            1;
+      display:         flex;
+      flex-direction:  column;
+    }
+
+    /* ── TOP BAR ─────────────────────────────────────────────── */
+    .topbar {
+      background:      #fff;
+      padding:         16px 32px;
+      display:         flex;
+      justify-content: space-between;
+      align-items:     center;
+      border-bottom:   1px solid var(--border);
+      position:        sticky;
+      top:             0;
+      z-index:         100;
+    }
+
+    .topbar h2 {
+      font-size:   18px;
+      font-weight: 800;
+    }
+
+    .topbar-right {
+      display:     flex;
+      align-items: center;
+      gap:         12px;
+    }
+
+    .topbar-date {
+      font-size: 12px;
+      color:     #aaa;
+    }
+
+    /* ── REFRESH BUTTON ──────────────────────────────────────── */
+    .refresh-btn {
+      padding:       7px 16px;
+      background:    var(--yellow);
+      border:        none;
+      border-radius: 7px;
+      font-weight:   700;
+      font-size:     12px;
+      cursor:        pointer;
+      font-family:   'DM Sans', sans-serif;
+    }
+
+    .refresh-btn:hover {
+      background: var(--ydim);
+    }
+
+    /* ── USER INFO LABEL ─────────────────────────────────────── */
+    .user-info {
+      color:       var(--yellow);
+      font-weight: 600;
+      font-size:   13px;
+    }
+
+    /* ── LOGOUT BUTTON ───────────────────────────────────────── */
+    .logout-btn {
+      background:    #ef4444;
+      color:         #fff;
+      border:        none;
+      padding:       8px 16px;
+      border-radius: 7px;
+      cursor:        pointer;
+      font-weight:   700;
+      font-size:     12px;
+      font-family:   'DM Sans', sans-serif;
+      transition:    0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626;
+    }
+
+    /* ── SCROLLABLE CONTENT WRAPPER ──────────────────────────── */
+    .content {
+      padding: 28px 32px;
+      flex:    1;
+    }
+
+    /* ── PAGE SECTIONS ───────────────────────────────────────── */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ── STATS GRID (4-COLUMN) ───────────────────────────────── */
+    .stats-grid {
+      display:               grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:                   16px;
+      margin-bottom:         28px;
+    }
+
+    /* Individual stat card */
+    .stat-card {
+      background:    #fff;
+      border-radius: 14px;
+      padding:       20px 22px;
+      box-shadow:    var(--shadow);
+      transition:    0.2s;
+      border:        2px solid transparent;
+    }
+
+    .stat-card:hover {
+      border-color: var(--yellow);
+      transform:    translateY(-2px);
+    }
+
+    /* Stat label */
+    .stat-card h3 {
+      font-size:      12px;
+      font-weight:    700;
+      color:          #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom:  8px;
+    }
+
+    /* Large numeric value */
+    .stat-value {
+      font-size:   30px;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* Small descriptive text below the value */
+    .stat-sub {
+      font-size:  11px;
+      color:      #aaa;
+      margin-top: 4px;
+    }
+
+    /* ── WHITE CARD ──────────────────────────────────────────── */
+    .card {
+      background:    #fff;
+      border-radius: 14px;
+      box-shadow:    var(--shadow);
+      overflow:      hidden;
+      margin-bottom: 18px;
+    }
+
+    .card-header {
+      padding:         16px 22px;
+      border-bottom:   1px solid var(--border);
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+    }
+
+    .card-header h2 {
+      font-size:   15px;
+      font-weight: 800;
+    }
+
+    /* Two-column card layout */
+    .card-grid {
+      display:               grid;
+      grid-template-columns: 1fr 1fr;
+      gap:                   18px;
+    }
+
+    /* ── DATA TABLE ──────────────────────────────────────────── */
+    table {
+      width:           100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      padding:        10px 18px;
+      text-align:     left;
+      font-size:      11px;
+      font-weight:    700;
+      color:          #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background:     #fafaf8;
+      border-bottom:  1px solid var(--border);
+    }
+
+    td {
+      padding:        12px 18px;
+      font-size:      13px;
+      border-bottom:  1px solid #f5f5f5;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #fffbea;
+    }
+
+    /* ── STATUS BADGES ───────────────────────────────────────── */
+    .badge {
+      padding:       3px 10px;
+      border-radius: 12px;
+      font-size:     11px;
+      font-weight:   700;
+      display:       inline-flex;
+      align-items:   center;
+    }
+
+    .badge-green  { background: #dcfce7; color: #16a34a; }
+    .badge-yellow { background: #fef9c3; color: #854d0e; }
+    .badge-red    { background: #fee2e2; color: #dc2626; }
+    .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+
+    /* ── EMPTY STATE ─────────────────────────────────────────── */
+    .no-data {
+      text-align: center;
+      padding:    48px 20px;
+      color:      #bbb;
+    }
+
+    .no-data span {
+      font-size:     40px;
+      margin-bottom: 10px;
+      display:       block;
+    }
+
+    /* ── GENERIC BUTTON ──────────────────────────────────────── */
+    .btn {
+      padding:       7px 14px;
+      border-radius: 7px;
+      border:        none;
+      cursor:        pointer;
+      font-family:   'DM Sans', sans-serif;
+      font-size:     12px;
+      font-weight:   700;
+      transition:    0.2s;
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color:      var(--black);
+    }
+
+    .btn-yellow:hover {
+      background: var(--ydim);
+    }
+
+    .btn-outline {
+      background: #fff;
+      border:     1.5px solid var(--border);
+      color:      #555;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--yellow);
+    }
+
+    /* ── SELF-REGISTERED BADGE ───────────────────────────────── */
+    .res-registered-tag {
+      font-size:     10px;
+      padding:       2px 7px;
+      border-radius: 6px;
+      background:    rgba(59, 130, 246, 0.1);
+      color:         var(--blue);
+      font-weight:   700;
+      margin-left:   5px;
+    }
+
+    /* ── MODAL OVERLAY ───────────────────────────────────────── */
+    .modal {
+      display:         none;
+      position:        fixed;
+      inset:           0;
+      background:      rgba(0, 0, 0, 0.6);
+      z-index:         500;
+      justify-content: center;
+      align-items:     center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    /* ── MODAL BOX ───────────────────────────────────────────── */
+    .modal-box {
+      background:    #fff;
+      border-radius: 16px;
+      width:         480px;
+      max-width:     95vw;
+      box-shadow:    0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow:      hidden;
+      animation:     popIn 0.2s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    /* ── MODAL HEADER ────────────────────────────────────────── */
+    .modal-head {
+      background:      var(--black);
+      padding:         18px 22px;
+      display:         flex;
+      justify-content: space-between;
+      align-items:     center;
+    }
+
+    .modal-head h3 {
+      color:       var(--yellow);
+      font-size:   16px;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      background: none;
+      border:     none;
+      color:      #aaa;
+      font-size:  20px;
+      cursor:     pointer;
+    }
+
+    .modal-close:hover {
+      color: #fff;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    /* ── MODAL FORM FIELD ────────────────────────────────────── */
+    .mf {
+      margin-bottom: 13px;
+    }
+
+    .mf label {
+      display:        block;
+      font-size:      10px;
+      font-weight:    700;
+      color:          #777;
+      margin-bottom:  4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .mf input,
+    .mf select,
+    .mf textarea {
+      width:         100%;
+      padding:       9px 12px;
+      border:        1.5px solid var(--border);
+      border-radius: 7px;
+      font-size:     13px;
+      font-family:   'DM Sans', sans-serif;
+      outline:       none;
+      transition:    border 0.2s;
+    }
+
+    .mf input:focus,
+    .mf select:focus,
+    .mf textarea:focus {
+      border-color: var(--yellow);
+    }
+
+    /* ── MODAL FEEDBACK MESSAGE ──────────────────────────────── */
+    .modal-msg {
+      font-size:  12px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .modal-msg.err { color: var(--red);   }
+    .modal-msg.ok  { color: var(--green); }
+
+    /* ── TOAST NOTIFICATION ──────────────────────────────────── */
+    .toast {
+      position:      fixed;
+      bottom:        20px;
+      right:         20px;
+      background:    var(--black);
+      color:         #fff;
+      padding:       10px 16px;
+      border-radius: 8px;
+      font-size:     13px;
+      font-weight:   600;
+      z-index:       9999;
+      box-shadow:    0 6px 24px rgba(0, 0, 0, 0.25);
+      display:       flex;
+      align-items:   center;
+      gap:           7px;
+      animation:     slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(16px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    /* ── RESPONSIVE BREAKPOINT ───────────────────────────────── */
+    @media (max-width: 900px) {
+      .sidebar    { display: none; }
+      .main       { margin-left: 0; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .card-grid  { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       SIDEBAR — fixed left navigation panel
+  ============================================================ -->
+  <aside class="sidebar">
+
+    <!-- Logo and brand name -->
+    <div class="sidebar-logo">
+      <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="Logo">
+      <span class="brand">Food Sprint</span>
+    </div>
+
+    <!-- Navigation links -->
+    <nav class="sidebar-nav">
+
+      <!-- Overview group -->
+      <div class="nav-section-label">Overview</div>
+      <div class="sidebar-item active" onclick="showSection('dashboard', this)">
+        <span>📊</span> Dashboard
+      </div>
+
+      <!-- Management group -->
+      <div class="nav-section-label">Management</div>
+      <div class="sidebar-item" onclick="showSection('restaurants', this)">
+        <span>🏪</span> Restaurants
+      </div>
+      <div class="sidebar-item" onclick="showSection('orders', this)">
+        <span>📋</span> All Orders
+      </div>
+      <div class="sidebar-item" onclick="showSection('users', this)">
+        <span>👥</span> Users
+      </div>
+
+      <!-- Navigation group -->
+      <div class="nav-section-label">Navigation</div>
+      <div class="sidebar-item" onclick="window.location.href='index.html'">
+        <span>↩</span> Back to Site
+      </div>
+
+    </nav>
+
+    <!-- Admin identity and logout -->
+    <div class="sidebar-footer">
+      <div style="color:#aaa; font-size:11px; padding:8px; line-height:1.5;">
+        <div style="color:#fff; font-weight:700; font-size:12px; margin-bottom:2px;">
+          Super Admin
+        </div>
+        <!-- Admin email injected by JS -->
+        <div id="adminEmailDisplay">—</div>
+      </div>
+      <button class="logout-btn" style="width:100%; margin-top:8px;" onclick="doLogout()">
+        ⏻ Logout
+      </button>
+    </div>
+
+  </aside>
+  <!-- END SIDEBAR -->
+
+
+  <!-- ============================================================
+       MAIN — everything to the right of the sidebar
+  ============================================================ -->
+  <div class="main">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+
+      <!-- Dynamic page title updated by JS -->
+      <h2 id="pageTitle">Dashboard</h2>
+
+      <div class="topbar-right">
+        <!-- Current date string injected by JS -->
+        <span class="topbar-date" id="topbarDate"></span>
+
+        <!-- Refresh the current section -->
+        <button class="refresh-btn" onclick="refreshCurrent()">↻ Refresh</button>
+
+        <!-- Logged-in user label -->
+        <span class="user-info">👤 Super Admin</span>
+
+        <!-- Top-bar logout shortcut -->
+        <button class="logout-btn" onclick="doLogout()">Logout</button>
+      </div>
+
+    </div>
+    <!-- END TOP BAR -->
+
+
+    <!-- Page content container -->
+    <div class="content">
+
+
+      <!-- ========================================================
+           DASHBOARD PAGE
+      ======================================================== -->
+      <div class="page active" id="page-dashboard">
+
+        <!-- Four summary stat cards -->
+        <div class="stats-grid">
+
+          <!-- Total number of restaurants on the platform -->
+          <div class="stat-card">
+            <h3>Total Restaurants</h3>
+            <div class="stat-value" id="stat-restaurants">0</div>
+            <div class="stat-sub">on platform</div>
+          </div>
+
+          <!-- Sum of all order totals -->
+          <div class="stat-card">
+            <h3>Total Revenue</h3>
+            <div class="stat-value" id="stat-revenue">₹0</div>
+            <div class="stat-sub">from all orders</div>
+          </div>
+
+          <!-- Count of all orders ever placed -->
+          <div class="stat-card">
+            <h3>Total Orders</h3>
+            <div class="stat-value" id="stat-orders">0</div>
+            <div class="stat-sub">all time</div>
+          </div>
+
+          <!-- Count of registered customer accounts -->
+          <div class="stat-card">
+            <h3>Registered Users</h3>
+            <div class="stat-value" id="stat-users">0</div>
+            <div class="stat-sub">customers</div>
+          </div>
+
+        </div>
+        <!-- END stats-grid -->
+
+        <!-- Two-column row: recent orders + top restaurants -->
+        <div class="card-grid">
+
+          <!-- Recent Orders card — table injected by JS -->
+          <div class="card">
+            <div class="card-header">
+              <h2>🛒 Recent Orders</h2>
+            </div>
+            <div id="recentOrdersContainer"></div>
+          </div>
+
+          <!-- Top Restaurants by revenue — table injected by JS -->
+          <div class="card">
+            <div class="card-header">
+              <h2>🏆 Top Restaurants</h2>
+            </div>
+            <div id="topRestaurantsContainer"></div>
+          </div>
+
+        </div>
+        <!-- END card-grid -->
+
+      </div>
+      <!-- END page-dashboard -->
+
+
+      <!-- ========================================================
+           RESTAURANTS PAGE
+      ======================================================== -->
+      <div class="page" id="page-restaurants">
+
+        <div class="card">
+
+          <div class="card-header">
+            <h2>🏪 All Restaurants</h2>
+            <!-- Opens the add-restaurant modal -->
+            <button class="btn btn-yellow" onclick="openAddModal()">+ Add Restaurant</button>
+          </div>
+
+          <!-- Restaurants table — rows injected by JS -->
+          <table>
+            <thead>
+              <tr>
+                <th>Restaurant</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Menu Items</th>
+                <th>Password</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="restaurantsTableBody"></tbody>
+          </table>
+
+        </div>
+
+      </div>
+      <!-- END page-restaurants -->
+
+
+      <!-- ========================================================
+           ORDERS PAGE
+      ======================================================== -->
+      <div class="page" id="page-orders">
+
+        <div class="card">
+
+          <div class="card-header">
+            <h2>📋 All Orders</h2>
+          </div>
+
+          <!-- Orders table — rows injected by JS -->
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Restaurant</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody"></tbody>
+          </table>
+
+          <!-- Shown when the orders array is empty -->
+          <div class="no-data" id="ordersEmpty" style="display:none;">
+            <span>📭</span>
+            No orders yet
+          </div>
+
+        </div>
+
+      </div>
+      <!-- END page-orders -->
+
+
+      <!-- ========================================================
+           USERS PAGE
+      ======================================================== -->
+      <div class="page" id="page-users">
+
+        <div class="card">
+
+          <div class="card-header">
+            <h2>👥 Registered Users</h2>
+          </div>
+
+          <!-- Users table — rows injected by JS -->
+          <table>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Orders</th>
+                <th>Total Spent</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+
+          <!-- Shown when no users are registered yet -->
+          <div class="no-data" id="usersEmpty" style="display:none;">
+            <span>👤</span>
+            No users yet
+          </div>
+
+        </div>
+
+      </div>
+      <!-- END page-users -->
+
+
+    </div>
+    <!-- END .content -->
+
+  </div>
+  <!-- END .main -->
+
+
+  <!-- ============================================================
+       ADD RESTAURANT MODAL
+  ============================================================ -->
+  <div class="modal" id="addModal">
+    <div class="modal-box">
+
+      <!-- Modal header with title and close button -->
+      <div class="modal-head">
+        <h3>🏪 Add New Restaurant</h3>
+        <button class="modal-close" onclick="closeAddModal()">✕</button>
+      </div>
+
+      <!-- Modal form body -->
+      <div class="modal-body">
+
+        <!-- Restaurant name input -->
+        <div class="mf">
+          <label>Restaurant Name *</label>
+          <input type="text" id="arName" placeholder="e.g. Spice Garden">
+        </div>
+
+        <!-- Optional cuisine / category label -->
+        <div class="mf">
+          <label>Cuisine / Category</label>
+          <input type="text" id="arCategory" placeholder="e.g. North Indian • Curries">
+        </div>
+
+        <!-- Initial login password for this restaurant -->
+        <div class="mf">
+          <label>Initial Password *</label>
+          <input type="password" id="arPass" placeholder="Min 4 characters">
+        </div>
+
+        <!-- Submit button -->
+        <button
+          class="btn btn-yellow"
+          style="width:100%; padding:11px; font-size:14px; font-family:'Syne',sans-serif;"
+          onclick="handleAddRestaurant()"
+        >
+          Add Restaurant →
+        </button>
+
+        <!-- Success / error feedback message -->
+        <div class="modal-msg" id="arMsg"></div>
+
+      </div>
+      <!-- END modal-body -->
+
+    </div>
+  </div>
+  <!-- END addModal -->
+
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+
+    /* ── ACCESS GUARD ─────────────────────────────────────────
+       Redirect anyone who is not logged in as admin back to the
+       main site immediately.
+    ──────────────────────────────────────────────────────────── */
+    if (localStorage.getItem("loggedInRole") !== "admin") {
+      alert("Access denied.");
+      window.location.href = "index.html";
+    }
+
+    /* ── POPULATE ADMIN DETAILS ───────────────────────────────
+       Show the logged-in admin's email and today's full date.
+    ──────────────────────────────────────────────────────────── */
+    document.getElementById("adminEmailDisplay").innerText =
+      localStorage.getItem("loggedInUser") || "—";
+
+    document.getElementById("topbarDate").innerText =
+      new Date().toLocaleDateString("en-IN", {
+        weekday: "long",
+        year:    "numeric",
+        month:   "long",
+        day:     "numeric"
+      });
+
+    /* ── HARDCODED RESTAURANT LIST ────────────────────────────
+       These restaurants are built into the app and always appear
+       even before a password has been set for them.
+    ──────────────────────────────────────────────────────────── */
+    const HARDCODED = [
+      "McDonald's",
+      "Burger King",
+      "KFC",
+      "Domino's",
+      "Pizza Hut",
+      "Wow Momo",
+      "Wow China",
+      "Behrouz Biryani",
+      "Haldiram's"
+    ];
+
+    /* ── LOCAL STORAGE HELPERS ────────────────────────────────
+       Thin wrappers around localStorage to keep code readable.
+    ──────────────────────────────────────────────────────────── */
+
+    /** Returns the fs_res_admins object (restaurant → {password, email}) */
+    function getResAdmins()   { return JSON.parse(localStorage.getItem("fs_res_admins")        || "{}"); }
+
+    /** Persists the updated fs_res_admins object */
+    function saveResAdmins(d) { localStorage.setItem("fs_res_admins", JSON.stringify(d)); }
+
+    /** Returns stored restaurant menus keyed by restaurant name */
+    function getStoredMenus() { return JSON.parse(localStorage.getItem("fs_restaurant_menus") || "{}"); }
+
+    /** Returns restaurant metadata (subtitle, category, status …) */
+    function getResMeta()     { return JSON.parse(localStorage.getItem("fs_restaurants_meta") || "{}"); }
+
+    /** Returns the full orders array */
+    function getOrders()      { return JSON.parse(localStorage.getItem("fs_orders")            || "[]"); }
+
+    /** Returns the registered users object keyed by email */
+    function getUsers()       { return JSON.parse(localStorage.getItem("fs_users")             || "{}"); }
+
+    /** Derives a deterministic login email from a restaurant name */
+    function resEmail(name)   { return name.toLowerCase().replace(/[^a-z0-9]/g, "") + "@foodsprint.in"; }
+
+    /* ── getAllRestaurants() ──────────────────────────────────
+       Merges HARDCODED names with any dynamically registered
+       ones so the admin always sees a complete sorted list.
+    ──────────────────────────────────────────────────────────── */
+    function getAllRestaurants() {
+      const admins = getResAdmins();
+      const menus  = getStoredMenus();
+
+      /* Combine all three sources and deduplicate with a Set */
+      const all = new Set([
+        ...HARDCODED,
+        ...Object.keys(admins),
+        ...Object.keys(menus)
+      ]);
+
+      return [...all].sort();
+    }
+
+    /* ── SECTION NAVIGATION ───────────────────────────────────
+       Shows the selected page and highlights the sidebar item.
+    ──────────────────────────────────────────────────────────── */
+    let currentSection = "dashboard";
+
+    function showSection(name, el) {
+      /* Hide every page */
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+
+      /* Remove active highlight from all sidebar items */
+      document.querySelectorAll(".sidebar-item").forEach(i => i.classList.remove("active"));
+
+      /* Show the requested page */
+      document.getElementById("page-" + name).classList.add("active");
+
+      /* Highlight the clicked sidebar item */
+      if (el) el.classList.add("active");
+
+      /* Update the top-bar heading */
+      const titles = {
+        dashboard:   "Dashboard",
+        restaurants: "Restaurants",
+        orders:      "All Orders",
+        users:       "Users"
+      };
+      document.getElementById("pageTitle").innerText = titles[name] || name;
+
+      /* Remember which section is active for the refresh button */
+      currentSection = name;
+
+      /* Load fresh data for the new section */
+      refresh(name);
+    }
+
+    /** Refreshes whichever section is currently visible */
+    function refreshCurrent() { refresh(currentSection); }
+
+    /** Routes a section name to the correct render function */
+    function refresh(name) {
+      if (name === "dashboard")   loadDashboard();
+      if (name === "restaurants") renderRestaurants();
+      if (name === "orders")      renderOrders();
+      if (name === "users")       renderUsers();
+    }
+
+    /* ── LOGOUT ───────────────────────────────────────────────
+       Clears all auth keys from localStorage and returns to the
+       main site.
+    ──────────────────────────────────────────────────────────── */
+    function doLogout() {
+      if (confirm("Logout?")) {
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("loggedInRole");
+        localStorage.removeItem("loggedInRestaurant");
+        window.location.href = "index.html";
+      }
+    }
+
+    /* ── TOAST HELPER ─────────────────────────────────────────
+       Creates a temporary bottom-right notification that removes
+       itself after 3 seconds.
+    ──────────────────────────────────────────────────────────── */
+    function toast(msg, icon = "✅") {
+      const el = document.createElement("div");
+      el.className = "toast";
+      el.innerHTML = `<span>${icon}</span> ${msg}`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       DASHBOARD
+    ══════════════════════════════════════════════════════════ */
+    function loadDashboard() {
+      const orders      = getOrders();
+      const users       = getUsers();
+      const restaurants = getAllRestaurants();
+
+      /* Calculate total platform revenue across all orders */
+      const revenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+      /* Fill the four stat cards */
+      document.getElementById("stat-restaurants").innerText = restaurants.length;
+      document.getElementById("stat-revenue").innerText     = "₹" + Math.round(revenue).toLocaleString("en-IN");
+      document.getElementById("stat-orders").innerText      = orders.length;
+      document.getElementById("stat-users").innerText       = Object.keys(users).length;
+
+      /* ── Recent Orders mini-table ── */
+      const roc = document.getElementById("recentOrdersContainer");
+
+      if (!orders.length) {
+        /* No orders yet — show empty state */
+        roc.innerHTML = '<div class="no-data"><span>📭</span>No orders yet</div>';
+        return;
+      }
+
+      /* Build table for the 6 most recent orders */
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Restaurant</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      orders.slice(0, 6).forEach(o => {
+        html += `
+          <tr>
+            <td><strong>${o.id}</strong></td>
+            <td>${o.customerName || o.customer?.name || "Guest"}</td>
+            <td>${o.restaurant || "—"}</td>
+            <td><strong>₹${Math.round(o.total || 0)}</strong></td>
+            <td><span class="badge ${statusClass(o.status)}">${o.status || "Pending"}</span></td>
+          </tr>
+        `;
+      });
+
+      html += `</tbody></table>`;
+      roc.innerHTML = html;
+
+      /* ── Top Restaurants by Revenue ── */
+      const revMap = {};
+      orders.forEach(o => {
+        revMap[o.restaurant] = (revMap[o.restaurant] || 0) + (o.total || 0);
+      });
+
+      /* Sort descending and take top 5 */
+      const top = Object.entries(revMap)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 5);
+
+      const trc = document.getElementById("topRestaurantsContainer");
+
+      if (!top.length) {
+        trc.innerHTML = '<div class="no-data"><span>🏪</span>No revenue data</div>';
+        return;
+      }
+
+      trc.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Restaurant</th>
+              <th>Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${top.map(([n, r]) => `
+              <tr>
+                <td><strong>${n}</strong></td>
+                <td><strong>₹${Math.round(r).toLocaleString("en-IN")}</strong></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    /* ── statusClass() ────────────────────────────────────────
+       Maps an order status string to the correct badge class.
+    ──────────────────────────────────────────────────────────── */
+    function statusClass(st) {
+      const map = {
+        "Pending":          "badge-yellow",
+        "Preparing":        "badge-blue",
+        "Delivered":        "badge-green",
+        "Cancelled":        "badge-red",
+        "Out for Delivery": "badge-blue"
+      };
+      return map[st] || "badge-yellow";
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       RESTAURANTS PAGE
+    ══════════════════════════════════════════════════════════ */
+    function renderRestaurants() {
+      const admins = getResAdmins();
+      const menus  = getStoredMenus();
+      const meta   = getResMeta();
+      const all    = getAllRestaurants();
+      const tbody  = document.getElementById("restaurantsTableBody");
+
+      /* No restaurants at all — show placeholder row */
+      if (!all.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="no-data"><span>🏪</span>No restaurants</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      /* Build one table row per restaurant */
+      tbody.innerHTML = all.map(name => {
+        const isRegistered = !!menus[name];                          /* has a stored menu   */
+        const hasPassword  = !!admins[name];                         /* password is set     */
+        const email        = admins[name]?.email || resEmail(name);  /* login email         */
+        const menuCount    = menus[name]?.sections
+          ?.reduce((s, x) => s + x.items.length, 0) || 0;           /* total menu items    */
+        const m = meta[name];                                        /* metadata object     */
+
+        return `
+          <tr>
+            <!-- Name + optional Self-Registered tag + subtitle -->
+            <td>
+              <strong>${name}</strong>
+              ${isRegistered ? `<span class="res-registered-tag">Self-Registered</span>` : ""}
+              <br>
+              <small style="color:#aaa;">${m?.subtitle || m?.category || "—"}</small>
+            </td>
+
+            <!-- Login email in monospace for readability -->
+            <td style="font-family:monospace; font-size:11px; color:#666;">${email}</td>
+
+            <!-- Whether added by admin or self-registered -->
+            <td>
+              ${isRegistered
+                ? `<span class="badge badge-blue">Self-Reg</span>`
+                : `<span class="badge badge-yellow">Admin</span>`}
+            </td>
+
+            <!-- Number of items in this restaurant's menu -->
+            <td>${isRegistered ? `<strong>${menuCount}</strong> items` : "—"}</td>
+
+            <!-- Whether a login password has been set -->
+            <td>
+              <span class="badge ${hasPassword ? "badge-green" : "badge-yellow"}">
+                ${hasPassword ? "✓ Set" : "Not set"}
+              </span>
+            </td>
+
+            <!-- Platform status — always Active for now -->
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       ORDERS PAGE
+    ══════════════════════════════════════════════════════════ */
+    function renderOrders() {
+      const orders = getOrders();
+      const tbody  = document.getElementById("ordersTableBody");
+      const empty  = document.getElementById("ordersEmpty");
+
+      if (!orders.length) {
+        /* Hide table, show empty-state message */
+        tbody.innerHTML     = "";
+        empty.style.display = "block";
+        return;
+      }
+
+      empty.style.display = "none";
+
+      tbody.innerHTML = orders.map(o => {
+        /* Format the timestamp as a readable date string */
+        const date = (o.ts || o.time)
+          ? new Date(o.ts || o.time).toLocaleDateString("en-IN", {
+              day:   "2-digit",
+              month: "short",
+              year:  "numeric"
+            })
+          : "—";
+
+        /* Determine payment label: COD or Online */
+        const payMode = o.paymentType || o.paymentMode;
+
+        return `
+          <tr>
+            <td><strong style="font-family:monospace;">${o.id}</strong></td>
+            <td>${o.customerName || o.customer?.name || "Guest"}</td>
+            <td>${o.restaurant || "—"}</td>
+            <td><strong>₹${Math.round(o.total || 0)}</strong></td>
+            <td>
+              <span class="badge ${payMode === "cod" ? "badge-yellow" : "badge-green"}">
+                ${payMode === "cod" ? "COD" : "Online"}
+              </span>
+            </td>
+            <td><span class="badge ${statusClass(o.status)}">${o.status || "Pending"}</span></td>
+            <td style="font-size:12px; color:#aaa;">${date}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       USERS PAGE
+    ══════════════════════════════════════════════════════════ */
+    function renderUsers() {
+      const users   = getUsers();
+      const orders  = getOrders();
+      const tbody   = document.getElementById("usersTableBody");
+      const empty   = document.getElementById("usersEmpty");
+      const entries = Object.entries(users);
+
+      if (!entries.length) {
+        /* No registered users — show placeholder */
+        tbody.innerHTML     = "";
+        empty.style.display = "block";
+        return;
+      }
+
+      empty.style.display = "none";
+
+      tbody.innerHTML = entries.map(([email, data]) => {
+        /* Total amount this user has spent across all their orders */
+        const spent = orders
+          .filter(o => o.customer?.email === email)
+          .reduce((sum, o) => sum + (o.total || 0), 0);
+
+        /* Number of orders placed by this user */
+        const cnt = orders.filter(o => o.customer?.email === email).length;
+
+        return `
+          <tr>
+            <td>${email}</td>
+            <td>${data.name || email.split("@")[0]}</td>
+            <td>${cnt}</td>
+            <td><strong>₹${Math.round(spent).toLocaleString("en-IN")}</strong></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       ADD RESTAURANT MODAL
+    ══════════════════════════════════════════════════════════ */
+
+    /** Opens the modal and resets all input fields and messages */
+    function openAddModal() {
+      document.getElementById("arName").value     = "";
+      document.getElementById("arCategory").value = "";
+      document.getElementById("arPass").value     = "";
+      document.getElementById("arMsg").innerHTML  = "";
+      document.getElementById("addModal").classList.add("show");
+    }
+
+    /** Closes the add-restaurant modal */
+    function closeAddModal() {
+      document.getElementById("addModal").classList.remove("show");
+    }
+
+    /** Validates the form and saves the new restaurant to localStorage */
+    function handleAddRestaurant() {
+      const name     = document.getElementById("arName").value.trim();
+      const category = document.getElementById("arCategory").value.trim();
+      const pass     = document.getElementById("arPass").value.trim();
+      const msg      = document.getElementById("arMsg");
+
+      /* Basic validation */
+      if (!name || !pass || pass.length < 4) {
+        msg.className = "modal-msg err";
+        msg.innerText = "Name and password (min 4 chars) required.";
+        return;
+      }
+
+      const admins = getResAdmins();
+      const menus  = getStoredMenus();
+
+      /* Prevent duplicate entries */
+      if (admins[name] || menus[name]) {
+        msg.className = "modal-msg err";
+        msg.innerText = "Restaurant already exists.";
+        return;
+      }
+
+      /* Save login credentials for the new restaurant */
+      admins[name] = {
+        password: pass,
+        email:    resEmail(name)
+      };
+      saveResAdmins(admins);
+
+      /* Save metadata (category, status, etc.) */
+      const meta = JSON.parse(localStorage.getItem("fs_restaurants_meta") || "{}");
+      meta[name] = {
+        name,
+        subtitle: category || "Restaurant",
+        category,
+        email:    resEmail(name),
+        status:   "active"
+      };
+      localStorage.setItem("fs_restaurants_meta", JSON.stringify(meta));
+
+      /* Show success feedback then close and refresh */
+      msg.className = "modal-msg ok";
+      msg.innerText = `✅ "${name}" added! Email: ${resEmail(name)}`;
+      toast(`${name} added`, "🏪");
+
+      setTimeout(() => {
+        closeAddModal();
+        renderRestaurants();
+        loadDashboard();
+      }, 1500);
+    }
+
+    /* Close the modal when clicking the dark backdrop */
+    document.getElementById("addModal").onclick = e => {
+      if (e.target === e.currentTarget) closeAddModal();
+    };
+
+    /* Initial data load on page open */
+    loadDashboard();
+
+  </script>
+
+</body>
+</html>

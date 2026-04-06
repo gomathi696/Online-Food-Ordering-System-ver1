@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Sprint — Register Your Restaurant</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+
+    /* ── RESET ───────────────────────────────────────────────── */
+    * {
+      margin:     0;
+      padding:    0;
+      box-sizing: border-box;
+    }
+
+    /* ── CSS VARIABLES ───────────────────────────────────────── */
+    :root {
+      --black:  #0a0a0a;
+      --yellow: #ffcc00;
+      --ydim:   #e6b800;
+      --ylight: #fffbea;
+      --white:  #fff;
+      --gray:   #f5f5f2;
+      --border: #e8e8e8;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      --green:  #22c55e;
+      --red:    #ef4444;
+      --blue:   #3b82f6;
+    }
+
+    /* ── BASE BODY ───────────────────────────────────────────── */
+    body {
+      background:  var(--gray);
+      font-family: 'DM Sans', sans-serif;
+      color:       var(--black);
+      min-height:  100vh;
+    }
+
+    /* ── HEADING FONT ────────────────────────────────────────── */
+    h1, h2, h3, h4, .brand {
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* ── TOP NAVIGATION ──────────────────────────────────────── */
+    nav {
+      background:      var(--black);
+      padding:         16px 56px;
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+      box-shadow:      0 2px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Clickable logo + brand name */
+    .nav-logo {
+      display:         flex;
+      align-items:     center;
+      gap:             10px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 38px;
+    }
+
+    .brand {
+      color:       var(--yellow);
+      font-size:   20px;
+      font-weight: 800;
+    }
+
+    /* Back to home link */
+    .nav-back {
+      color:           #888;
+      font-size:       13px;
+      text-decoration: none;
+      display:         flex;
+      align-items:     center;
+      gap:             5px;
+      transition:      0.2s;
+    }
+
+    .nav-back:hover {
+      color: var(--yellow);
+    }
+
+    /* ── HERO STRIP ──────────────────────────────────────────── */
+    .hero-strip {
+      background: linear-gradient(135deg, var(--black) 0%, #1a1a1a 100%);
+      padding:    48px 56px;
+      text-align: center;
+      position:   relative;
+      overflow:   hidden;
+    }
+
+    /* Decorative circle top-right */
+    .hero-strip::before {
+      content:       '';
+      position:      absolute;
+      top:           -50px;
+      right:         -80px;
+      width:         300px;
+      height:        300px;
+      border-radius: 50%;
+      background:    rgba(255, 204, 0, 0.05);
+    }
+
+    /* Decorative circle bottom-left */
+    .hero-strip::after {
+      content:       '';
+      position:      absolute;
+      bottom:        -60px;
+      left:          -60px;
+      width:         200px;
+      height:        200px;
+      border-radius: 50%;
+      background:    rgba(255, 204, 0, 0.04);
+    }
+
+    .hero-strip h1 {
+      font-size:     36px;
+      font-weight:   800;
+      color:         #fff;
+      margin-bottom: 10px;
+    }
+
+    /* Yellow accent in heading */
+    .hero-strip h1 span {
+      color: var(--yellow);
+    }
+
+    .hero-strip p {
+      color:      #aaa;
+      font-size:  15px;
+      max-width:  520px;
+      margin:     0 auto;
+    }
+
+    /* ── PROGRESS STEPS ──────────────────────────────────────── */
+    .progress-wrap {
+      max-width: 680px;
+      margin:    0 auto;
+      padding:   32px 20px 0;
+    }
+
+    .progress-steps {
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      margin-bottom:   10px;
+      gap:             0;
+    }
+
+    /* One step in the progress bar */
+    .ps-step {
+      display:        flex;
+      flex-direction: column;
+      align-items:    center;
+      gap:            8px;
+      flex:           1;
+      position:       relative;
+    }
+
+    /* Connector line between steps */
+    .ps-step:not(:last-child)::after {
+      content:    '';
+      position:   absolute;
+      top:        15px;
+      left:       calc(50% + 15px);
+      right:      calc(-50% + 15px);
+      height:     2px;
+      background: var(--border);
+      z-index:    0;
+      transition: 0.4s;
+    }
+
+    /* Completed step connector turns yellow */
+    .ps-step.done:not(:last-child)::after {
+      background: var(--yellow);
+    }
+
+    /* Step number circle */
+    .ps-circle {
+      width:           30px;
+      height:          30px;
+      border-radius:   50%;
+      border:          2px solid var(--border);
+      background:      #fff;
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      font-size:       12px;
+      font-weight:     800;
+      z-index:         1;
+      transition:      0.3s;
+      color:           #ccc;
+    }
+
+    /* Active step circle */
+    .ps-step.active .ps-circle {
+      border-color: var(--yellow);
+      background:   var(--yellow);
+      color:        var(--black);
+    }
+
+    /* Completed step circle */
+    .ps-step.done .ps-circle {
+      border-color: var(--yellow);
+      background:   var(--yellow);
+      color:        var(--black);
+    }
+
+    /* Completed step shows a tick instead of number */
+    .ps-step.done .ps-circle::before {
+      content: '✓';
+    }
+
+    .ps-step.done .ps-circle .ps-num {
+      display: none;
+    }
+
+    /* Step label below circle */
+    .ps-label {
+      font-size:   11px;
+      font-weight: 600;
+      color:       #aaa;
+      text-align:  center;
+      white-space: nowrap;
+    }
+
+    .ps-step.active .ps-label,
+    .ps-step.done .ps-label {
+      color:       var(--black);
+      font-weight: 700;
+    }
+
+    /* ── FORM CONTAINER ──────────────────────────────────────── */
+    .form-wrap {
+      max-width: 680px;
+      margin:    0 auto;
+      padding:   28px 20px 60px;
+    }
+
+    /* Individual step card — hidden by default */
+    .step-card {
+      background:    #fff;
+      border-radius: 18px;
+      box-shadow:    var(--shadow);
+      overflow:      hidden;
+      display:       none;
+      animation:     slideIn 0.3s ease;
+    }
+
+    /* Active step card is shown */
+    .step-card.active {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* ── STEP CARD HEADER ────────────────────────────────────── */
+    .step-card-header {
+      background: var(--black);
+      padding:    20px 28px;
+      display:    flex;
+      align-items: center;
+      gap:        12px;
+    }
+
+    .step-card-header .sh-icon {
+      font-size: 24px;
+    }
+
+    .step-card-header h2 {
+      color:       var(--yellow);
+      font-size:   18px;
+      font-weight: 800;
+    }
+
+    .step-card-header p {
+      color:      #aaa;
+      font-size:  12px;
+      margin-top: 2px;
+    }
+
+    .step-card-body {
+      padding: 28px;
+    }
+
+    /* ── FORM FIELDS ─────────────────────────────────────────── */
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display:        block;
+      font-size:      11px;
+      font-weight:    700;
+      color:          #666;
+      margin-bottom:  5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Required field asterisk */
+    .field label .req {
+      color:       var(--red);
+      margin-left: 2px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width:         100%;
+      padding:       11px 14px;
+      border:        1.5px solid var(--border);
+      border-radius: 9px;
+      font-size:     14px;
+      font-family:   'DM Sans', sans-serif;
+      outline:       none;
+      transition:    border 0.2s, box-shadow 0.2s;
+      background:    #fff;
+      color:         var(--black);
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--yellow);
+      box-shadow:   0 0 0 3px rgba(255, 204, 0, 0.12);
+    }
+
+    .field textarea {
+      height:  82px;
+      resize:  vertical;
+    }
+
+    /* Error state on invalid fields */
+    .field input.error,
+    .field select.error,
+    .field textarea.error {
+      border-color: var(--red);
+    }
+
+    /* Error message under invalid field */
+    .field-error {
+      font-size:  11px;
+      color:      var(--red);
+      margin-top: 4px;
+      display:    none;
+    }
+
+    .field-error.show {
+      display: block;
+    }
+
+    /* Two-column field layout */
+    .field-row {
+      display:               grid;
+      grid-template-columns: 1fr 1fr;
+      gap:                   14px;
+    }
+
+    /* Monospace email preview box */
+    .email-preview {
+      background:    #f0f0f0;
+      padding:       9px 13px;
+      border-radius: 8px;
+      font-size:     13px;
+      font-weight:   600;
+      font-family:   monospace;
+      color:         #555;
+      margin-top:    4px;
+    }
+
+    /* Small hint text below a field */
+    .hint {
+      font-size:  11px;
+      color:      #aaa;
+      margin-top: 4px;
+    }
+
+    /* ── PASSWORD STRENGTH INDICATOR ─────────────────────────── */
+    .pass-strength-bar {
+      height:        4px;
+      border-radius: 2px;
+      background:    #eee;
+      margin-top:    8px;
+      overflow:      hidden;
+    }
+
+    /* Coloured fill that grows with password strength */
+    .psb-fill {
+      height:        100%;
+      border-radius: 2px;
+      transition:    width 0.3s, background 0.3s;
+      width:         0%;
+    }
+
+    .pass-strength-label {
+      font-size:  11px;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* ── MENU BUILDER ────────────────────────────────────────── */
+
+    /* One menu section block */
+    .menu-section-block {
+      border:        1.5px solid var(--border);
+      border-radius: 12px;
+      padding:       16px;
+      margin-bottom: 14px;
+      background:    #fafafa;
+    }
+
+    .msb-header {
+      display:     flex;
+      align-items: center;
+      gap:         10px;
+      margin-bottom: 14px;
+    }
+
+    /* Section name input */
+    .msb-title-input {
+      flex:          1;
+      padding:       8px 12px;
+      border:        1.5px solid var(--border);
+      border-radius: 8px;
+      font-size:     14px;
+      font-family:   'DM Sans', sans-serif;
+      outline:       none;
+      font-weight:   600;
+      background:    #fff;
+      transition:    border 0.2s;
+    }
+
+    .msb-title-input:focus {
+      border-color: var(--yellow);
+    }
+
+    /* Remove section button */
+    .msb-del-btn {
+      padding:       6px 12px;
+      background:    rgba(239, 68, 68, 0.08);
+      color:         var(--red);
+      border:        1.5px solid rgba(239, 68, 68, 0.2);
+      border-radius: 7px;
+      cursor:        pointer;
+      font-size:     12px;
+      font-weight:   700;
+      font-family:   'DM Sans', sans-serif;
+      transition:    0.2s;
+      white-space:   nowrap;
+    }
+
+    .msb-del-btn:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* Column header row for menu items */
+    .item-row-head {
+      display:               grid;
+      grid-template-columns: 1fr 90px 80px 70px 32px;
+      gap:                   7px;
+      padding:               0 0 6px;
+      border-bottom:         1px solid var(--border);
+      margin-bottom:         8px;
+    }
+
+    .item-row-head span {
+      font-size:      10px;
+      font-weight:    700;
+      color:          #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    /* One menu item row */
+    .menu-item-row {
+      display:               grid;
+      grid-template-columns: 1fr 90px 80px 70px 32px;
+      gap:                   7px;
+      margin-bottom:         6px;
+      align-items:           center;
+    }
+
+    /* Text input inside menu item row */
+    .mi-inp {
+      padding:       7px 10px;
+      border:        1.5px solid var(--border);
+      border-radius: 7px;
+      font-size:     13px;
+      font-family:   'DM Sans', sans-serif;
+      outline:       none;
+      transition:    border 0.2s;
+      background:    #fff;
+      width:         100%;
+    }
+
+    .mi-inp:focus {
+      border-color: var(--yellow);
+    }
+
+    /* Select input inside menu item row */
+    .mi-sel {
+      padding:       7px 6px;
+      border:        1.5px solid var(--border);
+      border-radius: 7px;
+      font-size:     12px;
+      font-family:   'DM Sans', sans-serif;
+      outline:       none;
+      background:    #fff;
+      cursor:        pointer;
+      width:         100%;
+    }
+
+    /* Delete icon button for individual item */
+    .mi-del {
+      width:           28px;
+      height:          28px;
+      border-radius:   6px;
+      background:      rgba(239, 68, 68, 0.08);
+      border:          1.5px solid rgba(239, 68, 68, 0.2);
+      color:           var(--red);
+      cursor:          pointer;
+      font-size:       14px;
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      transition:      0.2s;
+      font-family:     'DM Sans', sans-serif;
+    }
+
+    .mi-del:hover {
+      background: rgba(239, 68, 68, 0.18);
+    }
+
+    /* Add item dashed button */
+    .add-item-btn {
+      padding:       6px 14px;
+      background:    rgba(59, 130, 246, 0.08);
+      color:         var(--blue);
+      border:        1.5px dashed rgba(59, 130, 246, 0.35);
+      border-radius: 7px;
+      font-size:     12px;
+      font-weight:   600;
+      cursor:        pointer;
+      transition:    0.2s;
+      font-family:   'DM Sans', sans-serif;
+      margin-top:    6px;
+    }
+
+    .add-item-btn:hover {
+      background: rgba(59, 130, 246, 0.15);
+    }
+
+    /* Add new section dashed button */
+    .add-section-btn {
+      width:           100%;
+      padding:         11px;
+      background:      var(--ylight);
+      border:          2px dashed rgba(255, 204, 0, 0.5);
+      border-radius:   10px;
+      font-size:       13px;
+      font-weight:     700;
+      cursor:          pointer;
+      color:           #854d0e;
+      font-family:     'DM Sans', sans-serif;
+      transition:      0.2s;
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      gap:             7px;
+    }
+
+    .add-section-btn:hover {
+      background:    #fff9d6;
+      border-color:  var(--yellow);
+    }
+
+    /* ── NAVIGATION BUTTONS ──────────────────────────────────── */
+    .btn-row {
+      display:    flex;
+      gap:        10px;
+      margin-top: 24px;
+    }
+
+    /* Primary next/submit button */
+    .btn-next {
+      flex:          1;
+      padding:       13px;
+      background:    var(--yellow);
+      border:        none;
+      border-radius: 10px;
+      font-weight:   800;
+      font-size:     15px;
+      font-family:   'Syne', sans-serif;
+      cursor:        pointer;
+      transition:    0.2s;
+      color:         var(--black);
+    }
+
+    .btn-next:hover {
+      background: var(--ydim);
+    }
+
+    /* Back button */
+    .btn-back {
+      padding:       13px 20px;
+      background:    #fff;
+      border:        1.5px solid var(--border);
+      border-radius: 10px;
+      font-weight:   600;
+      font-size:     14px;
+      font-family:   'DM Sans', sans-serif;
+      cursor:        pointer;
+      transition:    0.2s;
+      color:         #555;
+    }
+
+    .btn-back:hover {
+      border-color: var(--yellow);
+    }
+
+    /* Step-level feedback message */
+    .step-msg {
+      font-size:  13px;
+      margin-top: 12px;
+      padding:    10px 14px;
+      border-radius: 8px;
+      display:    none;
+    }
+
+    .step-msg.err {
+      background: rgba(239, 68, 68, 0.08);
+      color:      var(--red);
+      border:     1px solid rgba(239, 68, 68, 0.2);
+      display:    block;
+    }
+
+    .step-msg.ok {
+      background: rgba(34, 197, 94, 0.08);
+      color:      var(--green);
+      border:     1px solid rgba(34, 197, 94, 0.2);
+      display:    block;
+    }
+
+    /* ── SUCCESS SCREEN ──────────────────────────────────────── */
+    .success-screen {
+      text-align: center;
+      padding:    40px 20px;
+    }
+
+    .success-icon {
+      font-size:     64px;
+      margin-bottom: 18px;
+    }
+
+    .success-screen h2 {
+      font-size:     26px;
+      font-weight:   800;
+      margin-bottom: 10px;
+    }
+
+    .success-screen p {
+      color:       #666;
+      font-size:   15px;
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    /* Summary box with registration details */
+    .success-detail {
+      background:    var(--ylight);
+      border:        1.5px solid rgba(255, 204, 0, 0.4);
+      border-radius: 12px;
+      padding:       16px;
+      margin:        20px 0;
+      text-align:    left;
+      font-size:     13px;
+      line-height:   2;
+    }
+
+    .success-detail strong {
+      font-weight: 800;
+    }
+
+    .success-btns {
+      display:         flex;
+      gap:             10px;
+      justify-content: center;
+      flex-wrap:       wrap;
+      margin-top:      24px;
+    }
+
+    /* Primary CTA button on success screen */
+    .sbtn-primary {
+      padding:         12px 28px;
+      background:      var(--yellow);
+      border:          none;
+      border-radius:   10px;
+      font-weight:     800;
+      font-size:       14px;
+      font-family:     'Syne', sans-serif;
+      cursor:          pointer;
+      color:           var(--black);
+      text-decoration: none;
+      display:         inline-block;
+      transition:      0.2s;
+    }
+
+    .sbtn-primary:hover {
+      background: var(--ydim);
+    }
+
+    /* Ghost secondary button */
+    .sbtn-ghost {
+      padding:         12px 22px;
+      background:      #fff;
+      border:          1.5px solid var(--border);
+      border-radius:   10px;
+      font-weight:     600;
+      font-size:       14px;
+      font-family:     'DM Sans', sans-serif;
+      cursor:          pointer;
+      color:           #555;
+      text-decoration: none;
+      display:         inline-block;
+      transition:      0.2s;
+    }
+
+    .sbtn-ghost:hover {
+      border-color: var(--yellow);
+    }
+
+    /* ── INFO CALLOUT BOX ────────────────────────────────────── */
+    .info-box {
+      background:    var(--ylight);
+      border:        1.5px solid rgba(255, 204, 0, 0.5);
+      border-radius: 10px;
+      padding:       13px 16px;
+      font-size:     13px;
+      color:         #7a4700;
+      line-height:   1.6;
+      margin-bottom: 18px;
+    }
+
+    .info-box strong {
+      font-weight: 800;
+    }
+
+    /* ── FOOD CATEGORY CHIPS ─────────────────────────────────── */
+    .cat-chips {
+      display:   flex;
+      flex-wrap: wrap;
+      gap:       6px;
+      margin-top: 6px;
+    }
+
+    .cat-chip {
+      padding:       5px 13px;
+      border-radius: 20px;
+      border:        1.5px solid var(--border);
+      background:    #fff;
+      font-size:     12px;
+      font-weight:   600;
+      cursor:        pointer;
+      transition:    0.2s;
+      font-family:   'DM Sans', sans-serif;
+    }
+
+    .cat-chip:hover {
+      border-color: var(--yellow);
+    }
+
+    /* Selected chip highlighted in yellow */
+    .cat-chip.selected {
+      background:   var(--yellow);
+      border-color: var(--yellow);
+      color:        var(--black);
+    }
+
+    /* ── LOGO PREVIEW IMAGE ──────────────────────────────────── */
+    .logo-preview {
+      width:         70px;
+      height:        70px;
+      border-radius: 12px;
+      border:        2px solid var(--border);
+      object-fit:    contain;
+      background:    #f0f0f0;
+      display:       none;
+      margin-top:    8px;
+    }
+
+    .logo-preview.show {
+      display: block;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 700px) {
+      nav                  { padding: 14px 20px; }
+      .hero-strip          { padding: 32px 20px; }
+      .hero-strip h1       { font-size: 26px; }
+      .step-card-body      { padding: 20px; }
+      .field-row           { grid-template-columns: 1fr; }
+      .item-row-head       { display: none; }
+      .menu-item-row       { grid-template-columns: 1fr 80px; grid-template-rows: auto auto; }
+      .menu-item-row .mi-inp:first-child { grid-column: span 2; }
+      .mi-del              { grid-column: 2; grid-row: 2; }
+      .btn-row             { flex-direction: column-reverse; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       TOP NAVIGATION
+  ============================================================ -->
+  <nav>
+
+    <!-- Logo and brand name — links back to home -->
+    <a class="nav-logo" href="index.html">
+      <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="Food Sprint">
+      <span class="brand">Food Sprint</span>
+    </a>
+
+    <!-- Back to home link -->
+    <a class="nav-back" href="index.html">← Back to Home</a>
+
+  </nav>
+  <!-- END NAV -->
+
+
+  <!-- ============================================================
+       HERO STRIP — page heading
+  ============================================================ -->
+  <div class="hero-strip">
+    <h1>Register Your <span>Restaurant</span></h1>
+    <p>Join Food Sprint and start receiving orders from thousands of hungry customers in your area.</p>
+  </div>
+  <!-- END HERO STRIP -->
+
+
+  <!-- ============================================================
+       PROGRESS INDICATOR — shows which step the user is on
+  ============================================================ -->
+  <div class="progress-wrap">
+    <div class="progress-steps">
+
+      <!-- Step 1: Basic Info -->
+      <div class="ps-step active" id="ps1">
+        <div class="ps-circle"><span class="ps-num">1</span></div>
+        <div class="ps-label">Basic Info</div>
+      </div>
+
+      <!-- Step 2: Menu -->
+      <div class="ps-step" id="ps2">
+        <div class="ps-circle"><span class="ps-num">2</span></div>
+        <div class="ps-label">Menu</div>
+      </div>
+
+      <!-- Step 3: Set Password -->
+      <div class="ps-step" id="ps3">
+        <div class="ps-circle"><span class="ps-num">3</span></div>
+        <div class="ps-label">Password</div>
+      </div>
+
+      <!-- Step 4: Done -->
+      <div class="ps-step" id="ps4">
+        <div class="ps-circle"><span class="ps-num">4</span></div>
+        <div class="ps-label">Done!</div>
+      </div>
+
+    </div>
+  </div>
+  <!-- END PROGRESS -->
+
+
+  <!-- ============================================================
+       MULTI-STEP FORM WRAPPER
+  ============================================================ -->
+  <div class="form-wrap">
+
+
+    <!-- ========================================================
+         STEP 1 — BASIC INFO
+    ======================================================== -->
+    <div class="step-card active" id="step1">
+
+      <!-- Card header -->
+      <div class="step-card-header">
+        <span class="sh-icon">🏪</span>
+        <div>
+          <h2>Restaurant Details</h2>
+          <p>Tell customers who you are</p>
+        </div>
+      </div>
+
+      <div class="step-card-body">
+
+        <!-- Restaurant name and cuisine side by side -->
+        <div class="field-row">
+
+          <div class="field">
+            <label>Restaurant Name <span class="req">*</span></label>
+            <input
+              type="text"
+              id="resName"
+              placeholder="e.g. Spice Garden"
+              oninput="updateEmailPreview()"
+            >
+            <div class="field-error" id="err-resName">Restaurant name is required</div>
+          </div>
+
+          <div class="field">
+            <label>Cuisine / Subtitle <span class="req">*</span></label>
+            <input type="text" id="resSubtitle" placeholder="e.g. North Indian • Curries">
+            <div class="field-error" id="err-resSubtitle">Cuisine type is required</div>
+          </div>
+
+        </div>
+
+        <!-- Auto-generated login email preview -->
+        <div class="field">
+          <label>Login Email (auto-generated)</label>
+          <div class="email-preview" id="emailPreview">yourname@foodsprint.in</div>
+          <div class="hint">This email will be used to log in to your restaurant dashboard.</div>
+        </div>
+
+        <!-- Clickable food category chips -->
+        <div class="field">
+          <label>Food Categories</label>
+          <div class="cat-chips" id="catChips">
+            <div class="cat-chip" onclick="toggleCat(this)">🍔 Burgers</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🍕 Pizza</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🍗 Chicken</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🍚 Biryani</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🍜 Noodles</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🥟 Momos</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🥗 Healthy</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🍰 Desserts</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🥘 Chaat</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🍝 Pasta</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🥪 Sandwiches</div>
+            <div class="cat-chip" onclick="toggleCat(this)">🍹 Beverages</div>
+          </div>
+        </div>
+
+        <!-- City and phone number side by side -->
+        <div class="field-row">
+          <div class="field">
+            <label>City / Location</label>
+            <input type="text" id="resCity" placeholder="e.g. Chennai, Mumbai">
+          </div>
+          <div class="field">
+            <label>Phone Number</label>
+            <input type="tel" id="resPhone" placeholder="10-digit number">
+          </div>
+        </div>
+
+        <!-- Full address textarea -->
+        <div class="field">
+          <label>Restaurant Address</label>
+          <textarea id="resAddress" placeholder="Full address including landmark…"></textarea>
+        </div>
+
+        <!-- Opening hours and minimum order side by side -->
+        <div class="field-row">
+          <div class="field">
+            <label>Opening Hours</label>
+            <input type="text" id="resHours" placeholder="e.g. 10 AM – 11 PM">
+          </div>
+          <div class="field">
+            <label>Min Order Amount (₹)</label>
+            <input type="number" id="resMinOrder" placeholder="e.g. 100">
+          </div>
+        </div>
+
+        <!-- Optional logo URL with preview -->
+        <div class="field">
+          <label>Logo URL (optional)</label>
+          <input
+            type="text"
+            id="resLogo"
+            placeholder="https://your-logo-url.com/logo.png"
+            oninput="previewLogo()"
+          >
+          <!-- Logo thumbnail preview — shown when URL is entered -->
+          <img id="logoPreview" class="logo-preview" alt="Logo preview">
+        </div>
+
+        <!-- Step-level validation message -->
+        <div class="step-msg" id="msg1"></div>
+
+        <!-- Continue button -->
+        <div class="btn-row">
+          <button class="btn-next" onclick="goStep2()">Continue → Menu Setup</button>
+        </div>
+
+      </div>
+      <!-- END step-card-body -->
+
+    </div>
+    <!-- END step1 -->
+
+
+    <!-- ========================================================
+         STEP 2 — MENU BUILDER
+    ======================================================== -->
+    <div class="step-card" id="step2">
+
+      <!-- Card header -->
+      <div class="step-card-header">
+        <span class="sh-icon">🍽</span>
+        <div>
+          <h2>Build Your Menu</h2>
+          <p>Add sections and items — you can update later in your dashboard</p>
+        </div>
+      </div>
+
+      <div class="step-card-body">
+
+        <!-- Informational tip about menu sections -->
+        <div class="info-box">
+          ℹ️ Organise your menu into <strong>sections</strong>
+          (e.g. Starters, Mains, Desserts). Add items under each section.
+          You can add more items anytime from your restaurant dashboard.
+        </div>
+
+        <!-- Menu section blocks injected here by JS -->
+        <div id="menuSectionsContainer"></div>
+
+        <!-- Button to add a new section -->
+        <button class="add-section-btn" onclick="addSection()">＋ Add Menu Section</button>
+
+        <!-- Step-level validation message -->
+        <div class="step-msg" id="msg2"></div>
+
+        <!-- Back and continue buttons -->
+        <div class="btn-row">
+          <button class="btn-back" onclick="goStep(1)">← Back</button>
+          <button class="btn-next" onclick="goStep3()">Continue → Set Password</button>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- END step2 -->
+
+
+    <!-- ========================================================
+         STEP 3 — SET PASSWORD
+    ======================================================== -->
+    <div class="step-card" id="step3">
+
+      <!-- Card header -->
+      <div class="step-card-header">
+        <span class="sh-icon">🔐</span>
+        <div>
+          <h2>Set Your Password</h2>
+          <p>Secure your restaurant dashboard</p>
+        </div>
+      </div>
+
+      <div class="step-card-body">
+
+        <!-- Confirms the auto-generated login email -->
+        <div class="info-box">
+          Your login email will be: <strong id="confirmEmailDisplay">—</strong><br>
+          Keep your password safe — you'll use it to manage orders.
+        </div>
+
+        <!-- New password field with strength meter -->
+        <div class="field">
+          <label>Create Password <span class="req">*</span></label>
+          <input
+            type="password"
+            id="passNew"
+            placeholder="At least 6 characters"
+            oninput="checkStrength()"
+          >
+          <!-- Coloured strength bar -->
+          <div class="pass-strength-bar">
+            <div class="psb-fill" id="psbFill"></div>
+          </div>
+          <!-- Weak / Fair / Good / Strong label -->
+          <div class="pass-strength-label" id="psbLabel"></div>
+          <div class="field-error" id="err-pass">Password must be at least 6 characters</div>
+        </div>
+
+        <!-- Confirm password field -->
+        <div class="field">
+          <label>Confirm Password <span class="req">*</span></label>
+          <input type="password" id="passConfirm" placeholder="Re-enter your password">
+          <div class="field-error" id="err-passConfirm">Passwords do not match</div>
+        </div>
+
+        <!-- Step-level validation message -->
+        <div class="step-msg" id="msg3"></div>
+
+        <!-- Back and register buttons -->
+        <div class="btn-row">
+          <button class="btn-back" onclick="goStep(2)">← Back</button>
+          <button class="btn-next" onclick="handleRegister()">🎉 Register Restaurant →</button>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- END step3 -->
+
+
+    <!-- ========================================================
+         STEP 4 — SUCCESS SCREEN
+    ======================================================== -->
+    <div class="step-card" id="step4">
+      <div class="step-card-body">
+
+        <div class="success-screen">
+
+          <!-- Big celebration emoji -->
+          <div class="success-icon">🎉</div>
+
+          <h2>You're Live on Food Sprint!</h2>
+          <p>Your restaurant has been registered successfully.</p>
+          <p>Customers can now find you on the Food Sprint storefront.</p>
+
+          <!-- Registration summary box -->
+          <div class="success-detail">
+            <div>🏪 <strong>Restaurant:</strong> <span id="successName">—</span></div>
+            <div>📧 <strong>Login Email:</strong>  <span id="successEmail">—</span></div>
+            <div>🍽 <strong>Menu Sections:</strong> <span id="successSections">—</span></div>
+            <div>🔑 <strong>Password:</strong> Set successfully</div>
+          </div>
+
+          <p style="font-size:13px; color:#aaa;">
+            You are now logged in. Go to your dashboard to manage orders.
+          </p>
+
+          <!-- CTA buttons -->
+          <div class="success-btns">
+            <a href="restaurant.html" class="sbtn-primary">Open Restaurant Dashboard →</a>
+            <a href="index.html"      class="sbtn-ghost">Back to Home</a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    <!-- END step4 -->
+
+
+  </div>
+  <!-- END form-wrap -->
+
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+
+    /* ── HELPERS ──────────────────────────────────────────────── */
+
+    /** Converts a restaurant name to a deterministic login email */
+    function resNameToEmail(name) {
+      return name.toLowerCase().replace(/[^a-z0-9]/g, "") + "@foodsprint.in";
+    }
+
+    /** Returns the restaurant admins object from localStorage */
+    function getResAdmins()    { return JSON.parse(localStorage.getItem("fs_res_admins")       || "{}"); }
+
+    /** Saves the restaurant admins object */
+    function saveResAdmins(d)  { localStorage.setItem("fs_res_admins", JSON.stringify(d)); }
+
+    /** Returns stored restaurant menus keyed by restaurant name */
+    function getStoredMenus()  { return JSON.parse(localStorage.getItem("fs_restaurant_menus") || "{}"); }
+
+    /** Saves restaurant menus */
+    function saveStoredMenus(d){ localStorage.setItem("fs_restaurant_menus", JSON.stringify(d)); }
+
+    /** Returns restaurant metadata object */
+    function getResMeta()      { return JSON.parse(localStorage.getItem("fs_restaurants_meta") || "{}"); }
+
+    /** Saves restaurant metadata */
+    function saveResMeta(d)    { localStorage.setItem("fs_restaurants_meta", JSON.stringify(d)); }
+
+    /** Escapes HTML special characters to prevent XSS in injected content */
+    function escHtml(s) {
+      return String(s || "")
+        .replace(/&/g,  "&amp;")
+        .replace(/</g,  "&lt;")
+        .replace(/>/g,  "&gt;")
+        .replace(/"/g,  "&quot;");
+    }
+
+    /* ── STEP NAVIGATION ──────────────────────────────────────
+       Shows the chosen step card and updates the progress bar.
+    ──────────────────────────────────────────────────────────── */
+    let currentStep = 1;
+
+    function goStep(n) {
+      /* Hide all step cards */
+      document.querySelectorAll(".step-card").forEach(c => c.classList.remove("active"));
+
+      /* Show the target step */
+      document.getElementById("step" + n).classList.add("active");
+      currentStep = n;
+
+      /* Update progress indicator: done / active / upcoming */
+      for (let i = 1; i <= 4; i++) {
+        const ps = document.getElementById("ps" + i);
+        ps.classList.remove("active", "done");
+        if      (i < n) ps.classList.add("done");
+        else if (i === n) ps.classList.add("active");
+      }
+
+      /* Scroll to top so the user sees the new step */
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /* ── STEP 1: BASIC INFO LOGIC ─────────────────────────────── */
+
+    /** Updates the email preview as the user types the restaurant name */
+    function updateEmailPreview() {
+      const name  = document.getElementById("resName").value.trim();
+      const email = name ? resNameToEmail(name) : "yourname@foodsprint.in";
+      document.getElementById("emailPreview").innerText       = email;
+      document.getElementById("confirmEmailDisplay").innerText = email;
+    }
+
+    /** Toggles the selected state of a food category chip */
+    function toggleCat(el) {
+      el.classList.toggle("selected");
+    }
+
+    /** Shows or hides the logo preview image when the URL changes */
+    function previewLogo() {
+      const url = document.getElementById("resLogo").value.trim();
+      const img = document.getElementById("logoPreview");
+      if (url) { img.src = url; img.className = "logo-preview show"; }
+      else       img.className = "logo-preview";
+    }
+
+    /* Field-level error helpers */
+    function showErr(fieldId, errId) {
+      document.getElementById(fieldId).classList.add("error");
+      document.getElementById(errId).classList.add("show");
+    }
+
+    function clearErr(fieldId, errId) {
+      document.getElementById(fieldId).classList.remove("error");
+      document.getElementById(errId).classList.remove("show");
+    }
+
+    /* Step-level message helpers */
+    function showMsg(id, type, text) {
+      const el = document.getElementById(id);
+      el.className = "step-msg " + type;
+      el.innerText = text;
+    }
+
+    function clearMsg(id) {
+      const el = document.getElementById(id);
+      el.className = "step-msg";
+      el.innerText = "";
+    }
+
+    /** Validates step 1 and advances to step 2 */
+    function goStep2() {
+      const name     = document.getElementById("resName").value.trim();
+      const subtitle = document.getElementById("resSubtitle").value.trim();
+      let valid = true;
+
+      if (!name)     { showErr("resName",     "err-resName");     valid = false; }
+      else             clearErr("resName",     "err-resName");
+
+      if (!subtitle) { showErr("resSubtitle", "err-resSubtitle"); valid = false; }
+      else             clearErr("resSubtitle", "err-resSubtitle");
+
+      /* Check for a duplicate restaurant name */
+      const admins = getResAdmins();
+      const menus  = getStoredMenus();
+      if (admins[name] || menus[name]) {
+        showMsg("msg1", "err", `A restaurant named "${name}" already exists. Please choose a different name.`);
+        return;
+      }
+
+      if (!valid) { showMsg("msg1", "err", "Please fill in the required fields."); return; }
+      clearMsg("msg1");
+
+      /* Initialise with one blank section if the menu is empty */
+      if (menuSections.length === 0) addSection();
+      renderMenuSections();
+      goStep(2);
+    }
+
+    /* ── STEP 2: MENU BUILDER LOGIC ───────────────────────────── */
+
+    /** In-memory array of menu sections being built */
+    let menuSections = [];
+
+    /** Adds a blank section to the menu */
+    function addSection() {
+      menuSections.push({ id: "sec_" + Date.now(), title: "", items: [] });
+      renderMenuSections();
+    }
+
+    /** Removes a section by its id (minimum 1 section required) */
+    function deleteSection(id) {
+      if (menuSections.length <= 1) {
+        alert("You need at least one menu section.");
+        return;
+      }
+      menuSections = menuSections.filter(s => s.id !== id);
+      renderMenuSections();
+    }
+
+    /** Adds a blank item to a section */
+    function addItem(secId) {
+      const sec = menuSections.find(s => s.id === secId);
+      if (sec) sec.items.push({ name: "", price: 0, veg: "veg", best: false });
+      renderMenuSections();
+    }
+
+    /** Removes an item from a section by index */
+    function deleteItem(secId, idx) {
+      const sec = menuSections.find(s => s.id === secId);
+      if (sec) sec.items.splice(idx, 1);
+      renderMenuSections();
+    }
+
+    /** Renders all section blocks and their item rows into the DOM */
+    function renderMenuSections() {
+      const container = document.getElementById("menuSectionsContainer");
+      container.innerHTML = "";
+
+      menuSections.forEach((sec, si) => {
+
+        /* Section wrapper */
+        const block = document.createElement("div");
+        block.className = "menu-section-block";
+        block.id        = "block_" + sec.id;
+
+        /* Section header: name input + remove button */
+        const hdr = document.createElement("div");
+        hdr.className = "msb-header";
+        hdr.innerHTML = `
+          <input
+            class="msb-title-input"
+            value="${escHtml(sec.title)}"
+            placeholder="Section name (e.g. Starters)"
+            oninput="menuSections[${si}].title = this.value"
+          >
+          <button class="msb-del-btn" onclick="deleteSection('${sec.id}')">✕ Remove</button>
+        `;
+        block.appendChild(hdr);
+
+        /* Column headers for item rows */
+        const colHead = document.createElement("div");
+        colHead.className = "item-row-head";
+        colHead.innerHTML = `
+          <span>Item Name</span>
+          <span>Price (₹)</span>
+          <span>Type</span>
+          <span>Best?</span>
+          <span></span>
+        `;
+        block.appendChild(colHead);
+
+        /* One row per item */
+        sec.items.forEach((item, ii) => {
+          const row = document.createElement("div");
+          row.className = "menu-item-row";
+          row.innerHTML = `
+            <!-- Dish name -->
+            <input
+              class="mi-inp"
+              value="${escHtml(item.name)}"
+              placeholder="Dish name"
+              oninput="menuSections[${si}].items[${ii}].name = this.value"
+            >
+            <!-- Price -->
+            <input
+              class="mi-inp"
+              type="number"
+              value="${item.price}"
+              placeholder="₹"
+              min="0"
+              oninput="menuSections[${si}].items[${ii}].price = parseInt(this.value) || 0"
+            >
+            <!-- Veg / Non-Veg -->
+            <select class="mi-sel" onchange="menuSections[${si}].items[${ii}].veg = this.value">
+              <option value="veg"    ${item.veg === 'veg'    ? 'selected' : ''}>🟢 Veg</option>
+              <option value="nonveg" ${item.veg === 'nonveg' ? 'selected' : ''}>🔴 Non-Veg</option>
+            </select>
+            <!-- Bestseller flag -->
+            <select class="mi-sel" onchange="menuSections[${si}].items[${ii}].best = this.value === 'yes'">
+              <option value="no"  ${!item.best ? 'selected' : ''}>—</option>
+              <option value="yes" ${item.best  ? 'selected' : ''}>⭐ Yes</option>
+            </select>
+            <!-- Delete item button -->
+            <button class="mi-del" onclick="deleteItem('${sec.id}', ${ii})">✕</button>
+          `;
+          block.appendChild(row);
+        });
+
+        /* Add item dashed button below the item rows */
+        const addBtn   = document.createElement("button");
+        addBtn.className = "add-item-btn";
+        addBtn.innerText = "+ Add Item";
+        addBtn.onclick   = () => addItem(sec.id);
+        block.appendChild(addBtn);
+
+        container.appendChild(block);
+      });
+    }
+
+    /** Advances from step 2 to step 3 (no validation required for menu) */
+    function goStep3() {
+      clearMsg("msg2");
+      goStep(3);
+    }
+
+    /* ── STEP 3: PASSWORD LOGIC ───────────────────────────────── */
+
+    /** Evaluates password strength and updates the strength bar */
+    function checkStrength() {
+      const val  = document.getElementById("passNew").value;
+      const fill = document.getElementById("psbFill");
+      const lbl  = document.getElementById("psbLabel");
+
+      if (!val) { fill.style.width = "0%"; lbl.textContent = ""; return; }
+
+      /* Score increases with length, uppercase/numbers, and special chars */
+      let score = 0;
+      if (val.length >= 6)             score++;
+      if (val.length >= 10)            score++;
+      if (/[A-Z0-9]/.test(val))        score++;
+      if (/[^a-zA-Z0-9]/.test(val))    score++;
+
+      const stages = [
+        { w: "25%",  bg: "#ef4444", label: "Weak"     },
+        { w: "50%",  bg: "#f97316", label: "Fair"     },
+        { w: "75%",  bg: "#eab308", label: "Good"     },
+        { w: "100%", bg: "#22c55e", label: "Strong ✓" }
+      ];
+      const st = stages[Math.min(score - 1, 3)] || stages[0];
+
+      fill.style.width      = st.w;
+      fill.style.background = st.bg;
+      lbl.textContent       = st.label;
+      lbl.style.color       = st.bg;
+    }
+
+    /* ── handleRegister() ─────────────────────────────────────
+       Validates step 3, collects all data from all steps, saves
+       everything to localStorage, auto-logs in, and shows step 4.
+    ──────────────────────────────────────────────────────────── */
+    function handleRegister() {
+      const pass    = document.getElementById("passNew").value;
+      const confirm = document.getElementById("passConfirm").value;
+      let valid = true;
+
+      if (!pass || pass.length < 6) { showErr("passNew",     "err-pass");        valid = false; }
+      else                            clearErr("passNew",     "err-pass");
+
+      if (pass !== confirm)          { showErr("passConfirm", "err-passConfirm"); valid = false; }
+      else                            clearErr("passConfirm", "err-passConfirm");
+
+      if (!valid) {
+        showMsg("msg3", "err", "⚠️ Please fix the errors above.");
+        return;
+      }
+
+      /* ── Collect data from all steps ── */
+      const name     = document.getElementById("resName").value.trim();
+      const subtitle = document.getElementById("resSubtitle").value.trim();
+      const city     = document.getElementById("resCity").value.trim();
+      const phone    = document.getElementById("resPhone").value.trim();
+      const address  = document.getElementById("resAddress").value.trim();
+      const hours    = document.getElementById("resHours").value.trim();
+      const minOrder = document.getElementById("resMinOrder").value.trim();
+      const logo     = document.getElementById("resLogo").value.trim();
+      const email    = resNameToEmail(name);
+
+      /* Collect selected category chip labels */
+      const selectedCats = [...document.querySelectorAll(".cat-chip.selected")]
+        .map(el => el.innerText.replace(/^[^\s]+\s/, ""));
+
+      /* ── Build structured menu sections ── */
+      const sections = menuSections
+        .map((sec, si) => ({
+          id:    "sec" + si + "_" + Date.now(),
+          title: sec.title || "Section " + (si + 1),
+          desc:  "",
+          items: sec.items
+            .filter(it => it.name && it.name.trim())
+            .map(it => ({
+              name:     it.name.trim(),
+              price:    it.price || 0,
+              img:      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300",
+              veg:      it.veg !== "nonveg",
+              best:     !!it.best,
+              spicy:    false,
+              desc:     "",
+              category: [it.veg !== "nonveg" ? "veg" : "nonveg"]
+            }))
+        }))
+        .filter(s => s.items.length > 0); /* Remove empty sections */
+
+      /* ── Save restaurant login credentials ── */
+      const admins = getResAdmins();
+      admins[name] = { email, password: pass };
+      saveResAdmins(admins);
+
+      /* ── Save restaurant menu for the storefront ── */
+      const menus = getStoredMenus();
+      menus[name] = {
+        subtitle,
+        logo:           logo || null,
+        sections,
+        registeredAt:   new Date().toISOString()
+      };
+      saveStoredMenus(menus);
+
+      /* ── Save restaurant metadata for dashboards ── */
+      const meta = getResMeta();
+      meta[name] = {
+        name,
+        subtitle,
+        address:      address + (city ? ", " + city : ""),
+        city,
+        phone,
+        hours,
+        minOrder:     minOrder ? parseInt(minOrder) : null,
+        logo:         logo || null,
+        categories:   selectedCats,
+        email,
+        registeredAt: new Date().toISOString(),
+        status:       "active"
+      };
+      saveResMeta(meta);
+
+      /* ── Auto-login the newly registered restaurant ── */
+      localStorage.setItem("loggedInUser",       email);
+      localStorage.setItem("loggedInRole",       "restaurant");
+      localStorage.setItem("loggedInRestaurant", name);
+
+      /* ── Populate success screen details ── */
+      document.getElementById("successName").innerText     = name;
+      document.getElementById("successEmail").innerText    = email;
+      document.getElementById("successSections").innerText =
+        sections.length + " section(s), " +
+        sections.reduce((s, x) => s + x.items.length, 0) + " item(s)";
+
+      /* Show the success step */
+      goStep(4);
+
+      /* Auto-redirect to the restaurant dashboard after 5 seconds */
+      setTimeout(() => { window.location.href = "restaurant.html"; }, 5000);
+    }
+
+    /* ── INITIALISE ───────────────────────────────────────────── */
+    /* Add the first blank menu section on page load */
+    addSection();
+
+  </script>
+
+</body>
+</html>
